@@ -1,0 +1,59 @@
+# .github/workflows/sync-acbr-svn.yml
+name: Sincronizar com SVN do ACBr
+
+on:
+  # Executa a cada hora para manter o repositório atualizado
+  schedule:
+    - cron: '0 * * * *'
+  # Permite a execução manual do workflow a partir da aba "Actions" do GitHub
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do Repositório Espelho
+        uses: actions/checkout@v4
+        with:
+          # Usamos um Personal Access Token (PAT) para poder fazer o push
+          # das alterações de volta para este repositório.
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Instalar Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name 'ACBr Sync Bot'
+          git config --global user.email 'actions@github.com'
+
+      - name: Remover fontes antigos para garantir uma sincronização limpa
+        run: |
+          # Remove os diretórios caso existam para evitar conflitos
+          rm -rf Fontes Pacotes
+
+      - name: Fazer checkout do SVN (trunk2/Fontes)
+        run: |
+          echo "Baixando Fontes do SVN do ACBr..."
+          svn checkout --non-interactive --trust-server-cert "https://svn.code.sf.net/p/acbr/code/trunk2/Fontes" "Fontes"
+
+      - name: Fazer checkout do SVN (trunk2/Pacotes)
+        run: |
+          echo "Baixando Pacotes do SVN do ACBr..."
+          svn checkout --non-interactive --trust-server-cert "https://svn.code.sf.net/p/acbr/code/trunk2/Pacotes" "Pacotes"
+
+      - name: Adicionar, Fazer Commit e Push das Alterações
+        run: |
+          # Adiciona todos os arquivos novos ou modificados
+          git add -A
+          
+          # Verifica se há alterações para fazer commit
+          # O comando 'git diff-index' retorna um status de saída não zero se houver alterações.
+          if ! git diff-index --quiet HEAD; then
+            echo "Alterações detectadas. Fazendo commit e push..."
+            git commit -m "Sincronização automática do SVN do ACBr em $(date -u)"
+            git push
+          else
+            echo "Nenhuma alteração detectada no SVN. O repositório já está atualizado."
+          fi
