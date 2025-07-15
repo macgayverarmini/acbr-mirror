@@ -1,0 +1,296 @@
+{******************************************************************************}
+{ Projeto: Componentes ACBr                                                    }
+{  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
+{ mentos de Automação Comercial utilizados no Brasil                           }
+{                                                                              }
+{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
+{                                                                              }
+{ Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
+{                                                                              }
+{  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
+{ Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
+{                                                                              }
+{  Esta biblioteca é software livre; você pode redistribuí-la e/ou modificá-la }
+{ sob os termos da Licença Pública Geral Menor do GNU conforme publicada pela  }
+{ Free Software Foundation; tanto a versão 2.1 da Licença, ou (a seu critério) }
+{ qualquer versão posterior.                                                   }
+{                                                                              }
+{  Esta biblioteca é distribuída na expectativa de que seja útil, porém, SEM   }
+{ NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU      }
+{ ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral Menor}
+{ do GNU para mais detalhes. (Arquivo LICENÇA.TXT ou LICENSE.TXT)              }
+{                                                                              }
+{  Você deve ter recebido uma cópia da Licença Pública Geral Menor do GNU junto}
+{ com esta biblioteca; se não, escreva para a Free Software Foundation, Inc.,  }
+{ no endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.          }
+{ Você também pode obter uma copia da licença em:                              }
+{ http://www.opensource.org/licenses/lgpl-license.php                          }
+{                                                                              }
+{ Daniel Simões de Almeida - daniel@projetoacbr.com.br - www.projetoacbr.com.br}
+{       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
+{******************************************************************************}
+
+{******************************************************************************
+|* ACBrNFCom
+|*
+|* PROPÓSITO: Registro de Alterações
+******************************************************************************}
+
+Símbolo : Significado
+
+[+]     : Novo recurso
+[*]     : Recurso modificado/melhorado
+[-]     : Correção de Bug (assim esperamos)
+
+17/06/2025
+-- ACBrNFComWebServices --
+[*] #TK-7205: Melhorias no Consultar visando salvar o XML do evento retornado 
+    levando em consideração da data/hora de emissão do evento.
+  Por: Luiz Alberto da Silva Lope
+
+12/06/2025
+-- ACBrNFComXmlWriter --
+[*] #TK-7209 - Alteração na geração das tags: codDebAuto ou a codBanco e a 
+    codAgencia para deixar de acordo com os Schemas.
+   Por: Victor Werneck
+
+11/06/2025
+-- ACBrNFComXmlWriter --
+[*] Correção no nome da constante e inclusão de uma nova constante.
+   Por: Italo Giurizzato Junior
+
+09/06/2025
+-- Diversos --
+[*] Ajustes necessários para deixar em conformidade com a versão 1.05 dos Schemas.
+  Por: Italo Giurizzato Junior
+
+06/06/2025
+-- ACBrNFComNotasFiscais --
+[+] Implementado os parâmetros: ManterPDFSalvo e sBCC no método: EnviarEmail.
+  Por: Mateus Brunelli/Italo Giurizzato Junior
+
+26/05/2025
+-- Diversos --
+[*] O campo cCredPres que antes era do tipo Integer agora é do tipo TcCredPres.
+  Por: Italo Giurizzato Junior
+
+21/05/2025
+-- Diversos --
+[*] Alteração visando usar a unit ACBrDFe.Conversao que contem os tipos e funções
+    da Reforma Tributária.
+  Por: Italo Giurizzato Junior
+
+20/05/2025
+[*] Ajustes necessários para deixar em conformidade com a versão 1.02 dos Schemas.
+  Por: Italo Giurizzato Junior
+
+29/04/2025
+-- ACBrNFComWebServices --
+[*] #TK-6785 - Adiciona chamada a rotina AjustarOpcoes no envio de eventos da NFCom.
+  Por: Diego Folieni
+
+28/04/2025
+[*] Ajustes necessários para deixar em conformidade com a versão 1.01a dos Schemas.
+  Por: Italo Giurizzato Junior
+
+16/04/2025
+-- ACBrNFComServicos --
+[*] Alteração na URL do QR-Code da NFCom da SEFAZ-MG.
+   Por: Eduardo Zambiazzi
+
+15/04/2025
+-- Diversos --
+[*] Ajustes necessários para deixar em conformidade com a NT2025/001 versão 1.01.
+  Por: Italo Giurizzato Junior
+
+11/04/2025
+-- Diversos --
+[*] #TK-6836: Ajustes necessários para deixar em conformidade com a NT2025/001.
+  Por: Italo Giurizzato Junior
+
+04/04/2025
+-- Diversos --
+[*] #TK-5814: Implementado as units: ACBrNFComIniReader e ACBrNFComIniWrite que
+    vão ser responsáveis por ler e gerar o arquivo INI.
+    Refatorado a função GetURLQRCode para que a mesma receba a classe TNFCom em 
+    vez de diversos parâmetros de entrada.
+    Implementado a propriedade de configuração: SalvarEvento (valor padrão False)
+    agora ao salvar o XML *-procEventoNFCom o componente vai checar o valor dessa 
+    propriedade.
+  Por: Italo Giurizzato Junior
+
+08/03/2025
+-- ACBrNFComClass/ACBrNFComXmlReader/ACBrNFComXmlWriter --
+[*] #TK-5814: Alteração visando contemplar a Reforma Tributária.
+  Por: Italo Giurizzato Junior
+
+27/02/2025
+-- ACBrNFComXmlWriter --
+[*] #TK-5814: Alteração visando contemplar a Reforma Tributária.
+  Por: Italo Giurizzato Junior
+
+15/02/2025
+-- ACBrNFComClass/ACBrNFComConsts --
+[+] Inclusão de novas contantes e ajustes nas novas classes para atender a Reforma Tributária.
+   Por: Italo Giurizzato Junior
+
+10/02/2025
+-- ACBrNFComClass --
+[+] Inclusão das novas classes para atender a Reforma Tributária.
+   Por: Italo Giurizzato Junior
+-- ACBrNFComServicos --
+[+] Incluído as URLs de produção da SEFAZ-MS.
+   Por: Italo Giurizzato Junior
+
+06/02/2025
+-- ACBrNFCom.DAEventoRLRetrato/ACBrNFCom.DANFComRLRetrato --
+[*] Ajustes para compilar/instalar no Delphi 7.
+   Por: Italo Giurizzato Junior
+
+13/01/2025
+-- ACBrNFComServicos --
+[+] Incluído as URLs de homologação da SEFAZ-MS.
+[*] Alteração na URL de consulta da NFCom da SEFAZ-MG.
+   Por: Italo Giurizzato Junior
+
+08/01/2025
+-- Diversos --
+[*] Ajustes na geração do XML de eventos para usar o ACBrXmlDocument.
+   Por: Italo Giurizzato Junior
+
+03/01/2025
+-- ACBrNFComNotasFiscais/ACBrNFComWebServices/ACBrNFComXmlReader/ACBrNFCom.DANFComRLRetrato --
+[-] Ajustes na montagem do XML protocolado e na leitura do mesmo.
+   Por: Italo Giurizzato Junior
+
+18/11/2024
+-- ACBrNFComXmlWriter --
+[-] Quando o ICMS for SN (Simples Nacional) gerar com o valor 90 para o CST.
+   Por: Italo Giurizzato Junior
+
+08/10/2024
+-- ACBrNFComServicos --
+[+] Incluído as URLs de homologação da SEFAZ-MG
+   Por: Italo Giurizzato Junior
+
+01/10/2024
+-- Diversos --
+[*] Ajustes necessários para utilizar a unit: ACBrDFeComum.Proc
+   Por: Italo Giurizzato Junior
+
+26/09/2024
+-- ACBrNFComWebServices --
+[*] Correção nos códigos dos status na leitura dos retornos da recepção e Eventos.
+   Por: Cleverton Martins
+
+12/09/2024
+-- ACBrNFComWebServices --
+[*] Ajustes na montagem do XML *-ProcEventoNFCom.xml
+   Por: Italo Giurizzato Junior
+
+12/07/2024
+-- ACBrNFComXmlWriter --
+[*] Possível solução para a geração correta da string do QR-Code.
+   Por: Diego Folieni/Italo Giurizzato Junior
+
+11/07/2024
+-- ACBrNFComNotasFiscais/ACBrNFComWebServices/ACBrNFComClass/ACBrNFComXmlReader/
+   ACBrNFComXmlWriter --
+[*] Alteração visando a leitura correta do XML.
+   Por: Italo Giurizzato Junior
+
+27/06/2024
+-- ACBrNFComXmlWriter --
+[*] Alteração na assinatura da função: ObterNomeArquivo.
+   Por: Italo Giurizzato Junior
+
+25/06/2024
+-- Diversos --
+[*] Implementação para deixar o componente em conformidade com a NT 2024/002.
+    Inclusão de novos campos.
+    Homologação: 01/07/2024 - Produção: 15/07/2024
+   Por: Italo Giurizzato Junior
+
+08/05/2024
+-- ACBrNFComNotasFiscais --
+[*] Reversão da alteração que visava o uso das configurações na geração do XML.
+   Por: Italo Giurizzato Junior
+-- ACBrNFComXmlWriter --
+[*] Comentado as linhas que usa os dados de configuração na geração do XML.
+   Por: Italo Giurizzato Junior
+
+02/04/2024
+-- Diversos --
+[*] Melhorias no código usando o FixInsight (ainda não ficou 100%).
+  Por: Italo Giurizzato Junior
+
+02/03/2024
+-- ACBrNFComXmlWriter --
+[*] Corrigido o tipo de conversão para a tag: cNF.
+  Por: Italo Giurizzato Junior
+
+01/03/2024
+-- ACBrNFComXmlReader --
+[*] Melhorias e correções na leitura do XML.
+  Por: Italo Giurizzato Junior
+
+27/02/2024
+-- ACBrNFComWebServices/ACBrNFComRetConsSit/ACBrNFComRetEnvEvento --
+[*] Removido o uso da função ACBrStr ao ler uma mensagem.
+    Deixado o ParseText somente com o primeiro parâmetro.
+  Por: Italo Giurizzato Junior
+
+23/02/2024
+-- ACBrNFComConversao --
+[*] Ajustes na função: DblToVersaoNFCom.
+  Por: Italo Giurizzato Junior
+
+20/02/2024
+-- ACBrNFComWebServices/ACBrNFComClass --
+[*] Pequenas correções e desativação da consulta ao recibo.
+  Por: Italo Giurizzato Junior
+
+14/02/2024
+-- ACBrNFComRetEnvEvento --
+[-] Corrigido a leitura do grupo Signature do retorno.
+  Por: Italo Giurizzato Junior
+
+09/02/2024
+-- Diversos --
+[*] Refactoring visando deixar de usar a unit pcnAuxiliar.
+  Por: Italo Giurizzato Junior
+
+02/02/2024
+-- Diversos --
+[*] Compatibilização com o D7 e outros ajustes.
+  Por: Italo Giurizzato Junior
+-- ACBrNFComConsStatServ/ACBrNFComRetConsStatServ --
+[*] Renoção das units acima, pois o componente vai usar as units respectivas 
+    que estão na pasta Comum.
+  Por: Italo Giurizzato Junior
+-- Diversos --
+[*] Refactoring visando deixar de usar a unit pcnConsts.
+  Por: Italo Giurizzato Junior
+
+23/01/2024
+-- Diversos --
+[*] A unit ACBrNFComConversao foi totalmente reescrita e as demais units ajustes
+    realizados por conta da nova codificação da unit de conversão.
+   Por: Italo Giurizzato Junior
+
+19/01/2024
+-- Diversos --
+[*] Realizado diversos ajustes em varias units, finalizado a rotina que faz a
+    leitura do arquivo INI, que é utilizado pela Lib e pelo Monitor.
+   Por: Italo Giurizzato Junior
+
+18/01/2024
+-- ACBrNFComClass, ACBrNFComNotasFiscais --
+[*] Ajuste do tipo da tag "cClass".
+[-] Correção geração do XML após assinatura.
+  Por: BigWings
+
+10/01/2024
+[+] Doação do componente para o Projeto ACBr (ainda não esta funcional).
+   Por: Italo Giurizzato Junior
+
