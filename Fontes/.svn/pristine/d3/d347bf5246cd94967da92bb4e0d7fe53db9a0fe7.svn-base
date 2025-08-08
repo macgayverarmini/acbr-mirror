@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit DeISS.GravarXml;
+unit ModernizacaoPublica.GravarXml;
 
 interface
 
@@ -42,55 +42,47 @@ uses
   ACBrNFSeXGravarXml_ABRASFv2;
 
 type
-  { TNFSeW_DeISS203 }
+  { TNFSeW_ModernizacaoPublica202 }
 
-  TNFSeW_DeISS203 = class(TNFSeW_ABRASFv2)
+  TNFSeW_ModernizacaoPublica202 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
 
-  public
-    function GerarXml: Boolean; Override;
+    procedure DefinirIDRps; override;
+
   end;
 
 implementation
 
 uses
-  ACBrNFSeXConversao;
+  ACBrUtil.Strings,
+  ACBrDFe.Conversao;
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     DeISS
+//     ModernizacaoPublica
 //==============================================================================
 
-{ TNFSeW_DeISS203 }
+{ TNFSeW_ModernizacaoPublica202 }
 
-procedure TNFSeW_DeISS203.Configuracao;
+procedure TNFSeW_ModernizacaoPublica202.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoAliq := tcDe2;
+  // a linha abaixo foi comentada para atender a cidade de Belford Roxo/RJ
+  // se outra cidade atendida pelo mesmo provedor exigir a presença da tag
+  // vai ser necessário mudar a forma de configurar.
 
-  NrOcorrValTotTrib := 1;
-  NrOcorrDescCond := 1;
-  NrOcorrDescIncond := 1;
-  NrOcorrValorDeducoes := 1;
-  NrOcorrValorPis := 1;
-  NrOcorrValorCofins := 1;
-  NrOcorrValorIr := 1;
-  NrOcorrValorCsll := 1;
-  NrOcorrValorInss := 1;
-  NrOcorrOutrasRet := 1;
-  NrOcorrCodigoPaisTomador := 1;
+//  NrOcorrAliquota := 1;
+
+  GerarIDRps := True;
 end;
 
-function TNFSeW_DeISS203.GerarXml: Boolean;
+procedure TNFSeW_ModernizacaoPublica202.DefinirIDRps;
 begin
-  if NFSe.Servico.Valores.IssRetido = stRetencao then
-    NrOcorrValorIss := 1
-  else
-    NrOcorrValorIss := -1;
-
-  Result := inherited GerarXml;
+  NFSe.InfID.ID := 'rps' + OnlyNumber(NFSe.IdentificacaoRps.Numero) +
+                    NFSe.IdentificacaoRps.Serie +
+                    FpAOwner.TipoRPSToStr(NFSe.IdentificacaoRps.Tipo);
 end;
 
 end.
