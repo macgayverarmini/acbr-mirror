@@ -32,29 +32,45 @@
 
 {$I ACBr.inc}
 
-unit Libre.LerXml;
+unit Libre.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXLerXml_ABRASFv2;
+  ACBrXmlBase,
+  ACBrNFSeXGravarXml_ABRASFv2;
 
 type
-  { TNFSeR_Libre204 }
+  { TNFSeW_Libre204 }
 
-  TNFSeR_Libre204 = class(TNFSeR_ABRASFv2)
+  TNFSeW_Libre204 = class(TNFSeW_ABRASFv2)
   protected
-
-  public
+    procedure Configuracao; override;
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
 //     Libre
 //==============================================================================
+
+{ TNFSeW_Libre204 }
+
+procedure TNFSeW_Libre204.Configuracao;
+begin
+  inherited Configuracao;
+
+  TagTomador := 'TomadorServico';
+
+  FormatoAliq := tcDe2;
+
+  NrOcorrCodigoPaisTomador := -1;
+end;
 
 end.

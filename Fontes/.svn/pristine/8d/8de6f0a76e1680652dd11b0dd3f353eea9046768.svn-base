@@ -32,44 +32,58 @@
 
 {$I ACBr.inc}
 
-unit Libre.GravarXml;
+unit Libre.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrXmlBase,
+  ACBrDFe.Conversao,
+  ACBrXmlDocument,
+  ACBrNFSeXLerXml_ABRASFv2;
 
 type
-  { TNFSeW_Libre204 }
+  { TNFSeR_Libre204 }
 
-  TNFSeW_Libre204 = class(TNFSeW_ABRASFv2)
+  TNFSeR_Libre204 = class(TNFSeR_ABRASFv2)
   protected
-    procedure Configuracao; override;
+    procedure LerPrestadorServico(const ANode: TACBrXmlNode); override;
+  public
 
   end;
 
 implementation
 
-uses
-  ACBrXmlBase;
-
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
 //     Libre
 //==============================================================================
 
-{ TNFSeW_Libre204 }
+{ TNFSeR_Libre204 }
 
-procedure TNFSeW_Libre204.Configuracao;
+procedure TNFSeR_Libre204.LerPrestadorServico(const ANode: TACBrXmlNode);
+var
+  AuxNode: TACBrXmlNode;
 begin
-  inherited Configuracao;
+  if not Assigned(ANode) then Exit;
 
-  TagTomador := 'TomadorServico';
+  AuxNode := ANode.Childrens.FindAnyNs('Prestador');
 
-  FormatoAliq := tcDe2;
+  if AuxNode <> nil then
+  begin
+    LerIdentificacaoPrestador(AuxNode);
 
-  NrOcorrCodigoPaisTomador := -1;
+    with NFSe.Prestador do
+    begin
+      RazaoSocial := ObterConteudo(AuxNode.Childrens.FindAnyNs('RazaoSocial'), tcStr);
+      RazaoSocial := StringReplace(RazaoSocial, '&amp;', '&', [rfReplaceAll]);
+      NomeFantasia := ObterConteudo(AuxNode.Childrens.FindAnyNs('NomeFantasia'), tcStr);
+    end;
+
+    LerEnderecoPrestadorServico(AuxNode, 'Endereco');
+    LerContatoPrestador(AuxNode);
+  end;
 end;
 
 end.
