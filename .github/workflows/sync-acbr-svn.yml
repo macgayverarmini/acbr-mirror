@@ -4,7 +4,7 @@ name: Sincronizar com SVN do ACBr
 on:
   # Executa a cada hora para manter o repositório atualizado
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 3 * * *'
   # Permite a execução manual do workflow a partir da aba "Actions" do GitHub
   workflow_dispatch:
 
