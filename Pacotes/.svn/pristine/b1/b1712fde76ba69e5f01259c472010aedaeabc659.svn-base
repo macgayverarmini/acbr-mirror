@@ -1,16 +1,17 @@
 {******************************************************************************}
-{ Projeto: Componentes ACBr - ACBrCTe                                          }
-{  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
-{ mentos de Automação Comercial utilizados no Brasil                           }
+{ Projeto: Componente ACBrBPe                                                  }
+{  Biblioteca multiplataforma de componentes Delphi para emissão de Bilhete de }
+{ Passagem eletrônica - BPe                                                    }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2008 Wemerson Souto                         }
+{                                       Daniel Simoes de Almeida               }
+{                                       André Ferreira de Moraes               }
 {                                                                              }
-{ Colaboradores nesse arquivo: Wemerson Souto                                  }
-{                              Daniel Simoes de Almeida                        }
-{                              André Ferreira de Moraes                        }
-{																               }
-{  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
-{ Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
+{ Colaboradores nesse arquivo:                                                 }
+{                                                                              }
+{  Você pode obter a última versão desse arquivo na pagina do Projeto ACBr     }
+{ Componentes localizado em http://www.sourceforge.net/projects/acbr           }
+{                                                                              }
 {                                                                              }
 {  Esta biblioteca é software livre; você pode redistribuí-la e/ou modificá-la }
 { sob os termos da Licença Pública Geral Menor do GNU conforme publicada pela  }
@@ -28,18 +29,11 @@
 { Você também pode obter uma copia da licença em:                              }
 { http://www.opensource.org/licenses/lgpl-license.php                          }
 {                                                                              }
-{ Daniel Simões de Almeida - daniel@projetoacbr.com.br - www.projetoacbr.com.br}
-{       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
+{ Daniel Simões de Almeida  -  daniel@djsystem.com.br  -  www.djsystem.com.br  }
+{              Praça Anita Costa, 34 - Tatuí - SP - 18270-410                  }
+{                                                                              }
 {******************************************************************************}
-
-{******************************************************************************
-|* Historico
-|*
-|* 11/08/2010: Itamar Luiz Bermond
-|*  - Inicio do desenvolvimento
-|*
-******************************************************************************}
-package ACBr_CTeDacteFR;
+package ACBr_BPeDabpeFR;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -66,7 +60,7 @@ package ACBr_CTeDacteFR;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'ACBr - DACTe em FastReport - (http://www.projetoacbr.com.br/)'}
+{$DESCRIPTION 'ACBr - DABPe em FastReport - (http://www.projetoacbr.com.br/)'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -97,9 +91,10 @@ requires
 {$IFDEF VER340} fs27, frx27, frxe27, frxDB27, dsnap, {$ENDIF} // Sydney
 {$IFDEF VER350} fs28, frx28, frxe28, frxDB28, dsnap, {$ENDIF} // Alexandria
 {$IFDEF VER360} fs29, frx29, frxe29, frxDB29, dsnap, {$ENDIF} // Athens
-  ACBr_CTe;
+{$IFDEF VER370} fs37, frx37, frxe37, frxDB37, dsnap, {$ENDIF} // Florence
+  ACBr_BPe;
 
 contains
-  ACBrCTeDACTEFR in '..\..\..\..\..\..\Fontes\ACBrDFe\ACBrCTe\DACTE\Fast\ACBrCTeDACTEFR.pas';
+  ACBrBPeDABPEFR in '..\..\..\..\..\..\Fontes\ACBrDFe\ACBrBPe\DABPE\Fast\ACBrBPeDABPEFR.pas';
 
 end.

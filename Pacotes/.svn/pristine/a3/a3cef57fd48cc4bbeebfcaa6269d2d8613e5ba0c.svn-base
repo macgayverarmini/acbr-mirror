@@ -1,17 +1,17 @@
 {******************************************************************************}
-{ Projeto: Componente ACBrBPe                                                  }
-{  Biblioteca multiplataforma de componentes Delphi para emissão de Bilhete de }
-{ Passagem eletrônica - BPe                                                    }
+{ Projeto: Componentes ACBr - ACBrGNRE                                         }
+{  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
+{ mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2008 Wemerson Souto                         }
-{                                       Daniel Simoes de Almeida               }
-{                                       André Ferreira de Moraes               }
+{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
 {                                                                              }
-{ Colaboradores nesse arquivo:                                                 }
+{ Colaboradores nesse arquivo: Claudemir Vitor Pereira                         }
+{                              Daniel Simoes de Almeida                        }
+{                              André Ferreira de Moraes                        }
+{                              Juliomar Marchetti                              }
 {                                                                              }
-{  Você pode obter a última versão desse arquivo na pagina do Projeto ACBr     }
-{ Componentes localizado em http://www.sourceforge.net/projects/acbr           }
-{                                                                              }
+{  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
+{ Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
 {                                                                              }
 {  Esta biblioteca é software livre; você pode redistribuí-la e/ou modificá-la }
 { sob os termos da Licença Pública Geral Menor do GNU conforme publicada pela  }
@@ -29,11 +29,17 @@
 { Você também pode obter uma copia da licença em:                              }
 { http://www.opensource.org/licenses/lgpl-license.php                          }
 {                                                                              }
-{ Daniel Simões de Almeida  -  daniel@djsystem.com.br  -  www.djsystem.com.br  }
-{              Praça Anita Costa, 34 - Tatuí - SP - 18270-410                  }
-{                                                                              }
+{ Daniel Simões de Almeida - daniel@projetoacbr.com.br - www.projetoacbr.com.br}
+{       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
-package ACBr_BPeDabpeFR;
+
+{******************************************************************************
+|* Historico
+|*
+|* 09/12/2013 - Claudemir Vitor Pereira
+|*  - Doação do componente para o Projeto ACBr
+******************************************************************************}
+package ACBr_GNREGuiaFR;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -60,7 +66,7 @@ package ACBr_BPeDabpeFR;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'ACBr - DABPe em FastReport - (http://www.projetoacbr.com.br/)'}
+{$DESCRIPTION 'ACBr - GNRE Impressão da Guia em FastReport - (http://www.projetoacbr.com.br/)'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -91,9 +97,11 @@ requires
 {$IFDEF VER340} fs27, frx27, frxe27, frxDB27, dsnap, {$ENDIF} // Sydney
 {$IFDEF VER350} fs28, frx28, frxe28, frxDB28, dsnap, {$ENDIF} // Alexandria
 {$IFDEF VER360} fs29, frx29, frxe29, frxDB29, dsnap, {$ENDIF} // Athens
-  ACBr_BPe;
+{$IFDEF VER370} fs37, frx37, frxe37, frxDB37, dsnap, {$ENDIF} // Florence
+  ACBr_GNRE;
 
 contains
-  ACBrBPeDABPEFR in '..\..\..\..\..\..\Fontes\ACBrDFe\ACBrBPe\DABPE\Fast\ACBrBPeDABPEFR.pas';
+  ACBrGNREGuiaFR in '..\..\..\..\..\..\Fontes\ACBrDFe\ACBrGNRE\GNRE\Fast\ACBrGNREGuiaFR.pas',
+  ACBrGNREGuiaFRDM in '..\..\..\..\..\..\Fontes\ACBrDFe\ACBrGNRE\GNRE\Fast\ACBrGNREGuiaFRDM.pas' {dmACBrGNREFR: TDataModule};
 
 end.
