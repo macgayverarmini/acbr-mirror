@@ -46,10 +46,14 @@ uses
   ACBrDFeConsts,
   pcnConversao,
   pcnSignature,
+//  ACBrDFeComum.SignatureClass,
   ACBrNFe.Consts,
   ACBrNFe.EventoClass,
+  ACBrNFe.Classes,
   ACBrBase,
+  ACBrJSON,
   ACBrXmlBase,
+  ACBrDFe.Conversao,
   ACBrXmlWriter,
   ACBrXmlDocument;
 
@@ -120,6 +124,18 @@ type
     function Gerar_Evento_ConciliacaoFinanceira(Idx: Integer): TACBrXmlNode;
     function Gerar_DetalhePagamento(Idx: Integer): TACBrXmlNodeArray;
     function Gerar_Evento_CancConciliacaoFinanceira(Idx: Integer): TACBrXmlNode;
+    // Reforma Tributária
+    function Gerar_Evento_CancelamentoGenerico(Idx: Integer): TACBrXmlNode;
+    function Gerar_Evento_PagIntegLibCredPresAdq(Idx: Integer): TACBrXmlNode;
+    function Gerar_Evento_SolicApropCredPres(Idx: Integer): TACBrXmlNode;
+    function Gerar_gCredPres(Idx: Integer): TACBrXmlNodeArray;
+    function Gerar_gIBS(gIBS: TgIBSgCBS): TACBrXmlNode;
+    function Gerar_gCBS(gCBS: TgIBSgCBS): TACBrXmlNode;
+    function Gerar_Evento_DestItemConsPessoal(Idx: Integer): TACBrXmlNode;
+    function Gerar_gConsumo(Idx: Integer): TACBrXmlNodeArray;
+    function Gerar_gControleEstoque(gControleEstoque: TgControleEstoque): TACBrXmlNode;
+    function Gerar_DFeReferenciado(DFeReferenciado: TDFeReferenciado): TACBrXmlNode;
+
   public
     constructor Create;
     destructor Destroy; override;
@@ -130,6 +146,7 @@ type
     function LerXMLFromString(const AXML: string): Boolean;
     function ObterNomeArquivo(tpEvento: TpcnTpEvento): string; overload;
     function LerFromIni(const AIniString: string; CCe: Boolean = True): Boolean;
+    function LerFromJSON(const AJSONString: string): Boolean;
 
     property idLote: Int64 read FidLote write FidLote;
     property Evento: TInfEventoCollection read FEvento write SetEvento;
@@ -948,6 +965,35 @@ begin
     teConcFinanceira: Result.AppendChild(Gerar_Evento_ConciliacaoFinanceira(Idx));
 
     teCancConcFinanceira: Result.AppendChild(Gerar_Evento_CancConciliacaoFinanceira(Idx));
+
+    // Reforma Tributária
+    teCancGenerico: Result.AppendChild(Gerar_Evento_CancelamentoGenerico(Idx));
+
+    tePagIntegLibCredPresAdq: Result.AppendChild(Gerar_Evento_PagIntegLibCredPresAdq(Idx));
+
+    teImporALCZFM: Result := nil;
+
+    tePerecPerdaRouboFurtoTranspContratFornec: Result :=nil;
+
+    teFornecNaoRealizPagAntec: Result := nil;
+
+    teSolicApropCredPres: Result.AppendChild(Gerar_Evento_SolicApropCredPres(Idx));
+
+    teDestItemConsPessoal: Result.AppendChild(Gerar_Evento_DestItemConsPessoal(Idx));
+
+    tePerecPerdaRouboFurtoTranspContratAqu: Result := nil;
+
+    teAceiteDebitoApuracaoNotaCredito: Result := nil;
+
+    teImobilizacaoItem: Result := nil;
+
+    teSolicApropCredCombustivel: Result := nil;
+
+    teSolicApropCredBensServicos: Result := nil;
+
+    teManifPedTransfCredIBSSucessao: Result := nil;
+
+    teManifPedTransfCredCBSSucessao: Result := nil;
   end;
 end;
 
@@ -1050,10 +1096,10 @@ begin
 
       for i := 0 to RetEventoNFe.InfEvento.detEvento.itemPedido.Count -1 do
       begin
-        with InfEvento.detEvento.itemPedido.New do //ALTERADO
+        with InfEvento.detEvento.itemPedido.New do
         begin
-           InfEvento.detEvento.itemPedido[i].numItem := RetEventoNFe.InfEvento.detEvento.itemPedido[i].numItem;
-           InfEvento.detEvento.itemPedido[i].qtdeItem := RetEventoNFe.InfEvento.detEvento.itemPedido[i].qtdeItem;
+          InfEvento.detEvento.itemPedido[i].numItem := RetEventoNFe.InfEvento.detEvento.itemPedido[i].numItem;
+          InfEvento.detEvento.itemPedido[i].qtdeItem := RetEventoNFe.InfEvento.detEvento.itemPedido[i].qtdeItem;
         end;
       end;
 
@@ -1088,20 +1134,20 @@ begin
 
       for i := 0 to RetEventoNFe.InfEvento.detEvento.detPag.Count -1 do
       begin
-        with InfEvento.detEvento.detPag.New do //ALTERADO
+        with InfEvento.detEvento.detPag.New do
         begin
-           InfEvento.detEvento.detPag[i].indPag := RetEventoNFe.InfEvento.detEvento.detPag[i].indPag;
-           InfEvento.detEvento.detPag[i].tPag := RetEventoNFe.InfEvento.detEvento.detPag[i].tPag;
-           InfEvento.detEvento.detPag[i].xPag := RetEventoNFe.InfEvento.detEvento.detPag[i].xPag;
-           InfEvento.detEvento.detPag[i].vPag := RetEventoNFe.InfEvento.detEvento.detPag[i].vPag;
-           InfEvento.detEvento.detPag[i].dPag := RetEventoNFe.InfEvento.detEvento.detPag[i].dPag;
-           InfEvento.detEvento.detPag[i].CNPJPag := RetEventoNFe.InfEvento.detEvento.detPag[i].CNPJPag;
-           InfEvento.detEvento.detPag[i].UFPag := RetEventoNFe.InfEvento.detEvento.detPag[i].UFPag;
-           InfEvento.detEvento.detPag[i].CNPJIF := RetEventoNFe.InfEvento.detEvento.detPag[i].CNPJIF;
-           InfEvento.detEvento.detPag[i].tBand := RetEventoNFe.InfEvento.detEvento.detPag[i].tBand;
-           InfEvento.detEvento.detPag[i].cAut := RetEventoNFe.InfEvento.detEvento.detPag[i].cAut;
-           InfEvento.detEvento.detPag[i].CNPJReceb := RetEventoNFe.InfEvento.detEvento.detPag[i].CNPJReceb;
-           InfEvento.detEvento.detPag[i].UFReceb := RetEventoNFe.InfEvento.detEvento.detPag[i].UFReceb;
+          InfEvento.detEvento.detPag[i].indPag := RetEventoNFe.InfEvento.detEvento.detPag[i].indPag;
+          InfEvento.detEvento.detPag[i].tPag := RetEventoNFe.InfEvento.detEvento.detPag[i].tPag;
+          InfEvento.detEvento.detPag[i].xPag := RetEventoNFe.InfEvento.detEvento.detPag[i].xPag;
+          InfEvento.detEvento.detPag[i].vPag := RetEventoNFe.InfEvento.detEvento.detPag[i].vPag;
+          InfEvento.detEvento.detPag[i].dPag := RetEventoNFe.InfEvento.detEvento.detPag[i].dPag;
+          InfEvento.detEvento.detPag[i].CNPJPag := RetEventoNFe.InfEvento.detEvento.detPag[i].CNPJPag;
+          InfEvento.detEvento.detPag[i].UFPag := RetEventoNFe.InfEvento.detEvento.detPag[i].UFPag;
+          InfEvento.detEvento.detPag[i].CNPJIF := RetEventoNFe.InfEvento.detEvento.detPag[i].CNPJIF;
+          InfEvento.detEvento.detPag[i].tBand := RetEventoNFe.InfEvento.detEvento.detPag[i].tBand;
+          InfEvento.detEvento.detPag[i].cAut := RetEventoNFe.InfEvento.detEvento.detPag[i].cAut;
+          InfEvento.detEvento.detPag[i].CNPJReceb := RetEventoNFe.InfEvento.detEvento.detPag[i].CNPJReceb;
+          InfEvento.detEvento.detPag[i].UFReceb := RetEventoNFe.InfEvento.detEvento.detPag[i].UFReceb;
         end;
       end;
 
@@ -1341,6 +1387,233 @@ begin
   end;
 end;
 
+function TEventoNFe.LerFromJSON(const AJSONString: string): Boolean;
+var
+  lJSONLido, lIdLoteStr: String;
+  lRootJSONObj, lEnvEventoJSONObj, lEventoJSONObj,lInfEventoJSONObj,
+  lDetEventoJSONObj, lAuxJSONObj: TACBrJSONObject;
+  lEventoJSONArray, lAuxJSONArray: TACBrJSONArray;
+  i, j: Integer;
+  Ok: Boolean;
+begin
+{$IFNDEF COMPILER23_UP}
+  Result := False;
+{$ENDIF}
+  lJSONLido := LerJSONArquivoOuString(AJSONString);
+
+  if not StringIsJSON(lJSONLido) then
+    raise Exception.Create('String JSON informada não é válida');
+
+  lRootJSONObj := TACBrJSONObject.Parse(lJSONLido);
+  try
+    if not Assigned(lRootJSONObj) then
+      raise Exception.Create('Objeto JSON incorreto ou inválido');
+
+    lEnvEventoJSONObj := lRootJSONObj.AsJSONObject['envEvento'];
+    if not Assigned(lEnvEventoJSONObj) then
+      raise Exception.Create('Objeto JSON incorreto. Chave "envEvento" não encontrada');
+
+    lEventoJSONArray := lEnvEventoJSONObj.AsJSONArray['evento'];
+    if not Assigned(lEventoJSONArray) then
+      raise Exception.Create('Objeto JSON incorreto. Chave "evento" não encontrada');
+
+    lIdLoteStr := lEnvEventoJSONObj.AsString['idLote'];
+    idLote := StrToInt64Def(lIdLoteStr, 0);
+
+    Evento.Clear;
+    for i := 0 to lEventoJSONArray.Count - 1 do
+    begin
+      lEventoJSONObj := lEventoJSONArray.ItemAsJSONObject[i];
+      if not Assigned(lEventoJSONObj) then
+        continue;
+
+      Versao := lEventoJSONObj.AsString['versao'];
+
+      lInfEventoJSONObj := lEventoJSONObj.AsJSONObject['infEvento'];
+      if not Assigned(lInfEventoJSONObj) then
+        continue;
+
+      Evento.New;
+      Evento[i].InfEvento.cOrgao := lInfEventoJSONObj.AsInteger['cOrgao'];
+      Evento[i].InfEvento.CNPJ := lInfEventoJSONObj.AsString['CNPJ'];
+      Evento[i].InfEvento.chNFe := lInfEventoJSONObj.AsString['chNFe'];
+      Evento[i].InfEvento.dhEvento := lInfEventoJSONObj.AsISODateTime['dhEvento'];
+      Evento[i].InfEvento.tpEvento := StrToTpEventoNFe(Ok, lInfEventoJSONObj.AsString['tpEvento']);
+      Evento[i].InfEvento.nSeqEvento := StrToIntDef(lInfEventoJSONObj.AsString['nSeqEvento'], 1);
+      Evento[i].InfEvento.versaoEvento :=  lInfEventoJSONObj.AsString['versaoEvento'];
+      if Trim(Evento[i].InfEvento.versaoEvento) = '' then
+        Evento[i].InfEvento.versaoEvento := '1.00';
+
+      lDetEventoJSONObj := lInfEventoJSONObj.AsJSONObject['detEvento'];
+      if not Assigned(lDetEventoJSONObj) then
+        continue;
+
+      //Comum a todos os eventos...
+      Evento[i].InfEvento.detEvento.versao := lDetEventoJSONObj.AsString['versao'];
+      Evento[i].InfEvento.detEvento.descEvento := lDetEventoJSONObj.AsString['descEvento'];
+      case Evento[i].InfEvento.tpEvento of
+        teCancelamento:
+          begin
+            Evento[i].InfEvento.detEvento.nProt := lDetEventoJSONObj.AsString['nProt'];
+            Evento[i].InfEvento.detEvento.xJust := lDetEventoJSONObj.AsString['xJust'];
+          end;
+        teCCe:
+          begin
+            Evento[i].InfEvento.detEvento.xCorrecao := lDetEventoJSONObj.AsString['xCorrecao'];
+            Evento[i].InfEvento.detEvento.xCondUso := lDetEventoJSONObj.AsString['xCondUso'];
+          end;
+        teComprEntregaNFe:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.tpAutor := StrToTipoAutor(Ok, lDetEventoJSONObj.AsString['tpAutor']);
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.dhEntrega := lDetEventoJSONObj.AsISODateTime['dhEntrega'];
+            Evento[i].InfEvento.detEvento.nDoc := lDetEventoJSONObj.AsString['nDoc'];
+            Evento[i].InfEvento.detEvento.xNome := lDetEventoJSONObj.AsString['xNome'];
+            Evento[i].InfEvento.detEvento.latGPS := lDetEventoJSONObj.AsFloat['latGPS'];
+            Evento[i].InfEvento.detEvento.longGPS := lDetEventoJSONObj.AsFloat['longGPS'];
+            Evento[i].InfEvento.detEvento.hashComprovante := lDetEventoJSONObj.AsString['hashComprovante'];
+            Evento[i].InfEvento.detEvento.dhHashComprovante := lDetEventoJSONObj.AsISODateTime['dhHashComprovante'];
+          end;
+        teCancComprEntregaNFe:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.tpAutor := StrToTipoAutor(Ok,lDetEventoJSONObj.AsString['tpAutor']);
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.nProtEvento := lDetEventoJSONObj.AsString['nProtEvento'];
+          end;
+        teEPEC:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.tpAutor := StrToTipoAutor(Ok, lDetEventoJSONObj.AsString['tpAutor']);
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.dhEmi := lDetEventoJSONObj.AsISODateTime['dhEmi'];
+            Evento[i].InfEvento.detEvento.tpNF := StrToTpNF(Ok, lDetEventoJSONObj.AsString['tpNF']);
+            Evento[i].InfEvento.detEvento.IE := lDetEventoJSONObj.AsString['IE'];
+            Evento[i].InfEvento.detEvento.vNF := lDetEventoJSONObj.AsFloat['vNF'];
+            Evento[i].InfEvento.detEvento.vICMS := lDetEventoJSONObj.AsFloat['vICMS'];
+            lAuxJSONObj := lDetEventoJSONObj.AsJSONObject['dest'];
+            if not Assigned(lAuxJSONObj) then
+              continue;
+
+            Evento[i].InfEvento.detEvento.dest.UF := lAuxJSONObj.AsString['UF'];
+            Evento[i].InfEvento.detEvento.dest.CNPJCPF := lAuxJSONObj.AsString['CNPJCPF'];
+            Evento[i].InfEvento.detEvento.dest.idEstrangeiro := lAuxJSONObj.AsString['idEstrangeiro'];
+            Evento[i].InfEvento.detEvento.dest.IE := lAuxJSONObj.AsString['IE'];
+            if (Evento[i].InfEvento.detEvento.vNF = 0) and (Evento[i].InfEvento.detEvento.vICMS = 0) then
+            begin
+              //NFe
+              Evento[i].InfEvento.detEvento.vNF := lAuxJSONObj.AsFloat['vNF'];
+              Evento[i].InfEvento.detEvento.vICMS := lAuxJSONObj.AsFloat['vICMS'];
+              Evento[i].InfEvento.detEvento.vST := lAuxJSONObj.AsFloat['vST'];
+            end;
+          end;
+        teManifDestDesconhecimento, teManifDestOperNaoRealizada:
+          begin
+            Evento[i].InfEvento.detEvento.xJust := lDetEventoJSONObj.AsString['xJust'];
+          end;
+        teCancSubst:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.tpAutor := StrToTipoAutor(Ok, lDetEventoJSONObj.AsString['tpAutor']);
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.xJust := lDetEventoJSONObj.AsString['xJust'];
+            Evento[i].InfEvento.detEvento.chNFeRef := lDetEventoJSONObj.AsString['chNFeRef'];
+          end;
+        teInsucessoEntregaNFe:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.dhTentativaEntrega := lDetEventoJSONObj.AsISODateTime['dhTentativaEntrega'];
+            Evento[i].InfEvento.detEvento.nTentativa := lDetEventoJSONObj.AsInteger['nTentativa'];
+            Evento[i].InfEvento.detEvento.tpMotivo := StrTotpMotivo(Ok, lDetEventoJSONObj.AsString['tpMotivo']);
+            Evento[i].InfEvento.detEvento.xJustMotivo := lDetEventoJSONObj.AsString['xJustMotivo'];
+            Evento[i].InfEvento.detEvento.latGPS := lDetEventoJSONObj.AsFloat['latGPS'];
+            Evento[i].InfEvento.detEvento.longGPS := lDetEventoJSONObj.AsFloat['longGPS'];
+            Evento[i].InfEvento.detEvento.hashTentativaEntrega := lDetEventoJSONObj.AsString['hashTentativaEntrega'];
+            Evento[i].InfEvento.detEvento.dhHashTentativaEntrega := lDetEventoJSONObj.AsISODateTime['dhHashTentativaEntrega'];
+          end;
+        teCancInsucessoEntregaNFe:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.nProtEvento := lDetEventoJSONobj.AsString['nProtEvento'];
+          end;
+        teConcFinanceira:
+          begin
+            lAuxJSONArray := lDetEventoJSONObj.AsJSONArray['detPag'];
+            if not Assigned(lAuxJSONArray) then
+              continue;
+            for j := 0 to lAuxJSONArray.Count - 1 do
+            begin
+              lAuxJSONObj := lAuxJSONArray.ItemAsJSONObject[j];
+              if not Assigned(lAuxJSONObj) then
+                continue;
+
+              Evento[i].InfEvento.detEvento.detPag.New;
+              Evento[i].InfEvento.detEvento.detPag[j].indPag := StrToIndpagEX(lAuxJSONObj.AsString['indPag']);
+              Evento[i].InfEvento.detEvento.detPag[j].tPag := StrToFormaPagamento(Ok, lAuxJSONObj.AsString['tPag']);
+              Evento[i].InfEvento.detEvento.detPag[j].xPag := lAuxJSONObj.AsString['xPag'];
+              Evento[i].InfEvento.detEvento.detPag[j].vPag := lAuxJSONObj.AsFloat['vPag'];
+              Evento[i].InfEvento.detEvento.detPag[j].dPag := lAuxJSONObj.AsISODate['dPag'];
+              Evento[i].InfEvento.detEvento.detPag[j].CNPJPag := lAuxJSONObj.AsString['CNPJPag'];
+              Evento[i].InfEvento.detEvento.detPag[j].UFPag := lAuxJSONObj.AsString['UFPag'];
+              Evento[i].InfEvento.detEvento.detPag[j].CNPJIF := lAuxJSONObj.AsString['CNPJIF'];
+              Evento[i].InfEvento.detEvento.detPag[j].tBand := StrToBandeiraCartao(Ok, lAuxJSONObj.AsString['tBand']);
+              Evento[i].InfEvento.detEvento.detPag[j].cAut := lAuxJSONObj.AsString['cAut'];
+              Evento[i].InfEvento.detEvento.detPag[j].CNPJReceb := lAuxJSONObj.AsString['CNPJReceb'];
+              Evento[i].InfEvento.detEvento.detPag[j].UFReceb := lAuxJSONObj.AsString['UFReceb'];
+            end;
+          end;
+         teCancConcFinanceira:
+          begin
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.nProtEvento := lDetEventoJSONobj.AsString['nProtEvento'];
+          end;
+        tePedProrrog1, tePedProrrog2:
+          begin
+            Evento[i].InfEvento.detEvento.nProt := lDetEventoJSONObj.AsString['nProt'];
+            lAuxJSONArray := lDetEventoJSONObj.AsJSONArray['itemPedido'];
+            if not Assigned(lAuxJSONArray) then
+              continue;
+            for j := 0 to lAuxJSONArray.Count - 1 do
+            begin
+              lAuxJSONObj := lAuxJSONArray.ItemAsJSONObject[j];
+              if not Assigned(lAuxJSONObj) then
+                continue;
+              Evento[i].InfEvento.detEvento.itemPedido.New;
+              Evento[i].InfEvento.detEvento.itemPedido[j].numItem := lAuxJSONObj.AsInteger['numItem'];
+              Evento[i].InfEvento.detEvento.itemPedido[j].qtdeItem := lAuxJSONObj.AsFloat['qtdeItem'];
+            end;
+          end;
+        teCanPedProrrog1, teCanPedProrrog2:
+          begin
+            Evento[i].InfEvento.detEvento.idPedidoCancelado := lDetEventoJSONObj.AsString['idPedidoCancelado'];
+            Evento[i].InfEvento.detEvento.nProt := lDetEventoJSONObj.AsString['nProt'];
+          end;
+        teAtorInteressadoNFe:
+          begin
+            Evento[i].InfEvento.detEvento.cOrgaoAutor := lDetEventoJSONObj.AsInteger['cOrgaoAutor'];
+            Evento[i].InfEvento.detEvento.tpAutor := StrToTipoAutor(Ok, lDetEventoJSONObj.AsString['tpAutor']);
+            Evento[i].InfEvento.detEvento.verAplic := lDetEventoJSONObj.AsString['verAplic'];
+            Evento[i].InfEvento.detEvento.tpAutorizacao := StrToAutorizacao(Ok, lDetEventoJSONObj.AsString['tpAutorizacao']);
+            Evento[i].InfEvento.detEvento.xCondUso := lDetEventoJSONObj.AsString['xCondUso'];
+
+            lAuxJSONObj := lDetEventoJSONObj.AsJSONObject['autXML'];
+            if not Assigned(lAuxJSONObj) then
+              continue;
+            Evento[i].InfEvento.detEvento.autXML.New;
+            Evento[i].InfEvento.detEvento.autXML[0].CNPJCPF := lAuxJSONObj.AsString['CNPJCPF'];
+          end;
+      end;
+    end;
+
+    Result := True;
+  finally
+    lRootJSONObj.Free;
+  end;
+end;
+
 { TInfEventoCollection }
 
 function TInfEventoCollection.Add: TInfEventoCollectionItem;
@@ -1384,6 +1657,218 @@ begin
   FRetInfEvento.Free;
 
   inherited;
+end;
+
+// Reforma Tributária
+function TEventoNFe.Gerar_Evento_CancelamentoGenerico(
+  Idx: Integer): TACBrXmlNode;
+begin
+  Result := CreateElement('detEvento');
+  Result.SetAttribute('versao', Versao);
+
+  Result.AppendChild(AddNode(tcStr, 'HP19', 'descEvento', 4, 60, 1,
+                                            Evento[Idx].FInfEvento.DescEvento));
+
+  Result.AppendChild(AddNode(tcInt, 'HP20', 'cOrgaoAutor', 1, 2, 1,
+                                 Evento[Idx].FInfEvento.detEvento.cOrgaoAutor));
+
+  Result.AppendChild(AddNode(tcStr, 'P21', 'verAplic', 1, 20, 1,
+                                    Evento[Idx].FInfEvento.detEvento.verAplic));
+
+  Result.AppendChild(AddNode(tcStr, 'HP22', 'tpEventoAut', 6, 6, 1,
+                                 Evento[Idx].FInfEvento.detEvento.tpEventoAut));
+
+  Result.AppendChild(AddNode(tcStr, 'HP23', 'nProtEvento', 15, 255, 1,
+                                 Evento[Idx].FInfEvento.detEvento.nProtEvento));
+end;
+
+function TEventoNFe.Gerar_Evento_PagIntegLibCredPresAdq(
+  Idx: Integer): TACBrXmlNode;
+begin
+  Result := CreateElement('detEvento');
+  Result.SetAttribute('versao', Versao);
+
+  Result.AppendChild(AddNode(tcStr, 'P19', 'descEvento', 4, 60, 1,
+                                            Evento[Idx].FInfEvento.DescEvento));
+
+  Result.AppendChild(AddNode(tcInt, 'HP20', 'cOrgaoAutor', 1, 2, 1,
+                                 Evento[Idx].FInfEvento.detEvento.cOrgaoAutor));
+
+  Result.AppendChild(AddNode(tcStr, 'HP21', 'tpAutor', 1, 1, 1,
+                     TipoAutorToStr(Evento[Idx].FInfEvento.detEvento.tpAutor)));
+
+  Result.AppendChild(AddNode(tcStr, 'P22', 'verAplic', 1, 20, 1,
+                                    Evento[Idx].FInfEvento.detEvento.verAplic));
+
+  Result.AppendChild(AddNode(tcStr, 'P23', 'indQuitacao', 1, 1, 1, '1'));
+end;
+
+function TEventoNFe.Gerar_Evento_SolicApropCredPres(Idx: Integer): TACBrXmlNode;
+var
+  nodeArray: TACBrXmlNodeArray;
+  i: Integer;
+begin
+  Result := CreateElement('detEvento');
+  Result.SetAttribute('versao', Versao);
+
+  Result.AppendChild(AddNode(tcStr, 'P19', 'descEvento', 4, 60, 1,
+                                            Evento[Idx].FInfEvento.DescEvento));
+
+  Result.AppendChild(AddNode(tcInt, 'HP20', 'cOrgaoAutor', 1, 2, 1,
+                                 Evento[Idx].FInfEvento.detEvento.cOrgaoAutor));
+
+  Result.AppendChild(AddNode(tcStr, 'HP21', 'tpAutor', 1, 1, 1,
+                     TipoAutorToStr(Evento[Idx].FInfEvento.detEvento.tpAutor)));
+
+  Result.AppendChild(AddNode(tcStr, 'P22', 'verAplic', 1, 20, 1,
+                                    Evento[Idx].FInfEvento.detEvento.verAplic));
+
+  nodeArray := Gerar_gCredPres(Idx);
+  if nodeArray <> nil then
+  begin
+    for i := 0 to Length(nodeArray) - 1 do
+    begin
+      Result.AppendChild(nodeArray[i]);
+    end;
+  end;
+end;
+
+function TEventoNFe.Gerar_gCredPres(Idx: Integer): TACBrXmlNodeArray;
+var
+  i: integer;
+begin
+  Result := nil;
+  SetLength(Result, Evento[Idx].FInfEvento.detEvento.gCredPres.Count);
+
+  for i := 0 to Evento[Idx].FInfEvento.detEvento.gCredPres.Count - 1 do
+  begin
+    Result[i] := CreateElement('gCredPres');
+    Result[i].SetAttribute('nItem',
+     intToStr(Evento[Idx].InfEvento.detEvento.gCredPres[i].nItem));
+
+    Result[i].AppendChild(AddNode(tcDe2, 'HP22', 'vBC', 1, 15, 1,
+                             Evento[Idx].InfEvento.detEvento.gCredPres[i].vBC));
+
+    if Evento[Idx].InfEvento.detEvento.gCredPres[i].gIBS.cCredPres <> cpNenhum then
+      Result[i].AppendChild(Gerar_gIBS(Evento[Idx].InfEvento.detEvento.gCredPres[i].gIBS));
+
+    if Evento[Idx].InfEvento.detEvento.gCredPres[i].gCBS.cCredPres <> cpNenhum then
+      Result[i].AppendChild(Gerar_gCBS(Evento[Idx].InfEvento.detEvento.gCredPres[i].gCBS));
+  end;
+
+  if Evento[Idx].FInfEvento.detEvento.gCredPres.Count > 990 then
+    wAlerta('#1', 'gCredPres', '', ERR_MSG_MAIOR_MAXIMO + '990');
+end;
+
+function TEventoNFe.Gerar_gIBS(gIBS: TgIBSgCBS): TACBrXmlNode;
+begin
+  Result := CreateElement('gIBS');
+
+  Result.AppendChild(AddNode(tcStr, 'HP27', 'cCredPres', 2, 2, 1,
+                                cCredPresToStr(gIBS.cCredPres), DSC_CCREDPRES));
+
+  Result.AppendChild(AddNode(tcDe2, 'HP28', 'pCredPres', 1, 7, 1,
+                                                               gIBS.pCredPres));
+
+  Result.AppendChild(AddNode(tcDe2, 'HP29', 'vCredPres', 1, 15, 1,
+                                                               gIBS.vCredPres));
+end;
+
+function TEventoNFe.Gerar_gCBS(gCBS: TgIBSgCBS): TACBrXmlNode;
+begin
+  Result := CreateElement('gCBS');
+
+  Result.AppendChild(AddNode(tcStr, 'HP27', 'cCredPres', 2, 2, 1,
+                                cCredPresToStr(gCBS.cCredPres), DSC_CCREDPRES));
+
+  Result.AppendChild(AddNode(tcDe2, 'HP28', 'pCredPres', 1, 7, 1,
+                                                               gCBS.pCredPres));
+
+  Result.AppendChild(AddNode(tcDe2, 'HP29', 'vCredPres', 1, 15, 1,
+                                                               gCBS.vCredPres));
+end;
+
+function TEventoNFe.Gerar_Evento_DestItemConsPessoal(
+  Idx: Integer): TACBrXmlNode;
+var
+  nodeArray: TACBrXmlNodeArray;
+  i: Integer;
+begin
+  Result := CreateElement('detEvento');
+  Result.SetAttribute('versao', Versao);
+
+  Result.AppendChild(AddNode(tcStr, 'P19', 'descEvento', 4, 60, 1,
+                                            Evento[Idx].FInfEvento.DescEvento));
+
+  Result.AppendChild(AddNode(tcInt, 'HP20', 'cOrgaoAutor', 1, 2, 1,
+                                 Evento[Idx].FInfEvento.detEvento.cOrgaoAutor));
+
+  Result.AppendChild(AddNode(tcStr, 'HP21', 'tpAutor', 1, 1, 1,
+                     TipoAutorToStr(Evento[Idx].FInfEvento.detEvento.tpAutor)));
+
+  Result.AppendChild(AddNode(tcStr, 'P22', 'verAplic', 1, 20, 1,
+                                    Evento[Idx].FInfEvento.detEvento.verAplic));
+
+  nodeArray := Gerar_gConsumo(Idx);
+  if nodeArray <> nil then
+  begin
+    for i := 0 to Length(nodeArray) - 1 do
+    begin
+      Result.AppendChild(nodeArray[i]);
+    end;
+  end;
+end;
+
+function TEventoNFe.Gerar_gConsumo(Idx: Integer): TACBrXmlNodeArray;
+var
+  i: integer;
+begin
+  Result := nil;
+  SetLength(Result, Evento[Idx].FInfEvento.detEvento.gConsumo.Count);
+
+  for i := 0 to Evento[Idx].FInfEvento.detEvento.gConsumo.Count - 1 do
+  begin
+    Result[i] := CreateElement('gConsumo');
+    Result[i].SetAttribute('nItem',
+     intToStr(Evento[Idx].InfEvento.detEvento.gConsumo[i].nItem));
+
+    Result[i].AppendChild(AddNode(tcDe2, 'HP25', 'vIBS', 1, 15, 1,
+                             Evento[Idx].InfEvento.detEvento.gConsumo[i].vIBS));
+
+    Result[i].AppendChild(AddNode(tcDe2, 'HP26', 'vCBS', 1, 15, 1,
+                             Evento[Idx].InfEvento.detEvento.gConsumo[i].vCBS));
+
+    Result[i].AppendChild(Gerar_gControleEstoque(Evento[Idx].InfEvento.detEvento.gConsumo[i].gControleEstoque));
+
+    Result[i].AppendChild(Gerar_DFeReferenciado(Evento[Idx].InfEvento.detEvento.gConsumo[i].DFeReferenciado));
+  end;
+
+  if Evento[Idx].FInfEvento.detEvento.gConsumo.Count > 990 then
+    wAlerta('#1', 'gConsumo', '', ERR_MSG_MAIOR_MAXIMO + '990');
+end;
+
+function TEventoNFe.Gerar_gControleEstoque(
+  gControleEstoque: TgControleEstoque): TACBrXmlNode;
+begin
+  Result := CreateElement('gControleEstoque');
+
+  Result.AppendChild(AddNode(tcDe4, 'HP28', 'qConsumo', 1, 15, 1,
+                                                    gControleEstoque.qConsumo));
+
+  Result.AppendChild(AddNode(tcStr, 'HP29', 'uConsumo', 1, 6, 1,
+                                                    gControleEstoque.uConsumo));
+end;
+
+function TEventoNFe.Gerar_DFeReferenciado(
+  DFeReferenciado: TDFeReferenciado): TACBrXmlNode;
+begin
+  Result := CreateElement('DFeReferenciado');
+
+  Result.AppendChild(AddNode(tcStr, 'HP31', 'chaveAcesso', 1, 44, 1,
+                                                  DFeReferenciado.chaveAcesso));
+
+  Result.AppendChild(AddNode(tcInt, 'HP32', 'nItem', 1, 3, 1,
+                                                        DFeReferenciado.nItem));
 end;
 
 end.
