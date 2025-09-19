@@ -42,6 +42,36 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+18/09/2025
+-- ACBrNFSeXLerXml/IPM.Provider --
+[*] Incluida a leitura do campo xPais na seção Servico e acrescentado a tag opcinal
+    no provedor IPM versão 2.04 na montagem do Soap para informar se é envio de teste 
+    ou não.
+   Por: Italo Giurizzato Junior
+-- Pronim.GravarXml --
+[*] #ACBr-8063 Alterado o operador lógico de and para or na condição que defini se
+    o valor de NrOcorrAliquota vai ser 1.
+   Por: Italo Giurizzato Junior
+-- IPM.Provider/IPM.GravarXml --
+[*] Alterações visando a geração no XML do RPS (versão 2 layout ABRASF) com o grupo
+    IBSCBS.
+   Por: Italo Giurizzato Junior
+-- IPM.LerXml --
+[*] #ACBr-8060 Alterado a quantidade de digitos do ItemListaServico de 5 para 4.
+   Por: Fabio Tellini
+-- ACBrNFSeXServicos --
+[*] #ACBr-8064 A cidade Belém/PA trocou de provedor, agora é DSF versão 2.03
+   Por: VFADev
+[*] #ACBr-8062 A cidade Tunapolis/SC trocou de provedor, agora é IPM versão 1.00
+   Por: Wesley Lamb/Lux.sistemas
+[*] #ACBr-8059 Alterado o Params das cidades de Sorriso e Nobres.
+[*] #ACBr-8061 Acrescentado o Params para a cidade de Rio Verde/GO.
+   Por: Diego Reckziegel
+-- Agili.GravarXml --
+[*] #ACBr-8059 Removido a linha que defini que a formatação do ItemListaServico,
+    não pode ter formatação, uma vez que cada cidade formata de uma forma diferente.
+   Por: Diego Reckziegel
+
 15/09/2025
 -- Giap.Provider --
 [*] #ACBr-8049 Corrigido a leitura do código de verificação e da data de emissão.
