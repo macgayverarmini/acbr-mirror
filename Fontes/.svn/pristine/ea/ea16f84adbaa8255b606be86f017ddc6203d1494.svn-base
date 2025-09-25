@@ -42,6 +42,25 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+24/09/2025
+-- Giap.GravarXml --
+[*] #ACBr-8089 Alteração visando respeitar a quebra de linha.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXGravarXml_ABRASFv2/SimplISS.GravarXml/SimplISS.LerXml/SimplISS.Provider --
+[*] #ACBr-8086 Alteração visando gerar o campo OutrasInformações no lugar esperado
+    pelo provedor (infelizmente não segue o padrão).
+   Por: Wesley Lamb/Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] #ACBr-8084 A cidade Paranatinga/MT trocou de provedor, agora é Agili.
+   Por: rizzotec
+[*] #ACBr-8087 Alterado as URLs da cidade Boa Esperança/MG, o provedor continua o mesmo.
+   Por: Vinício Rocha
+[*] #ACBr-8090 Alterado o Params da cidade Nobres.
+   Por: Diego Reckziegel
+-- EloTech.LerXml --
+[*] #ACBR-8097 - Substituída procedure LerINISecaoServicos pela LerINISecaoItens, sobrescrevendo o método padrão e corrigindo a geração dos itens de serviços em duplicidade - https://www.projetoacbr.com.br/forum/topic/85962-acbrlibnfse-ponta-grossa/
+    Por: Renato Rubinho
+
 22/09/2025
 -- SigISSWeb.Provider --
 [*] Ajuste para não salvar o XML com 2 encoding.
