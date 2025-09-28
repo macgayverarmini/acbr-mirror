@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -31,10 +31,10 @@
 {******************************************************************************}
 
 {******************************************************************************
-|* ACBrONE
+|* ACBrGTIN (Global Trade Item Number)
 |*
 |* PROPÓSITO: Registro de Alterações
-******************************************************************************}
+*******************************************************************************}
 
 Símbolo : Significado
 
@@ -42,75 +42,55 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
-
-05/04/2024
--- Diversos --
-[*] Refatoração de todo o componente.
+27/09/2025
+-- ACBrGTINConversao --
+[*] Comentado as funções referente ao Tipo de Ambiente.
+-- ACBrGTINRetConsultar --
+[*] Incluida a unit ACBrDFe.Conversao.
   Por: Italo Giurizzato Junior
 
-21/03/2024
--- ACBrONEWebServices --
-[*] Adiciona chamada a UTF8ToNativeString quando usa ParseText para corrigir problemas de conversão de acentuação
-Por: Diego Folieni
-
 23/02/2024
--- ACBrONEConversao --
-[*] Ajustes nas funções: DblToVersaoONE, VersaoONEToDbl.
+-- ACBrGTINConversao --
+[*] Ajustes na função: DblToVersaoGTIN
   Por: Italo Giurizzato Junior
 
 22/02/2024
--- Diversos --
-[*] Refactoring na unit pcnConversaoONE e a alteração do seu nome para
-    ACBrONEConversao. Ajustes nas demais units por conta da alteração
-    do nome da unit.
-[*] Remoção da unit pcnConversaoONE, pois agora esta sedo usada a nova unit
-    ACBrONEConversao.
-  Por: Italo Giurizzato Junior
-
-09/02/2024
--- Diversos --
-[*] Refactoring visando deixar de usar a unit pcnAuxiliar.
+-- ACBrGTINConversao --
+[*] Refactoring na unit ACBrGTINConversao.
   Por: Italo Giurizzato Junior
 
 01/02/2024
--- Diversos --
+-- ACBrGTINWebServices --
 [*] Refactoring visando deixar de usar a unit pcnConsts.
   Por: Italo Giurizzato Junior
 
-31/03/2023
--- Diversos --
-[+] Implementado a inclusão e alteração de equipamentos ao transmitir a leitura
-    de placas.
+06/04/2023
+-- ACBrGTINWebServices --
+[*] Formatado o NCM para 8 digitos, incluindo zeros a esquerda.
+   Por: Ademar DC/Italo Giurizzato Junior
+
+11/10/2022
+-- ACBrGTINReg -- 
+[*] Ajustes de propriedades ACBrGTIN
+    Por: Daniel Infocotidiano
+
+10/10/2022
+-- ACBrGTINReg / ACBrGTINConfiguracoes --
+[*] Correção Units ACBrGTIN
+    Por: Daniel Infocotidiano / Italo Giurizzato Junior / Panda / Antonio Carlos Junior
+
+07/10/2022
+-- ACBrGTINReg / ACBrGTINConfiguracoes --
+[*] Ajustes nas propriedades componente ACBrGTIN
+    Por Daniel Infocotidiano / Italo Giurizzato Junior / Antonio Carlos Junior
+
+07/07/2022
+-- ACBrGTINWebServices --
+[*] Alteração visando a leitura correta de produtos cuja descrição tem o caracter
+    "&".
+   Por: Datilas/Italo Giurizzato Junior
+
+Data 14/06/2022
+[+] Doação do componente ACBrGTIN para o Projeto ACBr
    Por: Italo Giurizzato Junior
-
-01/02/2023
--- Diversos --
-[+] Implementado a consulta por placa.
-   Por: Italo Giurizzato Junior
-
-29/03/2022
--- Diversos --
-[*] Remoção de Warnings e Hints.
-   Por: Waldir Paim
-
-21/12/2020
--- pcnRetRecepcaoLeitura --
-[+] Inclusão de um novo campo no retorno do envio da leitura.
-   Por: Italo Giurizzato Junior
-
-10/11/2020
--- Diversos --
-[+] Novo método de Consulta a Foto.
-   Por: Italo Giurizzato Junior
-
-22/07/2020
--- Diversos --
-[+] Acrescentado a unit pcnConsts em algumas units do componente.
-    Por conta da migração de algumas constantes de pcnGerador para
-    pcnConsts.
-   Por: Italo Jurisato Junior
-
-14/10/2019
-[+] Doação do componente para o Projeto ACBr
-   Por: Italo Jurisato Junior
 

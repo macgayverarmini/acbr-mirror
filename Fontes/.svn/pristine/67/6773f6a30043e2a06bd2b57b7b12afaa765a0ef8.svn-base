@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit ACBrONE.RetConsPlaca;
+unit ACBrONE.RetManutencaoEQP;
 
 interface
 
@@ -42,30 +42,15 @@ uses
    System.Generics.Collections, System.Generics.Defaults,
   {$ELSEIF DEFINED(DELPHICOMPILER16_UP)}
    System.Contnrs,
-  {$IfEnd}
+  {$IFEND}
   ACBrBase,
   ACBrXmlBase,
-  ACBrXmlDocument;
+  ACBrDFe.Conversao;
 
 type
-  TinfMDFeCollectionItem = class(TObject)
-  private
-    FchMDFe: string;
+  { TRetManutencaoEQP }
 
-  public
-    property chMDFe: string read FchMDFe write FchMDFe;
-  end;
-
-  TinfMDFeCollection = class(TACBrObjectList)
-  private
-    function GetItem(Index: Integer): TinfMDFeCollectionItem;
-    procedure SetItem(Index: Integer; Value: TinfMDFeCollectionItem);
-  public
-    function New: TinfMDFeCollectionItem;
-    property Items[Index: Integer]: TinfMDFeCollectionItem read GetItem write SetItem; default;
-  end;
-
-  TRetConsPlaca = class(TObject)
+  TRetManutencaoEQP = class(TObject)
   private
     Fversao: string;
     FtpAmb: TACBrTipoAmbiente;
@@ -73,28 +58,20 @@ type
     FcStat: Integer;
     FxMotivo: string;
     FdhResp: TDateTime;
-    FNSU: string;
-    FleituraComp: string;
-    FinfMDFe: TinfMDFeCollection;
+    FNSUMovto: string;
+    FXML: AnsiString;
     FXmlRetorno: string;
-
-    procedure SetinfMDFe(const Value: TinfMDFeCollection);
-    procedure Ler_retOneConsPorPlaca(ANode: TACBrXmlNode);
   public
-    constructor Create;
-    destructor Destroy; override;
+    function LerXml: Boolean;
 
-    function LerXml: boolean;
-
-    property versao: string           read Fversao      write Fversao;
-    property tpAmb: TACBrTipoAmbiente read FtpAmb       write FtpAmb;
-    property verAplic: string         read FverAplic    write FverAplic;
-    property cStat: Integer           read FcStat       write FcStat;
-    property xMotivo: string          read FxMotivo     write FxMotivo;
-    property dhResp: TDateTime        read FdhResp      write FdhResp;
-    property NSU: string              read FNSU         write FNSU;
-    property leituraComp: string      read FleituraComp write FleituraComp;
-    property infMDFe: TinfMDFeCollection read FinfMDFe  write SetinfMDFe;
+    property versao: string           read Fversao   write Fversao;
+    property tpAmb: TACBrTipoAmbiente read FtpAmb    write FtpAmb;
+    property verAplic: string         read FverAplic write FverAplic;
+    property cStat: Integer           read FcStat    write FcStat;
+    property xMotivo: string          read FxMotivo  write FxMotivo;
+    property dhResp: TDateTime        read FdhResp   write FdhResp;
+    property NSUMovto: string         read FNSUMovto write FNSUMovto;
+    property XML: AnsiString          read FXML      write FXML;
 
     property XmlRetorno: string read FXmlRetorno write FXmlRetorno;
   end;
@@ -102,26 +79,11 @@ type
 implementation
 
 uses
-  synacode,
-  ACBrUtil.FilesIO;
+  ACBrXmlDocument;
 
-{ TRetConsPlaca }
+{ TRetManutencaoEQP }
 
-constructor TRetConsPlaca.Create;
-begin
-  inherited Create;
-
-  FinfMDFe := TinfMDFeCollection.Create();
-end;
-
-destructor TRetConsPlaca.Destroy;
-begin
-  FinfMDFe.Free;
-
-  inherited;
-end;
-
-function TRetConsPlaca.LerXml: boolean;
+function TRetManutencaoEQP.LerXml: Boolean;
 var
   Document: TACBrXmlDocument;
   ANode: TACBrXmlNode;
@@ -142,8 +104,7 @@ begin
       cStat := ObterConteudoTag(ANode.Childrens.FindAnyNs('cStat'), tcInt);
       xMotivo := ObterConteudoTag(ANode.Childrens.FindAnyNs('xMotivo'), tcStr);
       dhResp := ObterConteudoTag(ANode.Childrens.FindAnyNs('dhResp'), tcDatHor);
-
-      Ler_retOneConsPorPlaca(ANode.Childrens.FindAnyNs('retOneConsPorPlaca'));
+      NSUMovto := ObterConteudoTag(ANode.Childrens.FindAnyNs('NSUMovto'), tcStr);
     end;
   finally
     Result := True;
@@ -151,63 +112,4 @@ begin
   end;
 end;
 
-procedure TRetConsPlaca.Ler_retOneConsPorPlaca(ANode: TACBrXmlNode);
-var
-  ANodeAux: TACBrXmlNode;
-  ANodes: TACBrXmlNodeArray;
-  auxStr: AnsiString;
-  i: Integer;
-begin
-  if not Assigned(ANode) then Exit;
-
-  ANodeAux := ANode.Childrens.FindAnyNs('loteDistLeitura');
-
-  if ANodeAux <> nil then
-  begin
-    ANodeAux := ANodeAux.Childrens.FindAnyNs('leituraCompactada');
-
-    if ANodeAux <> nil then
-    begin
-      NSU := ObterConteudoTag(ANodeAux.Attributes.Items['NSU']);
-      auxStr := ObterConteudoTag(ANodeAux.Childrens.FindAnyNs('leituraComp'), tcStr);
-
-      if auxStr <> '' then
-        leituraComp := UnZip(DecodeBase64(auxStr));
-
-      ANodes := ANodeAux.Childrens.FindAllAnyNs('infMDFe');
-
-      for i := 0 to Length(ANodes) - 1 do
-      begin
-        FinfMDFe.New;
-        FinfMDFe[i].chMDFe := ObterConteudoTag(ANodes[i].Childrens.FindAnyNs('chMDFe'), tcStr);
-      end;
-    end;
-  end;
-end;
-
-procedure TRetConsPlaca.SetinfMDFe(const Value: TinfMDFeCollection);
-begin
-  FinfMDFe := Value;
-end;
-
-{ TinfMDFeCollection }
-
-function TinfMDFeCollection.GetItem(Index: Integer): TinfMDFeCollectionItem;
-begin
-  Result := TinfMDFeCollectionItem(inherited Items[Index]);
-end;
-
-function TinfMDFeCollection.New: TinfMDFeCollectionItem;
-begin
-  Result := TinfMDFeCollectionItem.Create;
-  Add(Result);
-end;
-
-procedure TinfMDFeCollection.SetItem(Index: Integer;
-  Value: TinfMDFeCollectionItem);
-begin
-  inherited Items[Index] := Value;
-end;
-
 end.
-
