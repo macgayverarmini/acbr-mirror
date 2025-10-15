@@ -32,50 +32,70 @@
 
 {$I ACBr.inc}
 
-unit Thema.LerXml;
+unit Thema.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase, ACBrXmlDocument,
-  ACBrNFSeXLerXml_ABRASFv1;
+  ACBrXmlBase,
+  ACBrXmlDocument,
+  ACBrNFSeXConsts,
+  ACBrNFSeXGravarXml_ABRASFv1;
 
 type
-  { TNFSeR_Thema }
+  { TNFSeW_Thema }
 
-  TNFSeR_Thema = class(TNFSeR_ABRASFv1)
+  TNFSeW_Thema = class(TNFSeW_ABRASFv1)
   protected
+    procedure Configuracao; override;
 
-    procedure LerConstrucaoCivil(const ANode: TACBrXmlNode); override;
-  public
+    function GerarConstrucaoCivil: TACBrXmlNode; override;
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
 //     Thema
 //==============================================================================
 
-{ TNFSeR_Thema }
+{ TNFSeW_Thema }
 
-procedure TNFSeR_Thema.LerConstrucaoCivil(const ANode: TACBrXmlNode);
-var
-  AuxNode: TACBrXmlNode;
+procedure TNFSeW_Thema.Configuracao;
 begin
-  if not Assigned(ANode) then Exit;
+  inherited Configuracao;
 
-  AuxNode := ANode.Childrens.FindAnyNs('ContrucaoCivil');
+  NrOcorrAliquota := 1;
+  NrOcorrValorPis := 1;
+  NrOcorrValorCofins := 1;
+  NrOcorrValorInss := 1;
+  NrOcorrValorIr := 1;
+  NrOcorrValorCsll := 1;
+  NrOcorrValorIss := 1;
+  DivAliq100 := True;
 
-  if AuxNode <> nil then
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
+end;
+
+function TNFSeW_Thema.GerarConstrucaoCivil: TACBrXmlNode;
+begin
+  Result := nil;
+
+  if (NFSe.ConstrucaoCivil.CodigoObra <> '') then
   begin
-    with NFSe.ConstrucaoCivil do
-    begin
-      CodigoObra := ObterConteudo(AuxNode.Childrens.FindAnyNs('CodigoObra'), tcStr);
-      Art        := ObterConteudo(AuxNode.Childrens.FindAnyNs('Art'), tcStr);
-    end;
+    Result := CreateElement('ContrucaoCivil');
+
+    Result.AppendChild(AddNode(tcStr, '#51', 'CodigoObra', 1, 15, 1,
+                                   NFSe.ConstrucaoCivil.CodigoObra, DSC_COBRA));
+
+    Result.AppendChild(AddNode(tcStr, '#52', 'Art', 1, 15, 1,
+                                            NFSe.ConstrucaoCivil.Art, DSC_ART));
   end;
 end;
 

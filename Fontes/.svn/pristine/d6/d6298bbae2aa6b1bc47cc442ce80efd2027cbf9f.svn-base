@@ -32,68 +32,47 @@
 
 {$I ACBr.inc}
 
-unit Thema.GravarXml;
+unit Tributus.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
   ACBrXmlBase,
-  ACBrXmlDocument,
-  ACBrNFSeXConsts,
-  ACBrNFSeXGravarXml_ABRASFv1;
+  ACBrNFSeXGravarXml_ABRASFv2;
 
 type
-  { TNFSeW_Thema }
+  { TNFSeW_Tributus204 }
 
-  TNFSeW_Thema = class(TNFSeW_ABRASFv1)
+  TNFSeW_Tributus204 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
-
-    function GerarConstrucaoCivil: TACBrXmlNode; override;
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao;
+
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Thema
+//     Tributus
 //==============================================================================
 
-{ TNFSeW_Thema }
+{ TNFSeW_Tributus204 }
 
-procedure TNFSeW_Thema.Configuracao;
+procedure TNFSeW_Tributus204.Configuracao;
 begin
   inherited Configuracao;
 
-  NrOcorrAliquota := 1;
-  NrOcorrValorPis := 1;
-  NrOcorrValorCofins := 1;
-  NrOcorrValorInss := 1;
-  NrOcorrValorIr := 1;
-  NrOcorrValorCsll := 1;
-  NrOcorrValorIss := 1;
-  DivAliq100 := True;
+  FormatoAliq := tcDe2;
 
-  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
-    DivAliq100 := False;
-end;
+  NrOcorrCodigoPaisTomador := -1;
 
-function TNFSeW_Thema.GerarConstrucaoCivil: TACBrXmlNode;
-begin
-  Result := nil;
+  TagTomador := 'TomadorServico';
 
-  if (NFSe.ConstrucaoCivil.CodigoObra <> '') then
-  begin
-    Result := CreateElement('ContrucaoCivil');
-
-    Result.AppendChild(AddNode(tcStr, '#51', 'CodigoObra', 1, 15, 1,
-                                   NFSe.ConstrucaoCivil.CodigoObra, DSC_COBRA));
-
-    Result.AppendChild(AddNode(tcStr, '#52', 'Art', 1, 15, 1,
-                                            NFSe.ConstrucaoCivil.Art, DSC_ART));
-  end;
+  GerarIDRps := True;
 end;
 
 end.

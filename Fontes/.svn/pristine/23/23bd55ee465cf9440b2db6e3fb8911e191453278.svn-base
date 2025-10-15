@@ -32,44 +32,55 @@
 
 {$I ACBr.inc}
 
-unit Tributus.GravarXml;
+unit Thema.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrXmlBase, ACBrXmlDocument,
+  ACBrNFSeXLerXml_ABRASFv1;
 
 type
-  { TNFSeW_Tributus204 }
+  { TNFSeR_Thema }
 
-  TNFSeW_Tributus204 = class(TNFSeW_ABRASFv2)
+  TNFSeR_Thema = class(TNFSeR_ABRASFv1)
   protected
-    procedure Configuracao; override;
+
+    procedure LerConstrucaoCivil(const ANode: TACBrXmlNode); override;
+  public
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao;
+
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Tributus
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+//     Thema
 //==============================================================================
 
-{ TNFSeW_Tributus204 }
+{ TNFSeR_Thema }
 
-procedure TNFSeW_Tributus204.Configuracao;
+procedure TNFSeR_Thema.LerConstrucaoCivil(const ANode: TACBrXmlNode);
+var
+  AuxNode: TACBrXmlNode;
 begin
-  inherited Configuracao;
+  if not Assigned(ANode) then Exit;
 
-  FormatoAliq := tcDe2;
+  AuxNode := ANode.Childrens.FindAnyNs('ContrucaoCivil');
 
-  NrOcorrCodigoPaisTomador := -1;
-
-  TagTomador := 'TomadorServico';
-
-  GerarIDRps := True;
+  if AuxNode <> nil then
+  begin
+    with NFSe.ConstrucaoCivil do
+    begin
+      CodigoObra := ObterConteudo(AuxNode.Childrens.FindAnyNs('CodigoObra'), tcStr);
+      Art        := ObterConteudo(AuxNode.Childrens.FindAnyNs('Art'), tcStr);
+    end;
+  end;
 end;
 
 end.

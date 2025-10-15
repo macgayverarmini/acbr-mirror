@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -30,35 +30,50 @@
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
 
-{******************************************************************************
-|* ACBrNFComDANFComRL
-|*
-|* PROPÓSITO: Registro de Alterações
-******************************************************************************}
+{$I ACBr.inc}
 
-Símbolo : Significado
+unit TcheInfo.GravarXml;
 
-[+]     : Novo recurso
-[*]     : Recurso modificado/melhorado
-[-]     : Correção de Bug (assim esperamos)
+interface
 
-09/10/2025
--- ACBrNFCom.DANFComRLRetrato/ACBrNFComDANFComClass --
-[*] Ajustes para impressão correta de palavras acentuadas.
-[*] ajuste de quebra de linha
-[*] ajustes no grupo gfat
-   Por: marcoprodata / rev.: Alexandre de Paula
+uses
+  SysUtils, Classes, StrUtils,
+  ACBrXmlBase,
+  ACBrNFSeXGravarXml_ABRASFv2;
 
-25/09/2025
--- ACBrNFCom.DAEventoRLRetrato/ACBrNFCom.DANFComRLRetrato --
-[*] Ajustes para impressão correta de palavras acentuadas.
-   Por: Italo Giurizzato Junior
+type
+  { TNFSeW_TcheInfo204 }
 
-24/09/2025
--- ACBrNFCom.DANFComRLRetrato --
-[+] Acrescentado o QR-Code do Pix.
-   Por: Joemil
+  TNFSeW_TcheInfo204 = class(TNFSeW_ABRASFv2)
+  protected
+    procedure Configuracao; override;
 
-24/10/2024
-[+] Doação do componente para o Projeto ACBr.
-   Por: Italo Giurizzato Junior
+  end;
+
+implementation
+
+uses
+  ACBrDFe.Conversao;
+
+//==============================================================================
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+//     TcheInfo
+//==============================================================================
+
+{ TNFSeW_TcheInfo204 }
+
+procedure TNFSeW_TcheInfo204.Configuracao;
+begin
+  inherited Configuracao;
+
+  FormatoAliq := tcDe2;
+
+  NrOcorrInformacoesComplemetares := 0;
+
+  NrOcorrCodigoPaisServico := -1;
+  NrOcorrCodigoPaisTomador := -1;
+
+  TagTomador := 'TomadorServico';
+end;
+
+end.
