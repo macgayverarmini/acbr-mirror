@@ -1,6 +1,5 @@
-package ACBr_NFSeDanfseFR;
+package ACBr_FastReportComum;
 
-{$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -13,9 +12,9 @@ package ACBr_NFSeDanfseFR;
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION OFF}
-{$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$DEFINITIONINFO ON}
 {$SAFEDIVIDE OFF}
 {$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
@@ -25,13 +24,14 @@ package ACBr_NFSeDanfseFR;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'ACBr - DANFSe em FastReport - (http://www.projetoacbr.com.br/)'}
+{$DESCRIPTION 'ACBr - Utils FastReport - (http://www.projetoacbr.com.br/)'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
-  rtl,
-{$IFDEF VER140} fs6, frx6, frxe6, frxDB6, {$ENDIF} // D6
+  dbrtl,
+  dsnap,
+  {$IFDEF VER140} fs6, frx6, frxe6, frxDB6, {$ENDIF} // D6
 {$IFDEF VER150} fs7, frx7, frxe7, frxDB7, {$ENDIF} // D7
 {$IFDEF VER170} fs9, frx9, frxe9, frxDB9, {$ENDIF} // D2005
 {$IFDEF VER180}
@@ -57,9 +57,11 @@ requires
 {$IFDEF VER350} fs28, frx28, frxe28, frxDB28, dsnap, {$ENDIF} // Alexandria
 {$IFDEF VER360} fs29, frx29, frxe29, frxDB29, dsnap, {$ENDIF} // Athens
 {$IFDEF VER370} fs37, frx37, frxe37, frxDB37, dsnap, {$ENDIF} // Florence
-  ACBr_NFSe;
+  rtl,
+  vcl;
+
 
 contains
-  ACBrNFSeDANFSeFR in '..\..\..\..\..\..\Fontes\ACBrDFe\ACBrNFSe\DANFSE\Fast\ACBrNFSeDANFSeFR.pas';
+  ACBrUtil.FR in '..\..\..\Fontes\ACBrComum\ACBrUtil.FR.pas';
 
 end.
