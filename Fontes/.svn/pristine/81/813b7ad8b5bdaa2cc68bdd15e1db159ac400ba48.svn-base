@@ -3,9 +3,9 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
 {                                                                              }
-{ Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
+{ Colaboradores nesse arquivo:  Rafael Teno Dias                               }
 {                                                                              }
 {  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
 { Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
@@ -30,40 +30,93 @@
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
 
-{******************************************************************************
-|* ACBrNFComDANFComRL
-|*
-|* PROPÓSITO: Registro de Alterações
-******************************************************************************}
+{$I ACBr.inc}
 
-Símbolo : Significado
+unit ACBrXmlReader;
 
-[+]     : Novo recurso
-[*]     : Recurso modificado/melhorado
-[-]     : Correção de Bug (assim esperamos)
+interface
 
-14/10/2025
--- ACBrNFCom.DANFComRLRetrato --
-[*] Ajuste para imprimir o titulo do campo dentro do seu quadro.
-   Por: Italo Giurizzato Junior
+uses
+  Classes, SysUtils,
+  ACBrDFe.Conversao,
+  ACBrXmlBase,
+  ACBrXmlDocument;
 
-09/10/2025
--- ACBrNFCom.DANFComRLRetrato/ACBrNFComDANFComClass --
-[*] Ajustes para impressão correta de palavras acentuadas.
-[*] ajuste de quebra de linha
-[*] ajustes no grupo gfat
-   Por: marcoprodata / rev.: Alexandre de Paula
+type
+  { TACBrXmlReader }
+  TACBrXmlReader = class
+  private
+    FArquivo: String;
 
-25/09/2025
--- ACBrNFCom.DAEventoRLRetrato/ACBrNFCom.DANFComRLRetrato --
-[*] Ajustes para impressão correta de palavras acentuadas.
-   Por: Italo Giurizzato Junior
+  protected
+    FDocument: TACBrXmlDocument;
 
-24/09/2025
--- ACBrNFCom.DANFComRLRetrato --
-[+] Acrescentado o QR-Code do Pix.
-   Por: Joemil
+  public
+    constructor Create;
+    destructor Destroy; override;
 
-24/10/2024
-[+] Doação do componente para o Projeto ACBr.
-   Por: Italo Giurizzato Junior
+    function LerXml: Boolean; virtual; abstract;
+    function CarregarArquivo(const CaminhoArquivo: string): boolean; overload;
+    function CarregarArquivo(const Stream: TStream): boolean; overload;
+    function ObterCNPJCPF(const ANode: TACBrXmlNode): string;
+    function ObterConteudo(const ANode: TACBrXmlNode; const Tipo: TACBrTipoCampo): variant;
+
+    property Document: TACBrXmlDocument read FDocument;
+    property Arquivo: String read FArquivo write FArquivo;
+
+  end;
+
+implementation
+
+uses
+  synautil;
+
+{ TACBrXmlReader }
+constructor TACBrXmlReader.Create;
+begin
+  FDocument := TACBrXmlDocument.Create();
+end;
+
+destructor TACBrXmlReader.Destroy;
+begin
+  if FDocument <> nil then FDocument.Free;
+  inherited Destroy;
+end;
+
+function TACBrXmlReader.CarregarArquivo(const CaminhoArquivo: string): boolean;
+var
+  ArquivoXML: TStringList;
+begin
+  //NOTA: Carrega o arquivo xml na memória para posterior leitura de sua tag's
+  ArquivoXML := TStringList.Create;
+  try
+    ArquivoXML.LoadFromFile(CaminhoArquivo);
+    FArquivo := ArquivoXML.Text;
+    Result := True;
+  finally
+    ArquivoXML.Free;
+  end;
+end;
+
+function TACBrXmlReader.CarregarArquivo(const Stream: TStream): boolean;
+begin
+  //NOTA: Carrega o arquivo xml na memória para posterior leitura de sua tag's
+  FArquivo := ReadStrFromStream(Stream, Stream.Size);
+  Result := True;
+end;
+
+function TACBrXmlReader.ObterCNPJCPF(const ANode: TACBrXmlNode): string;
+begin
+  Result := ObterConteudo(ANode.Childrens.Find('CNPJ'), tcStr);
+  if Trim(Result) = '' then
+    Result := ObterConteudo(ANode.Childrens.Find('CPF'), tcStr);
+end;
+
+function TACBrXmlReader.ObterConteudo(const ANode: TACBrXmlNode;
+  const Tipo: TACBrTipoCampo): variant;
+begin
+  Result := ObterConteudoTag(ANode, Tipo);
+end;
+
+end.
+
