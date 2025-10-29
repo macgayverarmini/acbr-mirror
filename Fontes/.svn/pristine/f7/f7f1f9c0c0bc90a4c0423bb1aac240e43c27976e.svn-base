@@ -42,6 +42,16 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+28/10/2025
+-- ACBrNFSeXGravarXml/IPM.GravarXml/PadraoNacional.GravarXml --
+[*] Ajuste para gerar ou não o grupo IBSCBS uma vez que segundo os Schemas 1.01 o
+    grupo é opcional.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXLerXml_ABRASFv1/ACBrNFSeXLerXml_ABRASFv2 --
+[*] Ajuste para atribuir o valor snSubstituido ao campo NFSe.SituacaoNfse quando a 
+    nota foi substituida por outra.
+   Por: Italo Giurizzato Junior
+
 27/10/2025
 -- ACBrNFSeXServicos --
 [*] #ACBr-8295 A cidade Crissiumal/RS trocou a URL, o provedor continua o mesmo.
