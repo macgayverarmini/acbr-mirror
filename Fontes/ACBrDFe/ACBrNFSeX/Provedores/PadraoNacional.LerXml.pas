@@ -843,6 +843,7 @@ begin
     NFSe.Competencia := ObterConteudo(AuxNode.Childrens.FindAnyNs('dCompet'), tcDat);
     NFSe.tpEmit := StrTotpEmit(Ok, ObterConteudo(AuxNode.Childrens.FindAnyNs('tpEmit'), tcStr));
     NFSe.cMotivoEmisTI := StrTocMotivoEmisTI(ObterConteudo(AuxNode.Childrens.FindAnyNs('cMotivoEmisTI'), tcStr));
+    NFSe.cLocEmi := ObterConteudo(AuxNode.Childrens.FindAnyNs('cLocEmi'), tcStr);
 
     LerXMLSubstituicao(AuxNode);
     LerXMLPrestador(AuxNode);
@@ -944,6 +945,10 @@ begin
       idDocTec := ObterConteudo(AuxNode.Childrens.FindAnyNs('idDocTec'), tcStr);
       docRef := ObterConteudo(AuxNode.Childrens.FindAnyNs('docRef'), tcStr);
       xInfComp := ObterConteudo(AuxNode.Childrens.FindAnyNs('xInfComp'), tcStr);
+      xInfComp := StringReplace(xInfComp, FpQuebradeLinha,
+                                                    sLineBreak, [rfReplaceAll]);
+
+      NFSe.OutrasInformacoes := NFSe.OutrasInformacoes + sLineBreak + xInfComp;
     end;
   end;
 end;
