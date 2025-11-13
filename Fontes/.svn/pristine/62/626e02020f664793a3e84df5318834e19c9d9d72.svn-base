@@ -1,51 +1,42 @@
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//              PCN - Projeto Cooperar NFe                                    //
-//                                                                            //
-//   Descrição: Classes para geração/leitura dos arquivos xml da NFe          //
-//                                                                            //
-//        site: www.projetocooperar.org/nfe                                   //
-//       email: projetocooperar@zipmail.com.br                                //
-//       forum: http://br.groups.yahoo.com/group/projeto_cooperar_nfe/        //
-//     projeto: http://code.google.com/p/projetocooperar/                     //
-//         svn: http://projetocooperar.googlecode.com/svn/trunk/              //
-//                                                                            //
-// Coordenação: (c) 2009 - Paulo Casagrande                                   //
-//                                                                            //
-//      Equipe: Vide o arquivo leiame.txt na pasta raiz do projeto            //
-//                                                                            //
-//      Versão: Vide o arquivo leiame.txt na pasta raiz do projeto            //
-//                                                                            //
-//     Licença: GNU Lesser General Public License (GNU LGPL)                  //
-//                                                                            //
-//              - Este programa é software livre; você pode redistribuí-lo    //
-//              e/ou modificá-lo sob os termos da Licença Pública Geral GNU,  //
-//              conforme publicada pela Free Software Foundation; tanto a     //
-//              versão 2 da Licença como (a seu critério) qualquer versão     //
-//              mais nova.                                                    //
-//                                                                            //
-//              - Este programa é distribuído na expectativa de ser útil,     //
-//              mas SEM QUALQUER GARANTIA; sem mesmo a garantia implícita de  //
-//              COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM       //
-//              PARTICULAR. Consulte a Licença Pública Geral GNU para obter   //
-//              mais detalhes. Você deve ter recebido uma cópia da Licença    //
-//              Pública Geral GNU junto com este programa; se não, escreva    //
-//              para a Free Software Foundation, Inc., 59 Temple Place,       //
-//              Suite 330, Boston, MA - 02111-1307, USA ou consulte a         //
-//              licença oficial em http://www.gnu.org/licenses/gpl.txt        //
-//                                                                            //
-//    Nota (1): - Esta  licença  não  concede  o  direito  de  uso  do nome   //
-//              "PCN  -  Projeto  Cooperar  NFe", não  podendo o mesmo ser    //
-//              utilizado sem previa autorização.                             //
-//                                                                            //
-//    Nota (2): - O uso integral (ou parcial) das units do projeto esta       //
-//              condicionado a manutenção deste cabeçalho junto ao código     //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
+{******************************************************************************}
+{ Projeto: Componentes ACBr                                                    }
+{  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
+{ mentos de Automação Comercial utilizados no Brasil                           }
+{                                                                              }
+{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
+{                                                                              }
+{ Fork do projeto: PCN - Projeto Cooperar NFe                                  }
+{                  Coordenação: (c) 2009 - Paulo Casagrande                    }
+{                  http://projetocooperar.googlecode.com/svn/trunk/            }
+{                                                                              }
+{ Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
+{                                                                              }
+{  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
+{ Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
+{                                                                              }
+{  Esta biblioteca é software livre; você pode redistribuí-la e/ou modificá-la }
+{ sob os termos da Licença Pública Geral Menor do GNU conforme publicada pela  }
+{ Free Software Foundation; tanto a versão 2.1 da Licença, ou (a seu critério) }
+{ qualquer versão posterior.                                                   }
+{                                                                              }
+{  Esta biblioteca é distribuída na expectativa de que seja útil, porém, SEM   }
+{ NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU      }
+{ ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral Menor}
+{ do GNU para mais detalhes. (Arquivo LICENÇA.TXT ou LICENSE.TXT)              }
+{                                                                              }
+{  Você deve ter recebido uma cópia da Licença Pública Geral Menor do GNU junto}
+{ com esta biblioteca; se não, escreva para a Free Software Foundation, Inc.,  }
+{ no endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.          }
+{ Você também pode obter uma copia da licença em:                              }
+{ http://www.opensource.org/licenses/lgpl-license.php                          }
+{                                                                              }
+{ Daniel Simões de Almeida - daniel@projetoacbr.com.br - www.projetoacbr.com.br}
+{       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
+{******************************************************************************}
 
 {$I ACBr.inc}
 
-unit pcnConversaoNFe;
+unit ACBrNFe.Conversao;
 
 interface
 
@@ -295,12 +286,11 @@ const
     'URL-ConsultaNFCe');
 
 type
-  TpcnFinalidadeNFe = (fnNormal, fnComplementar, fnAjuste, fnDevolucao,
-    fnCredito, fnDebito);
+  TpcnFinalidadeNFe = (fnNormal, fnComplementar, fnAjuste, fnDevolucao);
 
 const
   TFinalidadeNFeArrayStrings: array[TpcnFinalidadeNFe] of string = ('1', '2', '3',
-    '4', '5', '6');
+    '4');
 
 type
   TpcnModeloDF = (moNFe, moNFCe);
@@ -525,7 +515,7 @@ function tpMotivoToStr(const t: TtpMotivo): string;
 function StrTotpMotivo(out ok: boolean; const s: string): TtpMotivo;
 
 function TtpGuiaToStr(const t: TtpGuia): string;
-function StrToTtpGuia(const s: String): TtpGuia;
+function StrToTtpGuia(const s: string): TtpGuia;
 
 // Reforma Tributária
 function tpNFDebitoToStr(const t: TtpNFDebito): string;
@@ -1266,14 +1256,14 @@ end;
 // B25 - Finalidade de emissão da NF-e *****************************************
 function FinNFeToStr(const t: TpcnFinalidadeNFe): String;
 begin
-  Result := EnumeradoToStr(t, ['1', '2', '3', '4', '5', '6'],
-    [fnNormal, fnComplementar, fnAjuste, fnDevolucao, fnCredito, fnDebito]);
+  Result := EnumeradoToStr(t, ['1', '2', '3', '4'],
+    [fnNormal, fnComplementar, fnAjuste, fnDevolucao]);
 end;
 
 function StrToFinNFe(out ok: Boolean; const s: String): TpcnFinalidadeNFe;
 begin
-  Result := StrToEnumerado(ok, s, ['1', '2', '3', '4', '5', '6'],
-    [fnNormal, fnComplementar, fnAjuste, fnDevolucao, fnCredito, fnDebito]);
+  Result := StrToEnumerado(ok, s, ['1', '2', '3', '4'],
+    [fnNormal, fnComplementar, fnAjuste, fnDevolucao]);
 end;
 
 function IndicadorNFeToStr(const t: TpcnIndicadorNFe): String;
@@ -1414,8 +1404,8 @@ begin
     3: result := '3-RESERVA DE DOMÍNIO';
     4: result := '4-PENHOR DE VEÍCULOS';
     9: result := '9-OUTRAS'
-    else
-      result := IntToStr(iRestricao)+ 'NÃO DEFINIDO' ;
+  else
+    result := IntToStr(iRestricao)+ 'NÃO DEFINIDO' ;
   end;
 end;
 
@@ -1438,8 +1428,8 @@ begin
     14: result := '14-VERDE';
     15: result := '15-VERMELHA';
     16: result := '16-FANTASIA'
-    else
-      result := sCorDENATRAN + 'NÃO DEFINIDA' ;
+  else
+    result := sCorDENATRAN + 'NÃO DEFINIDA' ;
   end;
 end;
 
@@ -1474,9 +1464,9 @@ begin
     5: result := '05-TRAÇÃO';
     6: result := '06-ESPECIAL';
     7: result := '07-COLEÇÃO'
-    else
+  else
       result := IntToStr(iEspecie ) + 'NÃO DEFINIDA' ;
-    end;
+  end;
 end;
 
 function VeiculosTipoStr( const iTipoVeic : Integer ): String;
@@ -1508,9 +1498,9 @@ begin
     24: result := '24-SIDE-CAR';
     25: result := '25-UTILITÁRIO';
     26: result := '26-MOTOR-CASA'
-    else
+  else
       result := IntToStr(iTipoVeic)+'NÃO DEFINIDO' ;
-    end;
+  end;
 end;
 
 function VeiculosCombustivelStr( const sTpComb : String ): String;
@@ -1543,9 +1533,9 @@ begin
     25: result := '25-CÉLULA COMBUSTÍVEL';
     26: result := '26-HÍBRIDO/GÁS NATURAL VEICULAR';
     27: result := '27-ETANOL/ELÉTRICO';
-    else
+  else
       result := stpComb +'NÃO DEFINIDO' ;
-    end;
+  end;
 end;
 
 function VeiculosTipoOperStr( const TtpOP : TpcnTipoOperacao ): String;
@@ -1556,7 +1546,6 @@ begin
     toVendaDireta         : result := '3-VENDA DIRETA';
     toOutros              : result := '0-OUTROS';
   end;
-
 end;
 
 function ArmaTipoStr( const TtpArma : TpcnTipoArma ): String;
@@ -1620,7 +1609,8 @@ end;
 
 function SchemaEventoToStr(const t: TSchemaNFe): String;
 begin
-  result := EnumeradoToStr(t, ['e110110', 'e110111', 'e110112', 'e110140',
+  result := EnumeradoToStr(t, ['e110001',
+                               'e110110', 'e110111', 'e110112', 'e110140',
                                'e111500', 'e111501', 'e111502', 'e111503',
                                'e210200', 'e210210', 'e210220', 'e210240',
                                'e110130', 'e110131', 'e110150', 'e110192',
@@ -1628,7 +1618,8 @@ begin
                                'e112120', 'e112130', 'e112140', 'e211110',
                                'e211120', 'e211124', 'e211128', 'e211130',
                                'e211140', 'e211150', 'e212110', 'e212120'],
-    [schEnvCCe, schcancNFe, schCancSubst, schEnvEPEC,
+    [schCancGenerico,
+     schEnvCCe, schcancNFe, schCancSubst, schEnvEPEC,
      schPedProrrog1, schPedProrrog2, schCanPedProrrog1, schCanPedProrrog2,
      schManifDestConfirmacao, schManifDestCiencia, schManifDestDesconhecimento,
      schManifDestOperNaoRealizada, schCompEntrega, schCancCompEntrega,
@@ -1725,7 +1716,7 @@ function StrToTtpGuia(const s: String): TtpGuia;
 var
   idx: TtpGuia;
 begin
-  for idx:= Low(TtpGuiaArrayStrings) to High(TtpGuiaArrayStrings)do
+  for idx:= Low(TtpGuiaArrayStrings) to High(TtpGuiaArrayStrings) do
   begin
     if(TtpGuiaArrayStrings[idx] = s)then
     begin
@@ -1746,7 +1737,7 @@ function StrTotpNFDebito(const s: string): TtpNFDebito;
 var
   idx: TtpNFDebito;
 begin
-  for idx:= Low(TtpNFDebitoArrayStrings) to High(TtpNFDebitoArrayStrings)do
+  for idx:= Low(TtpNFDebitoArrayStrings) to High(TtpNFDebitoArrayStrings) do
   begin
     if(TtpNFDebitoArrayStrings[idx] = s)then
     begin
@@ -1766,7 +1757,7 @@ function StrTotpNFCredito(const s: string): TtpNFCredito;
 var
   idx: TtpNFCredito;
 begin
-  for idx:= Low(TtpNFCreditoArrayStrings) to High(TtpNFCreditoArrayStrings)do
+  for idx:= Low(TtpNFCreditoArrayStrings) to High(TtpNFCreditoArrayStrings) do
   begin
     if(TtpNFCreditoArrayStrings[idx] = s)then
     begin
