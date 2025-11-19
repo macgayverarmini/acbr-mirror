@@ -32,46 +32,90 @@
 
 {$I ACBr.inc}
 
-unit Tecnos.LerXml;
+unit Tinus.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlDocument,
-  ACBrNFSeXLerXml_ABRASFv2;
+  ACBrNFSeXGravarXml_ABRASFv1,
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrDFe.Conversao,
+  ACBrNFSeXConversao,
+  ACBrXmlDocument;
 
 type
-  { TNFSeR_Tecnos201 }
+  { TNFSeW_Tinus }
 
-  TNFSeR_Tecnos201 = class(TNFSeR_ABRASFv2)
+  TNFSeW_Tinus = class(TNFSeW_ABRASFv1)
   protected
+    procedure Configuracao; override;
 
   public
-    function LerXmlNfse(const ANode: TACBrXmlNode): Boolean; override;
+    function GerarXml: Boolean; Override;
+
+  end;
+
+  { TNFSeW_Tinus203 }
+
+  TNFSeW_Tinus203 = class(TNFSeW_ABRASFv2)
+  protected
+    procedure Configuracao; override;
+
+    function GerarServico: TACBrXmlNode; override;
 
   end;
 
 implementation
 
-uses
-  ACBrNFSeXConversao;
-
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     Tecnos
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+//     Tinus
 //==============================================================================
 
-{ TNFSeR_Tecnos201 }
+{ TNFSeW_Tinus }
 
-function TNFSeR_Tecnos201.LerXmlNfse(const ANode: TACBrXmlNode): Boolean;
+procedure TNFSeW_Tinus.Configuracao;
 begin
-  Result := inherited LerXmlNfse(ANode);
+  inherited Configuracao;
 
+  DivAliq100 := True;
+
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
+
+  NrOcorrValorIss := 1;
+end;
+
+function TNFSeW_Tinus.GerarXml: Boolean;
+begin
   if NFSe.OptanteSimplesNacional = snSim then
-    NFSe.OptanteSimplesNacional := snNao
-  else
-    NFSe.OptanteSimplesNacional := snSim;
+  begin
+    NrOcorrAliquota := 1;
+    NrOcorrValorIss := -1;
+  end;
+
+  Result := inherited GerarXml;
+end;
+
+{ TNFSeW_Tinus203 }
+
+procedure TNFSeW_Tinus203.Configuracao;
+begin
+  inherited Configuracao;
+
+end;
+
+function TNFSeW_Tinus203.GerarServico: TACBrXmlNode;
+begin
+  Result := inherited GerarServico;
+
+  // Reforma Tributária
+  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
+     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
+     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
+     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
+    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
 end;
 
 end.
