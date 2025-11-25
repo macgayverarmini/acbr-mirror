@@ -42,6 +42,18 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+
+24/11/2025
+-- ACBrNFSeXConfiguracoes/ACBrNFSeXProviderBase/ACBrNFSeXProviderManager --
+-- ISSSaoPaulo.Provider/PadraoNacional.GravarXml/PadraoNacional.LerXml/PadraoNacional.Provider -
+[*] Ajustes visando atender os provedores que tem API própria: Betha, EL, Infisc, Pronim, Tiplan.
+    E o provedor ISSSaoPaulo que vai manter o layout usado mas modificado para atender a reforma
+    tributária.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Ajustes em algumas cidades visando a reforma tributária.
+   Por: Italo Giurizzato Junior
+
 21/11/2025
 -- IPM.GravarXml --
 [*] #ACBr-8387 Incluído linha para gerar o codigo_nbs no XML do RPS.
