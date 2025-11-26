@@ -43,6 +43,37 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+25/11/2025
+-- ACBrNFSeXClass/ACBrNFSeXGravarXml_ABRASFv2/ACBrNFSeXLerXml_ABRASFv2/DeISS.GravarXml --
+[*] #ACBr-8459 Implementado o campo TomadorSubstitutoTributario para determinar se o 
+    tomador é ou não é substituto tributário.
+   Por: Vinicius Jung - DSV Bremen/Italo Giurizzato Junior
+-- IPM.GravarXml -
+[*] #ACBr-8461 Alteração visando não gerar o grupo IBSCBS quando os campos não estiverem
+    alimentados.
+   Por: C4Dev
+-- Giss.GravarXml --
+[*] #ACBr-8466 Alteração visando não gerar a tag Alíquota.
+   Por: breno.silva
+-- ACBrNFSeXServicos --
+[*] #ACBr-8454 A cidade Santa Cecilia/SC mudou de versão e URL, o provedor continua o mesmo.
+   Por: lucasatz
+-- ACBrNFSeXConversao/PadraoNacional.GravarXml --
+[-] #ACBr-8465 Ajustes para não gerar Tributação Federal quando for MEI.
+   Por: Felipe baldin/Italo Giurizzato Junior
+-- ISSe.GravarXml --
+[-] #ACBr-8455 Ajustes para não ocorrer mais erro de validação ao gerar o XML com os novos
+    campos.
+   Por: Italo Giurizzato Junior
+-- IPM.GravarXml --
+[*] #ACBr-8454 Ajustes para gerar o XML com os novos campos da reforma tributária no
+    layout versão 2.04 da ABRASF.
+   Por: Italo Giurizzato Junior
+-- Infisc.GravarXml --
+[*] #ACBr-8443/8457 Ajustes para gerar o XML sem os novos campos da Reforma tributária em ambiente
+    de produção, somente em homologação.
+   Por: dna.automacao/TiagoTecchio
+
 24/11/2025
 -- ACBrNFSeXConfiguracoes/ACBrNFSeXProviderBase/ACBrNFSeXProviderManager --
 -- ISSSaoPaulo.Provider/PadraoNacional.GravarXml/PadraoNacional.LerXml/PadraoNacional.Provider -

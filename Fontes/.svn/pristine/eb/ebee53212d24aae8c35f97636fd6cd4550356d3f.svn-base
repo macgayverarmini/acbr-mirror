@@ -32,67 +32,70 @@
 
 {$I ACBr.inc}
 
-unit DeISS.GravarXml;
+unit ISSe.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrDFe.Conversao,
+  ACBrNFSeXConversao,
+  ACBrXmlDocument;
 
 type
-  { TNFSeW_DeISS203 }
+  { TNFSeW_ISSe201 }
 
-  TNFSeW_DeISS203 = class(TNFSeW_ABRASFv2)
+  TNFSeW_ISSe201 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
+    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
 
-  public
-    function GerarXml: Boolean; Override;
   end;
 
 implementation
 
-uses
-  ACBrDFe.Conversao,
-  ACBrNFSeXConversao;
-
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     DeISS
+//     ISSe
 //==============================================================================
 
-{ TNFSeW_DeISS203 }
+{ TNFSeW_ISSe201 }
 
-procedure TNFSeW_DeISS203.Configuracao;
+procedure TNFSeW_ISSe201.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoAliq := tcDe2;
-
-  NrOcorrValTotTrib := 1;
-  NrOcorrDescCond := 1;
-  NrOcorrDescIncond := 1;
-  NrOcorrValorDeducoes := 1;
+  NrOcorrCodigoNBS := 0;
+  NrOcorrDataPagamento := 0;
   NrOcorrValorPis := 1;
   NrOcorrValorCofins := 1;
+  NrOcorrValorInss := 1;
   NrOcorrValorIr := 1;
   NrOcorrValorCsll := 1;
-  NrOcorrValorInss := 1;
-  NrOcorrOutrasRet := 1;
-  NrOcorrCodigoPaisTomador := 1;
+  NrOcorrValorIss := 1;
+  NrOcorrValorISS := 1;
+  NrOcorrAliquota := 1;
+
+  NrOcorrDiscriminacao_1 := -1;
+  NrOcorrCodigoMunic_1 := -1;
+  NrOcorrDiscriminacao_2 := 1;
+  NrOcorrCodigoMunic_2 := 1;
+
+
+  FormatoItemListaServico := filsSemFormatacao;
 end;
 
-function TNFSeW_DeISS203.GerarXml: Boolean;
+function TNFSeW_ISSe201.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
 begin
-  if (NFSe.Servico.Valores.IssRetido = stRetencao) or
-     (NFSe.Prestador.Endereco.CodigoMunicipio <> IntToStr(NFSe.Servico.MunicipioIncidencia)) then
-    NrOcorrValorIss := 1
-  else
-    NrOcorrValorIss := -1;
+  Result := inherited GerarInfDeclaracaoPrestacaoServico;
 
-  Result := inherited GerarXml;
+  // Reforma Tributária
+  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
+     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
+     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
+     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
+    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
 end;
 
 end.
