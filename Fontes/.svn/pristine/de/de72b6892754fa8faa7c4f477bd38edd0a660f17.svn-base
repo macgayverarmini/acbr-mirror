@@ -117,6 +117,8 @@ type
   end;
 
   TACBrNFSeXWebservicePadraoNacionalSoap = class(TACBrNFSeXWebserviceSoap11)
+  private
+    function GetSubVersao: Integer;
   protected
 
   public
@@ -132,6 +134,8 @@ type
     }
 
     function TratarXmlRetornado(const aXML: string): string; override;
+
+    property SubVersao: Integer read GetSubVersao;
   end;
 
   TACBrNFSeProviderPadraoNacionalSoap = class (TACBrNFSeProviderPadraoNacional)
@@ -201,7 +205,7 @@ begin
 
   with ConfigGeral do
   begin
-    QuebradeLinha := '|';
+    QuebradeLinha := '\n';
     ModoEnvio := meUnitario;
     ConsultaLote := False;
     FormatoArqEnvio := tfaJson;
@@ -462,10 +466,8 @@ var
   i: Integer;
   AResumo: TNFSeResumoCollectionItem;
 
-  procedure LerNFSe(XmlCodificado: string);
+  procedure LerNFSe(NFSeXml: string);
   begin
-    NFSeXml := DeCompress(DecodeBase64(NFSeXml));
-
     DocumentXml := TACBrXmlDocument.Create;
 
     try
@@ -494,6 +496,7 @@ var
         begin
           NumeroNota := NumNFSe;
           Data := DataAut;
+          XmlRetorno := NFSeXml;
         end;
 
         ANota := TACBrNFSeX(FAOwner).NotasFiscais.FindByRps(NumDps);
@@ -544,7 +547,11 @@ begin
         AResumo.idNota := JSon.AsString['id'];
         AResumo.Link := JSon.AsString['chaveAcesso'];
 
-        NFSeXml := Document.AsString['XmlGZipB64'];
+        NFSeXml := JSon.AsString['xmlGZipB64'];
+
+        NFSeXml := DeCompress(DecodeBase64(NFSeXml));
+
+        AResumo.XmlRetorno := NFSeXml;
 
         if NFSeXml <> '' then
           LerNFSe(NFSeXml);
@@ -566,6 +573,8 @@ begin
 
         Response.Link := Document.AsString['chaveAcesso'];
         NFSeXml := Document.AsString['nfseXmlGZipB64'];
+
+        NFSeXml := DeCompress(DecodeBase64(NFSeXml));
 
         if NFSeXml <> '' then
           LerNFSe(NFSeXml);
@@ -1732,6 +1741,9 @@ end;
 
 function TACBrNFSeXWebservicePadraoNacional.TratarXmlRetornado(
   const aXML: string): string;
+var
+  lJSON, lErroJSON: TACBrJSONObject;
+  lJSONArray: TACBrJSONArray;
 begin
   Result := inherited TratarXmlRetornado(aXML);
 
@@ -1741,22 +1753,37 @@ begin
 
     if not StringIsJSON(Result) then
     begin
-      Result := '{' +
-                  '"tipoAmbiente": "",' +
-                  '"versaoAplicativo": "",' +
-                  '"dataHoraProcessamento": "",' +
-                  '"idDps": "",' +
-                  '"chaveAcesso": "",' +
-                  '"nfseXmlGZipB64": "",' +
-                  '"erros": [' +
-                   '{'  +
-                   '"mensagem": "' + Result + '",' +
-                    '"codigo": "E9999",' +
-                    '"descricao": "' + Result + '",' +
-                    '"complemento": ""' +
-                    '}' +
-                    ']' +
-                '}';
+      lJSON := TACBrJSONObject.Create;
+      try
+        lJSONArray := TACBrJSONArray.Create;
+        try
+          lErroJSON := TACBrJSONObject.Create;
+          try
+            lJSON.AddPair('tipoAmbiente', EmptyStr);
+            lJSON.AddPair('versaoAplicativo', EmptyStr);
+            lJSON.AddPair('dataHoraProcessamento', EmptyStr);
+            lJSON.AddPair('idDps', EmptyStr);
+            lJSON.AddPair('chaveAcesso', EmptyStr);
+            lJSON.AddPair('nfseXmlGZipB64', EmptyStr);
+
+            lErroJSON.AddPair('mensagem', EmptyStr);
+            lErroJSON.AddPair('codigo', 'E9999');
+            lErroJSON.AddPair('descricao', Result);
+            lErroJSON.AddPair('complemento', EmptyStr);
+
+            lJSONArray.AddElementJSON(lErroJSON);
+            lJSON.AddPair('erros', lJSONArray, False);
+
+            Result := lJSON.ToJSON;
+          finally
+            //lErroJSON.Free;
+          end;
+        finally
+          //lJSONArray.Free;
+        end;
+      finally
+        lJSON.Free;
+      end;
     end
   end;
 end;
@@ -1980,6 +2007,11 @@ end;
 
 { TACBrNFSeXWebservicePadraoNacionalSoap }
 
+function TACBrNFSeXWebservicePadraoNacionalSoap.GetSubVersao: Integer;
+begin
+  Result := StrToIntDef(TACBrNFSeX(FPDFeOwner).Provider.ConfigGeral.Params.ValorParametro('SubVersao'), 0);
+end;
+
 function TACBrNFSeXWebservicePadraoNacionalSoap.GerarNFSe(const ACabecalho,
   AMSG: string): string;
 var
@@ -1987,20 +2019,36 @@ var
 begin
   FPMsgOrig := AMSG;
 
-  Request := RemoverDeclaracaoXML(AMSG);
+  case SubVersao of
+    0: begin
+         Request := RemoverDeclaracaoXML(AMSG);
 
-  Request := RetornarConteudoEntre(Request,
-   '<dps:DPS xmlns:dps="http://www.sped.fazenda.gov.br/nfse" versao="1.01">',
-   '</dps:DPS>', False);
+         Request := RetornarConteudoEntre(Request,
+           '<dps:DPS xmlns:dps="http://www.sped.fazenda.gov.br/nfse" versao="1.01">',
+           '</dps:DPS>', False);
 
-  Request := '<dps:RecepcionarDpsEnvio xmlns:dps="http://www.betha.com.br/e-nota-dps">' +
-               '<dps:DPS versao="1.0">' +
-                  Request +
-               '</dps:DPS>' +
-             '</dps:RecepcionarDpsEnvio>';
+         Request := '<dps:RecepcionarDpsEnvio xmlns:dps="http://www.betha.com.br/e-nota-dps">' +
+                      '<dps:DPS versao="1.0">' +
+                         Request +
+                      '</dps:DPS>' +
+                    '</dps:RecepcionarDpsEnvio>';
 
-  Result := Executar('http://www.betha.com.br/e-nota-dps-service/RecepcionarDps',
-    Request, [], []);
+         Result := Executar('http://www.betha.com.br/e-nota-dps-service/RecepcionarDps',
+           Request, [], []);
+       end;
+
+    1: begin
+         Request := RemoverDeclaracaoXML(AMSG);
+
+         Request := '<nfse:NotaFiscalNacionalGerar>' +
+                      '<xml>' + IncluirCDATA(Request) + '</xml>' +
+                    '</nfse:NotaFiscalNacionalGerar>';
+
+         Result := Executar('', Request, ['return'],
+           ['xmlns:nfse="http://webservices.sil.com/"']);
+       end;
+  end;
+
 end;
 
 function TACBrNFSeXWebservicePadraoNacionalSoap.TratarXmlRetornado(
