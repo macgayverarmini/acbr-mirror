@@ -32,64 +32,89 @@
 
 {$I ACBr.inc}
 
-unit ISSNet.LerXml;
+unit WebISS.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXLerXml_ABRASFv1, ACBrNFSeXLerXml_ABRASFv2;
+  ACBrDFe.Conversao,
+  ACBrNFSeXConversao,
+  ACBrNFSeXGravarXml_ABRASFv1,
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrXmlDocument;
+
 
 type
-  { TNFSeR_ISSNet }
+  { TNFSeW_WebISS }
 
-  TNFSeR_ISSNet = class(TNFSeR_ABRASFv1)
+  TNFSeW_WebISS = class(TNFSeW_ABRASFv1)
   protected
-
-    function NormatizarXml(const aXml: string): string; override;
-  public
+    procedure Configuracao; override;
 
   end;
 
-  { TNFSeR_ISSNet204 }
+  { TNFSeW_WebISS202 }
 
-  TNFSeR_ISSNet204 = class(TNFSeR_ABRASFv2)
+  TNFSeW_WebISS202 = class(TNFSeW_ABRASFv2)
   protected
+    procedure Configuracao; override;
 
-    function NormatizarXml(const aXml: string): string; override;
+    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
+
   public
-
+    function GerarXml: Boolean; Override;
   end;
 
 implementation
 
-uses
-  ACBrXmlBase,
-  ACBrUtil.Strings;
-
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     ISSNet
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+//     WebISS
 //==============================================================================
 
-{ TNFSeR_ISSNet }
+{ TNFSeW_WebISS }
 
-function TNFSeR_ISSNet.NormatizarXml(const aXml: string): string;
+procedure TNFSeW_WebISS.Configuracao;
 begin
-  Result := inherited NormatizarXml(aXml);
+  inherited Configuracao;
 
-  Result := RemoverPrefixosDesnecessarios(Result);
-  Result := RemoverCaracteresDesnecessarios(Result);
+  DivAliq100 := True;
+
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
+
+  FormatoItemListaServico := filsSemFormatacao;
+  NrOcorrAliquota := 1;
 end;
 
-{ TNFSeR_ISSNet204 }
+{ TNFSeW_WebISS202 }
 
-function TNFSeR_ISSNet204.NormatizarXml(const aXml: string): string;
+procedure TNFSeW_WebISS202.Configuracao;
 begin
-  Result := inherited NormatizarXml(aXml);
+  inherited Configuracao;
 
-  Result := RemoverPrefixosDesnecessarios(Result);
-  Result := RemoverCaracteresDesnecessarios(Result);
+  FormatoItemListaServico := filsSemFormatacao;
+end;
+
+function TNFSeW_WebISS202.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
+begin
+  Result := inherited GerarInfDeclaracaoPrestacaoServico;
+
+  // Reforma Tributária
+  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
+     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
+     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
+     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
+    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
+end;
+
+function TNFSeW_WebISS202.GerarXml: Boolean;
+begin
+  if NFSe.OptanteSimplesNacional = snSim then
+    NrOcorrAliquota := 1;
+
+  Result := inherited GerarXml;
 end;
 
 end.
