@@ -42,6 +42,15 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+
+05/12/2025
+-- ACBrNFSeXLerXml_ABRASFv2/WebISS.GravarXml/WebISS.LerXml --
+[*] ACBR-8538 - Ajustes para gerar a tag CodigoNbs e a leitura do grupo IBSCBS.
+   Por: Tiago Tecchio/Italo Giurizzato Junior
+-- ACBrNFSeXClass/ACBrNFSeXLerXml/SigISSWeb.GravarXml --
+[+] ACBR-8497 - Implementado os novos campos para atender a reforma tributária.
+   Por: Italo Giurizzato Junior
+
 04/12/2025
 -- ACBrNFSeXServicos --
 [*] A cidade Ribeirão Pires/SP mudou de provedor, agora é Giss
