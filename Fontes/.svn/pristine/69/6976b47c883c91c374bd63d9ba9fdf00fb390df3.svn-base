@@ -43,6 +43,31 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+08/12/2025
+-- EL.GravarXml --
+[-] Correção para evitar erro de validação.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXLerXml --
+[-] Correção para evitar loop infinito.
+   Por: Italo Giurizzato Junior
+-- Pronim.Provider --
+[+] ACBR-8541 - Implementado a Consulta ao DPS por numero e serie do mesmo.
+    Consulta exclusiva para o provedor Pronim - API Própria.
+   Por: Italo Giurizzato Junior
+-- PadraoNacional.GravarXml --
+[*] ACBR-8551 - Alterado a condição para gerar o grupo comExt, pois o valor do serviço pode ser zero.
+   Por: Leonardo Gomes
+-- ISSSaoPaulo.Provider --
+[*] ACBR-8550 - Se não tem Intermediário não é necessário incluir na assinatura adicional.
+   Por: Leonardo Gomes
+-- ACBrNFSeXClass/Tecnos.GravarXml --
+[*] ACBR-8458 - Alterações para atender o provedor Tecnos no que se refere a Reforma Tributária.
+   Por: Italo Giurizzato Junior
+-- Diversos --
+[*] ACBR-8508/8520 - Alterações em diversas units para atender o provedor Publica no 
+    que se refere a Reforma Tributária.
+   Por: Italo Giurizzato Junior
+
 05/12/2025
 -- ACBrNFSeXLerXml_ABRASFv2/WebISS.GravarXml/WebISS.LerXml --
 [*] ACBR-8538 - Ajustes para gerar a tag CodigoNbs e a leitura do grupo IBSCBS.

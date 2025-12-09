@@ -1080,6 +1080,7 @@ begin
         Aliquota := StringToFloatDef(AINIRec.ReadString(sSecao, 'Aliquota', ''), 0);
         Valor := StringToFloatDef(sFim, 0);
       end;
+
       Inc(i);
     end;
 
@@ -1804,6 +1805,8 @@ begin
       break;
 
     gRefNFSe.New.refNFSe := sFim;
+
+    inc(i);
   end;
 end;
 
@@ -1824,6 +1827,9 @@ begin
     Dest.IE := AINIRec.ReadString(sSecao, 'IE', '');
     Dest.IM := AINIRec.ReadString(sSecao, 'IM', '');
     Dest.xPais := AINIRec.ReadString(sSecao, 'xPais', '');
+
+    // Incluido para atender o provedor Publica
+    Dest.TipoServico := AINIRec.ReadString(sSecao, 'TipoServico', '');
 
     Dest.ender.endNac.CEP := AINIRec.ReadString(sSecao, 'CEP', '');
     Dest.ender.endNac.cMun := AINIRec.ReadInteger(sSecao, 'cMun', 0);
@@ -1914,6 +1920,8 @@ begin
       xTpReeRepRes := AINIRec.ReadString(sSecao, 'xTpReeRepRes', '');
       vlrReeRepRes := StringToFloatDef(AINIRec.ReadString(sSecao, 'vlrReeRepRes', ''), 0);
     end;
+
+    inc(i);
   end;
 end;
 
