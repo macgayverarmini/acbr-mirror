@@ -32,70 +32,157 @@
 
 {$I ACBr.inc}
 
-unit ISSe.GravarXml;
+unit ISSNet.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
+  ACBrXmlBase,
+  ACBrXmlDocument,
+  ACBrNFSeXGravarXml_ABRASFv1,
   ACBrNFSeXGravarXml_ABRASFv2,
-  ACBrDFe.Conversao,
-  ACBrNFSeXConversao,
-  ACBrXmlDocument;
+  PadraoNacional.GravarXml;
 
 type
-  { TNFSeW_ISSe201 }
+  { TNFSeW_ISSNet }
 
-  TNFSeW_ISSe201 = class(TNFSeW_ABRASFv2)
+  TNFSeW_ISSNet = class(TNFSeW_ABRASFv1)
   protected
     procedure Configuracao; override;
-    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
+
+    function GerarPrestador: TACBrXmlNode; override;
+    function GerarCodigoMunicipioUF: TACBrXmlNodeArray; override;
+    function GerarServicoCodigoMunicipio: TACBrXmlNode; override;
+  end;
+
+  { TNFSeW_ISSNet204 }
+
+  TNFSeW_ISSNet204 = class(TNFSeW_ABRASFv2)
+  protected
+    procedure Configuracao; override;
+
+  public
+    function GerarXml: Boolean; Override;
+  end;
+
+  { TNFSeW_ISSNetAPIPropria }
+
+  TNFSeW_ISSNetAPIPropria = class(TNFSeW_PadraoNacional)
+  protected
+
+  public
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao,
+  ACBrUtil.Strings,
+  ACBrNFSeXConsts,
+  ACBrNFSeXConversao;
+
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     ISSe
+//     ISSNet
 //==============================================================================
 
-{ TNFSeW_ISSe201 }
+{ TNFSeW_ISSNet }
 
-procedure TNFSeW_ISSe201.Configuracao;
+procedure TNFSeW_ISSNet.Configuracao;
 begin
   inherited Configuracao;
 
-  NrOcorrCodigoNBS := 0;
-  NrOcorrDataPagamento := 0;
+  FormatoItemListaServico := filsSemFormatacaoSemZeroEsquerda;
+
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoFormatarItemServico') then
+    FormatoItemListaServico := filsNaoSeAplica;
+
+  DivAliq100 := True;
+
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
+
   NrOcorrValorPis := 1;
   NrOcorrValorCofins := 1;
   NrOcorrValorInss := 1;
   NrOcorrValorIr := 1;
   NrOcorrValorCsll := 1;
   NrOcorrValorIss := 1;
-  NrOcorrValorISS := 1;
   NrOcorrAliquota := 1;
 
-  NrOcorrDiscriminacao_1 := -1;
-  NrOcorrCodigoMunic_1 := -1;
+  PrefixoPadrao := 'tc';
+end;
+
+function TNFSeW_ISSNet.GerarPrestador: TACBrXmlNode;
+begin
+  Result := CreateElement('Prestador');
+
+  Result.AppendChild(GerarCPFCNPJ(NFSe.Prestador.IdentificacaoPrestador.CpfCnpj));
+
+  Result.AppendChild(AddNode(tcStr, '#35', 'InscricaoMunicipal', 1, 15, 0,
+             NFSe.Prestador.IdentificacaoPrestador.InscricaoMunicipal, DSC_IM));
+end;
+
+function TNFSeW_ISSNet.GerarCodigoMunicipioUF: TACBrXmlNodeArray;
+begin
+  SetLength(Result, 2);
+
+  Result[0] := AddNode(tcStr, '#43', 'Cidade', 7, 7, 0,
+                  OnlyNumber(NFSe.Tomador.Endereco.CodigoMunicipio), DSC_CMUN);
+
+  Result[1] := AddNode(tcStr, '#44', 'Estado', 2, 2, 0,
+                                             NFSe.Tomador.Endereco.UF, DSC_UF);
+end;
+
+function TNFSeW_ISSNet.GerarServicoCodigoMunicipio: TACBrXmlNode;
+begin
+  Result := AddNode(tcStr, '#33', 'MunicipioPrestacaoServico', 1, 7, 1,
+                            OnlyNumber(NFSe.Servico.CodigoMunicipio), DSC_CMUN);
+end;
+
+{ TNFSeW_ISSNet204 }
+
+procedure TNFSeW_ISSNet204.Configuracao;
+begin
+  inherited Configuracao;
+
+  FormatoAliq := tcDe2;
+
+  NrOcorrCodTribMun_1 := 0;
+  NrOcorrInformacoesComplemetares := 0;
+
   NrOcorrDiscriminacao_2 := 1;
   NrOcorrCodigoMunic_2 := 1;
 
+  NrOcorrDiscriminacao_1 := -1;
+  NrOcorrCodigoMunic_1 := -1;
+  NrOcorrCodigoPaisServico := -1;
+  NrOcorrCodigoPaisTomador := -1;
 
-  FormatoItemListaServico := filsSemFormatacao;
+  TagTomador := 'TomadorServico';
 end;
 
-function TNFSeW_ISSe201.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
+function TNFSeW_ISSNet204.GerarXml: Boolean;
 begin
-  Result := inherited GerarInfDeclaracaoPrestacaoServico;
+  if ((NFSe.Tomador.Endereco.CodigoMunicipio = '9999999') or
+      (NFSe.Tomador.Endereco.UF = 'EX')) and
+     ((NFSe.Servico.ExigibilidadeISS = exiExportacao) or
+     (NFSe.Servico.ExigibilidadeISS = exiExigivel)) then
+    NrOcorrCodigoPaisServico := 1;
 
-  // Reforma Tributária
-  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
-     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
-     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
-     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
-    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
+  if (NFSe.OptanteSimplesNacional = snSim) or
+     (NFSe.RegimeEspecialTributacao = retMicroempresarioIndividual) then
+  begin
+    if FpAOwner.ConfigGeral.Params.TemParametro('TagAliquotaObrigSN') then
+      NrOcorrAliquota := 1;
+
+    if FpAOwner.ConfigGeral.Params.TemParametro('TagValorISSObrigSN') then
+      NrOcorrValorIss := 1;
+  end;
+
+  Result := inherited GerarXml;
 end;
 
 end.

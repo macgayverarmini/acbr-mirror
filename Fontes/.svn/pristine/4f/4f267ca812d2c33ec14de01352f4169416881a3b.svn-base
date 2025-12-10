@@ -32,71 +32,89 @@
 
 {$I ACBr.inc}
 
-unit Citta.GravarXml;
+unit WebISS.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
+  ACBrDFe.Conversao,
+  ACBrNFSeXConversao,
+  ACBrNFSeXGravarXml_ABRASFv1,
   ACBrNFSeXGravarXml_ABRASFv2,
-  PadraoNacional.GravarXml;
+  ACBrXmlDocument;
+
 
 type
-  { TNFSeW_Citta203 }
+  { TNFSeW_WebISS }
 
-  TNFSeW_Citta203 = class(TNFSeW_ABRASFv2)
+  TNFSeW_WebISS = class(TNFSeW_ABRASFv1)
   protected
     procedure Configuracao; override;
 
   end;
 
-  { TNFSeW_CittaAPIPropria }
+  { TNFSeW_WebISS202 }
 
-  TNFSeW_CittaAPIPropria = class(TNFSeW_PadraoNacional)
-  private
-
+  TNFSeW_WebISS202 = class(TNFSeW_ABRASFv2)
   protected
+    procedure Configuracao; override;
+
+    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
 
   public
-    function GerarXml: Boolean; override;
+    function GerarXml: Boolean; Override;
   end;
 
 implementation
 
-uses
-  ACBrXmlDocument,
-  ACBrNFSeXConversao;
-
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Citta
+//     WebISS
 //==============================================================================
 
-{ TNFSeW_Citta203 }
+{ TNFSeW_WebISS }
 
-procedure TNFSeW_Citta203.Configuracao;
+procedure TNFSeW_WebISS.Configuracao;
 begin
   inherited Configuracao;
 
-  GerarIDRps := True;
+  DivAliq100 := True;
+
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
+
+  FormatoItemListaServico := filsSemFormatacao;
+  NrOcorrAliquota := 1;
 end;
 
-{ TNFSeW_CittaAPIPropria }
+{ TNFSeW_WebISS202 }
 
-function TNFSeW_CittaAPIPropria.GerarXml: Boolean;
-var
-  NFSeNode: TACBrXmlNode;
+procedure TNFSeW_WebISS202.Configuracao;
 begin
-  Configuracao;
+  inherited Configuracao;
 
-  ListaDeAlertas.Clear;
+  FormatoItemListaServico := filsSemFormatacao;
+end;
 
-  FDocument.Clear();
+function TNFSeW_WebISS202.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
+begin
+  Result := inherited GerarInfDeclaracaoPrestacaoServico;
 
-  NFSeNode := GerarXMLNFSe;
-  FDocument.Root := NFSeNode;
+  // Reforma Tributária
+  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
+     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
+     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
+     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
+    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
+end;
 
-  Result := True;
+function TNFSeW_WebISS202.GerarXml: Boolean;
+begin
+  if NFSe.OptanteSimplesNacional = snSim then
+    NrOcorrAliquota := 1;
+
+  Result := inherited GerarXml;
 end;
 
 end.
