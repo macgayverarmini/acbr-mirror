@@ -509,6 +509,11 @@ Provedor=EL
 Versao=2.04
 ProRecepcionar=https://nfse-backend.portovelho.ro.gov.br/producao/NfseWSService
 
+; Descomente as linhas abaixo após 01/01/2026
+;Versao=1.01
+;Params=APIPropria:
+;HomRecepcionar=https://nfse-backend.portovelho.ro.gov.br/producao/api/nacional/homologacao
+
 [1100254]
 ; Incluído em 18/10/2022
 ; Atualizado em 19/12/2024
@@ -22322,7 +22327,6 @@ ProRecepcionar=https://lajedomuriae.govbr.cloud/NFSe.Portal.integracao/services.
 ;HomRecepcionar=https://reformatributaria.govbr.cloud/nfse.api.teste/NotaNacional
 
 [3302403]
-; Atualizado em 14/05/2024
 Nome=Macae
 UF=RJ
 Provedor=Tiplan
@@ -22331,6 +22335,12 @@ ProRecepcionar=https://spe.macae.rj.gov.br/nfse/WSNacional2/nfse.asmx
 HomRecepcionar=https://macaehomologacao.nfe.com.br/nfse/wsnacional2/nfse.asmx
 ProLinkURL=https://spe.macae.rj.gov.br/nfse.aspx?ccm=%InscMunic%&nf=%NumeroNFSe%&cod=%CodVerif%
 HomLinkURL=https://spe.macae.rj.gov.br/nfse.aspx?ccm=%InscMunic%&nf=%NumeroNFSe%&cod=%CodVerif%
+
+; URLs para a API própria do provedor que usa o Padrão Nacional (homologação liberada a partir de 14/11/2025)
+;Versao=1.01
+;Params=APIPropria:
+;ProRecepcionar=https://spe.macae.rj.gov.br/api/adn/dps/recepcao
+;HomRecepcionar=https://macaehomologacao.nfe.com.br/api/adn/dps/recepcao 
 
 [3302452]
 Nome=Macuco
@@ -25793,10 +25803,16 @@ HomLinkURL=https://nfehomologacao.etransparencia.com.br/sp.mococa/nfe/stubimprim
 ; Atualizado em 05/07/2022
 Nome=Mogi das Cruzes
 UF=SP
-Provedor=SmarAPD
+Provedor=SilTecnologia
 Versao=2.03
 ProRecepcionar=https://servicos.mogidascruzes.sp.gov.br/tbw/services/Abrasf23
 HomRecepcionar=https://servicos.mogidascruzes.sp.gov.br/tbwhomologacao/services/Abrasf23
+
+; Descomentar as linhas abaixo para usar a API própria
+;Versao=1.01
+;Params=APIPropria:
+;ProRecepcionar=https://servicos.mogidascruzes.sp.gov.br/tbw/services/NotaFiscalNacional
+;HomRecepcionar=https://servicos.mogidascruzes.sp.gov.br/tbwhomologacao/services/NotaFiscalNacional
 
 [3530706]
 ; Incluído em 19/04/2024
@@ -35109,7 +35125,24 @@ ProRecepcionar=http://guaranidasmissoes.govbr.cloud/NFSe.Portal.Integracao/servi
 [4309555]
 Nome=Harmonia
 UF=RS
-Provedor=
+Provedor=Tecnos
+Versao=2.01
+ProRecepcionar=*
+ProConsultarLote=http://harmonia.nfse-tecnos.com.br:9097/ConsultaLoteRPS.asmx
+ProConsultarNFSeRps=http://harmonia.nfse-tecnos.com.br:9095/ConsultaNFSePorRPS.asmx
+ProConsultarNFSePorFaixa=http://harmonia.nfse-tecnos.com.br:9096/ConsultaNFSePorFaixa.asmx
+ProCancelarNFSe=http://harmonia.nfse-tecnos.com.br:9098/CancelamentoNFSe.asmx
+ProRecepcionarSincrono=http://harmonia.nfse-tecnos.com.br:9091/EnvioLoteRPSSincrono.asmx
+ProGerarNFSe=*
+ProSubstituirNFSe=http://harmonia.nfse-tecnos.com.br:9086/SubstituicaoNFSe.asmx
+HomRecepcionar=*
+HomConsultarLote=http://homologaharmonia.nfse-tecnos.com.br:9097/ConsultaLoteRPS.asmx
+HomConsultarNFSeRps=http://homologaharmonia.nfse-tecnos.com.br:9095/ConsultaNFSePorRPS.asmx
+HomConsultarNFSePorFaixa=http://homologaharmonia.nfse-tecnos.com.br:9096/ConsultaNFSePorFaixa.asmx
+HomCancelarNFSe=http://homologaharmonia.nfse-tecnos.com.br:9098/CancelamentoNFSe.asmx
+HomRecepcionarSincrono=http://homologaharmonia.nfse-tecnos.com.br:9091/EnvioLoteRPSSincrono.asmx
+HomGerarNFSe=*
+HomSubstituirNFSe=http://homologaharmonia.nfse-tecnos.com.br:9086/SubstituicaoNFSe.asmx
 
 [4309571]
 Nome=Herveiras
@@ -37497,6 +37530,10 @@ Provedor=Citta
 Versao=2.03
 ProRecepcionar=https://svs.cittaweb.com.br/nfse/services/nfseSOAP
 ProLinkURL=https://svs.cittaweb.com.br/nfse/api/public/documento/report/%CodVerif%
+
+; Desmarcar as linhas abaixo para usar a API do provedor que atende a Reforma Tributária
+;Versao=1.01
+;Params=APIPropria:|PN:
 
 [4319737]
 Nome=Sao Valerio do Sul
