@@ -43,6 +43,18 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+12/12/2025
+-- Infisc.Provider/PadraoNacional.Provider --
+[*] ACBR-8574 - Possível solução para o método ObterDANFSE do provedor Infisc.
+   Por: Italo Giurizzato Junior
+-- Pronim.Provider --
+[*] Alteração visando sanar o erro de UTF-8 ao ler o retorno.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Incluído as URLs de homologação e produção da API própria do provedor RLZ as cidades
+    que vão continuar com o provedor.
+   Por: Italo Giurizzato Junior
+
 11/12/2025
 -- ACBrNFSeXServicos --
 [*] ACBR-8565 - Incluída a cidade Harmonia/RS, o provedor é Tecnos versão 2.01
