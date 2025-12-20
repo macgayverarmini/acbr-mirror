@@ -42,6 +42,37 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+19/12/2025
+-- PadraoNacional.Provider --
+[-] ACBR-8607 Ajuste visando sanar falha no retorno do ObterDANFSe quando o mesmo for um PDF.
+   Por: marcosvillatore /Diego Folieni 
+-- Publica.Provider --
+[*] ACBr-8616 Alterado o método Configuração para assinar o Rps.
+   Por: leonardo.gomes
+-- ACBrNFSeXConversao/ACBrNFSeXProviderBase --
+[*] ACBr-8614 Incluído a Natureza da Operação 305.
+   Por: Gustavo Totta
+-- ACBrNFSeXClass/ACBrNFSeXLerXml/ACBrNFSeXLerXml_ABRASFv2/Tecnos.GravarXml --
+[*] ACBr-8611 Alteração visando gerar e ler a tag DataFatoGerador.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXProviderManager/ABase.GravarXml/ABase.LerXml/ABase.Provider --
+[+] ACBr-8605 Implementado a API própria no provedor ABase, por enquanto somente o envio do DPS.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBr-8605 Criada a seção ABasePN para conter as URLs de homologação e produção a ser utilizadas
+    pelo provedor ABase em sua API própria (falta implementar a API própria no componente).
+   Por: Eduardo Zils
+[*] ACBr-8603 A cidade Lagoa da Prata/MG mudou de versão e URLs, o provedor continua o mesmo.
+   Por: João Antônio
+[*] ACBr-8602 A cidade Rio das Antas/SC mudou de versão e URLs, o provedor continua o mesmo.
+   Por: Wesley Lamb
+[*] ACBr-8601 A cidade Criciúma/SC mudou para o PadraoNacional.
+   Por: BluData
+[*] ACBr-8598 Incluída  URL de homologação da cidade de Mercedes/PR.
+   Por: Arthur Haupt Pacheco
+[*] ACBr-8594 Correção na URLs da cidade de Cáceres/MT, o provedor continua o mesmo.
+   Por: Fernando Henrique
+
 18/12/2025
 -- ACBrNFSeXServicos --
 [*] Correção nas novas URLs o provedor RLZ
