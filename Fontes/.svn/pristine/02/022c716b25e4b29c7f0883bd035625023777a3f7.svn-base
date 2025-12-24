@@ -32,82 +32,39 @@
 
 {$I ACBr.inc}
 
-unit SilTecnologia.GravarXml;
+unit Coplan.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv1,
-  ACBrNFSeXGravarXml_ABRASFv2,
-  PadraoNacional.GravarXml;
+  ACBrNFSeXLerXml_ABRASFv2,
+  PadraoNacional.LerXml;
 
 type
-  { TNFSeW_SilTecnologia }
+  { TNFSeR_Coplan201 }
 
-  TNFSeW_SilTecnologia = class(TNFSeW_ABRASFv1)
-  protected
-
-  end;
-
-  { TNFSeW_SilTecnologia203 }
-
-  TNFSeW_SilTecnologia203 = class(TNFSeW_ABRASFv2)
-  protected
-    procedure Configuracao; override;
-
-  end;
-
-  { TNFSeW_SilTecnologiaAPIPropria }
-
-  TNFSeW_SilTecnologiaAPIPropria = class(TNFSeW_PadraoNacional)
+  TNFSeR_Coplan201 = class(TNFSeR_ABRASFv2)
   protected
 
   public
-    function GerarXml: Boolean; override;
+
+  end;
+
+  { TNFSeR_CoplanAPIPropria }
+
+  TNFSeR_CoplanAPIPropria = class(TNFSeR_PadraoNacional)
+  protected
+
+  public
+
   end;
 
 implementation
 
-uses
-  ACBrXmlDocument,
-  ACBrDFe.Conversao;
-
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     SilTecnologia
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+//     Coplan
 //==============================================================================
-
-{ TNFSeW_SilTecnologia203 }
-
-procedure TNFSeW_SilTecnologia203.Configuracao;
-begin
-  inherited Configuracao;
-
-  FormatoAliq := tcDe2;
-
-  NrOcorrInformacoesComplemetares := 0;
-  NrOcorrAliquota := 1;
-  NrOcorrCodigoPaisServico := -1;
-end;
-
-{ TNFSeW_SilTecnologiaAPIPropria }
-
-function TNFSeW_SilTecnologiaAPIPropria.GerarXml: Boolean;
-var
-  NFSeNode: TACBrXmlNode;
-begin
-  Configuracao;
-
-  ListaDeAlertas.Clear;
-
-  FDocument.Clear();
-
-  NFSeNode := GerarXMLNFSe;
-  FDocument.Root := NFSeNode;
-
-  Result := True;
-end;
 
 end.

@@ -32,29 +32,76 @@
 
 {$I ACBr.inc}
 
-unit Coplan.LerXml;
+unit Coplan.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXLerXml_ABRASFv2;
+  ACBrXmlBase,
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrNFSeXConversao,
+  PadraoNacional.GravarXml;
 
 type
-  { TNFSeR_Coplan201 }
+  { TNFSeW_Coplan201 }
 
-  TNFSeR_Coplan201 = class(TNFSeR_ABRASFv2)
+  TNFSeW_Coplan201 = class(TNFSeW_ABRASFv2)
   protected
-
+    procedure Configuracao; override;
   public
+    function GerarXml: Boolean; override;
+  end;
+
+  { TNFSeW_CoplanAPIPropria }
+
+  TNFSeW_CoplanAPIPropria = class(TNFSeW_PadraoNacional)
+  protected
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
 //     Coplan
 //==============================================================================
+
+{ TNFSeW_Coplan201 }
+
+procedure TNFSeW_Coplan201.Configuracao;
+begin
+  inherited Configuracao;
+
+  FormatoAliq := tcDe2;
+  FormatoItemListaServico := filsSemFormatacao;
+
+  NrOcorrInscEstTomador_1 := 0;
+
+  NrOcorrValorPis := 1;
+  NrOcorrValorCofins := 1;
+  NrOcorrValorInss := 1;
+  NrOcorrValorIr := 1;
+  NrOcorrValorCsll := 1;
+  NrOcorrValorIss := 1;
+  NrOcorrValorISS := 1;
+  NrOcorrDescCond := 1;
+  NrOcorrDescIncond := 1;
+end;
+
+function TNFSeW_Coplan201.GerarXml: Boolean;
+begin
+  // stRetencao = snSim (tem retenção)
+  // stNormal   = snNao (não tem retenção)
+  if NFSe.Servico.Valores.IssRetido <> stNormal then
+    NrOcorrRespRetencao := 0   // se tem a retenção a tag deve ser gerada
+  else
+    NrOcorrRespRetencao := -1; // se não tem a retenção a tag não deve ser gerada
+
+  Result := inherited GerarXml;
+end;
 
 end.

@@ -32,62 +32,87 @@
 
 {$I ACBr.inc}
 
-unit Tiplan.GravarXml;
+unit SilTecnologia.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
+  ACBrXmlBase,
   ACBrNFSeXGravarXml_ABRASFv1,
   ACBrNFSeXGravarXml_ABRASFv2,
-  ACBrNFSeXConversao,
   PadraoNacional.GravarXml;
 
 type
-  { TNFSeW_Tiplan }
+  { TNFSeW_SilTecnologia }
 
-  TNFSeW_Tiplan = class(TNFSeW_ABRASFv1)
+  TNFSeW_SilTecnologia = class(TNFSeW_ABRASFv1)
+  protected
+
+  end;
+
+  { TNFSeW_SilTecnologia203 }
+
+  TNFSeW_SilTecnologia203 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
 
   end;
 
-  { TNFSeW_Tiplan203 }
+  { TNFSeW_SilTecnologiaAPIPropria }
 
-  TNFSeW_Tiplan203 = class(TNFSeW_ABRASFv2)
-  protected
-    function DefinirNameSpaceDeclaracao: string; override;
-
-  end;
-
-  { TNFSeW_TiplanAPIPropria }
-
-  TNFSeW_TiplanAPIPropria = class(TNFSeW_PadraoNacional)
+  TNFSeW_SilTecnologiaAPIPropria = class(TNFSeW_PadraoNacional)
   protected
 
+  public
+    function GerarXml: Boolean; override;
   end;
 
 implementation
 
+uses
+  ACBrXmlDocument,
+  ACBrDFe.Conversao;
+
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Tiplan
+//     SilTecnologia
 //==============================================================================
 
-{ TNFSeW_Tiplan }
+{ TNFSeW_SilTecnologia203 }
 
-procedure TNFSeW_Tiplan.Configuracao;
+procedure TNFSeW_SilTecnologia203.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoItemListaServico := filsSemFormatacao;
+  FormatoAliq := tcDe2;
+
+  NrOcorrInformacoesComplemetares := 0;
+  NrOcorrAliquota := 1;
+  NrOcorrCodigoPaisServico := -1;
+  NrOcorrDiscriminacao_1 := -1;
+  NrOcorrCodigoMunic_1 := -1;
+
+  NrOcorrDiscriminacao_2 := 1;
+  NrOcorrCodigoMunic_2 := 1;
 end;
 
-{ TNFSeW_Tiplan203 }
+{ TNFSeW_SilTecnologiaAPIPropria }
 
-function TNFSeW_Tiplan203.DefinirNameSpaceDeclaracao: string;
+function TNFSeW_SilTecnologiaAPIPropria.GerarXml: Boolean;
+var
+  NFSeNode: TACBrXmlNode;
 begin
-  Result := 'http://www.abrasf.org.br/nfse.xsd';
+  Configuracao;
+
+  ListaDeAlertas.Clear;
+
+  FDocument.Clear();
+
+  NFSeNode := GerarXMLNFSe;
+  FDocument.Root := NFSeNode;
+
+  Result := True;
 end;
 
 end.

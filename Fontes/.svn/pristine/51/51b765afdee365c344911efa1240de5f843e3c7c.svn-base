@@ -42,6 +42,15 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+23/12/2025
+-- ACBrNFSeXProviderManager/Coplan.GravarXml/Coplan.LerXml/Coplan.Provider --
+[*] ACBR-8631: Implementação da API Própria do Provedor Coplan que vai usar um WS Soap.
+   Por: Márcio Baroni
+23/12/2025
+-- Tiplan.GravarXml --
+[*] ACBR-8619: O provedor também fez alterações no layout em uso, ajustes no componente
+    visando essa alteração no layout.
+   Por: Luis AGSI
 
 22/12/2025
 -- ACBrNFSeXServicosRTC.ini --
