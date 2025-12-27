@@ -37,7 +37,7 @@ unit Tecnos.GravarXml;
 interface
 
 uses
-  SysUtils, Classes, StrUtils,
+  SysUtils, Classes, StrUtils, IniFiles,
   ACBrXmlBase,
   ACBrXmlDocument,
   ACBrNFSeXGravarXml_ABRASFv2;
@@ -54,9 +54,14 @@ type
     function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
     function GerarInfDeclaracaoPrestacaoServ: TACBrXmlNode;
     function GerarValores: TACBrXmlNode; override;
+    function GerarConstrucaoCivil: TACBrXmlNode; override;
 
     procedure Configuracao; override;
     procedure DefinirIDDeclaracao; override;
+
+    //======Arquivo INI===========================================
+    procedure GerarINISecaoConstrucaoCivil(const AINIRec: TMemIniFile); override;
+    procedure GerarINISecaoServico(const AINIRec: TMemIniFile); override;
 
   end;
 
@@ -126,10 +131,57 @@ begin
   NrOcorrInscEstInter := 1;
 
   NrOcorrInscMunTomador := 1;
+  NrOcorrInscEstTomador_1 := 0;
 
   NrOcorrRespRetencao := 1;
   
   GerarTagServicos := False;
+end;
+
+function TNFSeW_Tecnos201.GerarConstrucaoCivil: TACBrXmlNode;
+begin
+  if (Trim(NFSe.ConstrucaoCivil.LocalConstrucao) <> EmptyStr) or
+     (Trim(NFSe.ConstrucaoCivil.CodigoObra) <> EmptyStr) or
+     (Trim(NFSe.ConstrucaoCivil.Art) <> EmptyStr) then
+  begin
+    Result := CreateElement('ConstrucaoCivil');
+
+    Result.AppendChild(AddNode(tcStr, '#54', 'LocalConstrucao', 1,  50, 1,
+                                            NFSe.ConstrucaoCivil.LocalConstrucao, DSC_LOCAL_CONSTRUCAO));
+
+    Result.AppendChild(AddNode(tcStr, '#51', 'CodigoObra', 1, 15, 1,
+                                   NFSe.ConstrucaoCivil.CodigoObra, DSC_COBRA));
+
+    Result.AppendChild(AddNode(tcStr, '#52', 'Art', 1, 15, 1,
+                                            NFSe.ConstrucaoCivil.Art, DSC_ART));
+
+    Result.AppendChild(AddNode(tcInt, '#53', 'ReformaCivil', 1, 15, 1,
+                                            FpAOwner.SimNaoToStr(NFSe.ConstrucaoCivil.ReformaCivil), DSC_ART));
+
+    Result.AppendChild(AddNode(tcInt, '#55', 'Cib', 1, 50, 1,
+                                            NFSe.ConstrucaoCivil.Cib, DSC_CIB));
+
+    Result.AppendChild(AddNode(tcStr, '#56', 'EstadoObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.UF, DSC_UFOBRA));
+
+    Result.AppendChild(AddNode(tcStr, '#56', 'CidadeObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.CodigoMunicipio, DSC_CODMUNOBRA));
+
+    Result.AppendChild(AddNode(tcStr, '#56', 'EnderecoObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.Endereco, DSC_EOBRA));
+
+    Result.AppendChild(AddNode(tcInt, '#56', 'NumeroObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.Numero, DSC_NEOBRA));
+
+    Result.AppendChild(AddNode(tcStr, '#56', 'BairroObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.Bairro, DSC_BEOBRA));
+
+    Result.AppendChild(AddNode(tcInt, '#56', 'CepObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.CEP, DSC_CEPOBRA));
+
+    Result.AppendChild(AddNode(tcStr, '#56', 'ComplementoObra', 1, 2, 1,
+                                            NFSe.ConstrucaoCivil.Endereco.Complemento, DSC_CEOBRA));
+  end;
 end;
 
 function TNFSeW_Tecnos201.GerarEnderecoTomador: TACBrXmlNode;
@@ -229,7 +281,7 @@ begin
   Result.AppendChild(GerarPrestador);
   Result.AppendChild(GerarTomador);
 
-  Result.AppendChild(AddNode(tcDat, '#9', 'DataFatoGerador', 10, 10, 0,
+  Result.AppendChild(AddNode(tcDatHor, '#9', 'DataFatoGerador', 10, 10, 0,
                                                      NFSe.DataFatoGerador, ''));
 
   Result.AppendChild(GerarIntermediarioServico);
@@ -302,6 +354,54 @@ begin
   Result.AppendChild(GerarInfDeclaracaoPrestacaoServ);
 end;
 
+procedure TNFSeW_Tecnos201.GerarINISecaoConstrucaoCivil(const AINIRec: TMemIniFile);
+var
+  lSecao: String;
+begin
+  if (Trim(NFSe.ConstrucaoCivil.CodigoObra) <> EmptyStr) or
+     (Trim(NFSe.ConstrucaoCivil.Art) <> EmptyStr) or
+     (Trim(NFSe.ConstrucaoCivil.LocalConstrucao) <> EmptyStr) then
+  begin
+    lSecao:= 'ConstrucaoCivil';
+    AINIRec.WriteString(lSecao, 'LocalConstrucao', NFSe.ConstrucaoCivil.LocalConstrucao);
+    AINIRec.WriteString(lSecao, 'CodigoObra', NFSe.ConstrucaoCivil.CodigoObra);
+    AINIRec.WriteString(lSecao, 'Art', NFSe.ConstrucaoCivil.Art);
+    AINIRec.WriteString(lSecao, 'ReformaCivil', FpAOwner.SimNaoToStr(NFSe.ConstrucaoCivil.ReformaCivil));
+    AINIRec.WriteInteger(lSecao, 'Cib', NFSe.ConstrucaoCivil.Cib);
+    AINIRec.WriteString(lSecao, 'UF', NFSe.ConstrucaoCivil.Endereco.UF);
+    AINIRec.WriteString(lSecao, 'CodigoMunicipio', NFSe.ConstrucaoCivil.Endereco.CodigoMunicipio);
+    AINIRec.WriteString(lSecao, 'Logradouro', NFSe.ConstrucaoCivil.Endereco.Endereco);
+    AINIRec.WriteString(lSecao, 'Numero', NFSe.ConstrucaoCivil.Endereco.Numero);
+    AINIRec.WriteString(lSecao, 'Bairro', NFSe.ConstrucaoCivil.Endereco.Bairro);
+    AINIRec.WriteString(lSecao, 'CEP', NFSe.ConstrucaoCivil.Endereco.CEP);
+    AINIRec.WriteString(lSecao, 'Complemento', NFSe.ConstrucaoCivil.Endereco.Complemento);
+  end;
+end;
+
+procedure TNFSeW_Tecnos201.GerarINISecaoServico(const AINIRec: TMemIniFile);
+var
+  lSecao: String;
+begin
+  lSecao := 'Servico';
+  AINIRec.WriteString(lSecao, 'ResponsavelRetencao', FpAOwner.ResponsavelRetencaoToStr(NFSe.Servico.ResponsavelRetencao));
+  AINIRec.WriteString(lSecao, 'ItemListaServico', NFSe.Servico.ItemListaServico);
+  AINIRec.WriteString(lSecao, 'xItemListaServico', NFSe.Servico.xItemListaServico);
+  AINIRec.WriteString(lSecao, 'CodigoCnae', NFSe.Servico.CodigoCnae);
+  AINIRec.WriteString(lSecao, 'CodigoTributacaoMunicipio', NFSe.Servico.CodigoTributacaoMunicipio);
+  AINIRec.WriteString(lSecao, 'xCodigoTributacaoMunicipio', NFSe.Servico.xCodigoTributacaoMunicipio);
+  AINIRec.WriteString(lSecao, 'Discriminacao', NFSe.Servico.Discriminacao);
+  AINIRec.WriteString(lSecao, 'CodigoMunicipio', NFSe.Servico.CodigoMunicipio);
+  AINIRec.WriteInteger(lSecao, 'CodigoPais', NFSe.Servico.CodigoPais);
+  AINIRec.WriteString(lSecao, 'ExigibilidadeISS', FpAOwner.ExigibilidadeISSToStr(NFSe.Servico.ExigibilidadeISS));
+  AINIRec.WriteInteger(lSecao, 'MunicipioIncidencia', NFSe.Servico.MunicipioIncidencia);
+  AINIRec.WriteString(lSecao, 'xMunicipioIncidencia', NFSe.Servico.xMunicipioIncidencia);
+  AINIRec.WriteString(lSecao, 'NumeroProcesso', NFSe.Servico.NumeroProcesso);
+  AINIRec.WriteString(lSecao, 'xPed', NFSe.Servico.xPed);
+  AINIRec.WriteString(lSecao, 'nItemPed', NFSE.Servico.nItemPed);
+  AINIRec.WriteString(lSecao, 'CodigoNBS', NFSe.Servico.CodigoNBS);
+  AINIRec.WriteString(lSecao, 'CodigoServicoNacional', NFSe.Servico.CodigoServicoNacional);
+end;
+
 function TNFSeW_Tecnos201.GerarValores: TACBrXmlNode;
 var
   item: string;
@@ -367,10 +467,16 @@ begin
   Result.AppendChild(AddNode(tcStr, '#37', 'NumeroProcesso', 1, 30, 1,
                                    NFSe.Servico.NumeroProcesso, DSC_NPROCESSO));
 
-  Result.AppendChild(AddNode(tcStr, '#37', 'CodigoNBS', 1, 30, 0,
+  Result.AppendChild(AddNode(tcStr, '#38', 'xPed', 1, 999, 0,
+                                                   NFSe.Servico.xPed, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#39', 'nItemPed', 1, 999, 0,
+                                                   NFSe.Servico.nItemPed, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#40', 'CodigoNBS', 1, 30, 0,
                                                    NFSe.Servico.CodigoNBS, ''));
 
-  Result.AppendChild(AddNode(tcStr, '#37', 'CodigoServicoNacional', 1, 30, 0,
+  Result.AppendChild(AddNode(tcStr, '#41', 'CodigoServicoNacional', 1, 30, 0,
                                        NFSe.Servico.CodigoServicoNacional, ''));
 end;
 
