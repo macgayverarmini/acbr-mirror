@@ -41,6 +41,30 @@ Símbolo : Significado
 [+]     : Novo recurso
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
+
+02/01/2026
+-- ACBrNFSeXDANFSeRLRetrato --
+[*] ACBR-8687: Alteração visando não imprimir duas vezes as informações complementares do Padrão Nacional.
+  Por: João Vitor Bogo
+-- GeisWeb.GravarXml/GeisWeb.Provider --
+[*] ACBR-8688: Alterações visando o novo webservice do provedor.
+  Por: Italo Giurizzato Junior
+-- Publica.GravarXml/Publica.LerXml --
+[*] ACBR-8689: Ajustes na geração do XML com os novos campos da Reforma Tributária
+  Por: Roger Rodrigues
+-- GovDigital.GravarXml --
+[+] ACBR-8671: Alterações visando atender a Reforma Tributária.
+  Por: Italo Giurizzato Junior
+-- ACBrNFSeXConversao/SpeedGov.GravarXml/SpeedGov.Provider --
+[+] ACBR-8675: Alterações visando atender a Reforma Tributária.
+  Por: Dorivan Sousa
+-- Pronim.Provider --
+[+] ACBR-8695: Implementado o envio de eventos.
+  Por: Italo Giurizzato Junior
+-- Giss.GravarXml --
+[*] ACBR-8597: Alterado a condição para gerar o grupo <trib>
+  Por: Alessandro dos Santos/Marcelo DeSoft7
+
 31/12/2025
 -- ACBrNFSeXLerXml.pas --
 [*] Adicionado campos utilizado provedor ISSSaoPaulo lerINI
