@@ -32,44 +32,39 @@
 
 {$I ACBr.inc}
 
-unit Digifred.GravarXml;
+unit Digifred.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrNFSeXLerXml_ABRASFv2,
+  PadraoNacional.LerXml;
 
 type
-  { TNFSeW_Digifred200 }
+  { TNFSeR_Digifred200 }
 
-  TNFSeW_Digifred200 = class(TNFSeW_ABRASFv2)
+  TNFSeR_Digifred200 = class(TNFSeR_ABRASFv2)
   protected
-    procedure Configuracao; override;
+
+  public
+
+  end;
+
+  { TNFSeR_DigifredPropria }
+
+  TNFSeR_DigifredAPIPropria = class(TNFSeR_PadraoNacional)
+  protected
+
+  public
 
   end;
 
 implementation
 
-uses
-  ACBrDFe.Conversao;
-
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
 //     Digifred
 //==============================================================================
-
-{ TNFSeW_Digifred200 }
-
-procedure TNFSeW_Digifred200.Configuracao;
-begin
-  inherited Configuracao;
-
-  FormatoEmissao := tcDatHor;
-  FormatoCompetencia := tcDatHor;
-  FormatoAliq := tcDe2;
-  NrOcorrCodigoPaisServico := -1;
-end;
 
 end.
