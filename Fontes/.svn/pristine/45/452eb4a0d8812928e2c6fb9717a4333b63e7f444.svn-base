@@ -42,6 +42,35 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+
+07/01/2026
+-- SilTecnologia.Provider --
+[*] Ajustes para realizar a assinatura do DPS quando informado que o modo de envio é automático.
+   Por: Diego Folieni
+-- ACBrNFSeXServicos --
+[*] Atualizado o arquivo ACBrNFSeXServicos com o conteúdo do ACBrNFSeXServicosRTC.
+    Podemos agora remover da aplicação a configuração da propriedade IniServicos que apontava para
+    o arquivo ACBrNFSeXServicosRTC, pois ele foi removido SVN.
+   Por: Italo Giurizzato Junior
+-- ISSSaoPaulo.Provider --
+[+] ACBR-8702: Implementado o envio síncrono.
+   Por: Leonardo Gomes
+-- Pronim.Provider --
+[-] Correção no envio do evento.
+   Por: Italo Giurizzato Junior
+-- ISSSaoPaulo.Provider --
+[-] ACBR-8733: Ajuste na geração da AssinaturaAdicional da versão 2.00 para coincidir com manual.
+   Por: Diego Folieni
+-- Agili.GravarXml --
+[*] ACBR-8731: Alterações visando a reforma tributária.
+   Por: plenustech
+-- Diversos --
+[*] Ajustes para informar corretamente quando o provedor usa o layout do Padrão Nacional
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXProviderManager/VersaTecnologia.GravarXml/VersaTecnologia.LerXml/VersaTecnologia.Provider --
+[+] ACBR-8731: Implementado a versão 2.04 
+   Por: Italo Giurizzato Junior
+
 06/01/2026
 -- ACBrNFSeXDANFSeFR --
 [*] ACBR-8699: Ajustes para imprimir o Código do Item Lista Serviço com 8 caracteres.
@@ -56,8 +85,6 @@ Símbolo : Significado
 [*] ACBR-8673: Adicionado ler propriedade SituacaoTributariaPISCOFINS
    https://www.projetoacbr.com.br/forum/topic/88675-erro-valida%C3%A7%C3%A3o-nfservi%C3%A7o-referente-situacaotributariapiscofins
    Por: Daniel de Morais InfoCotidiano
-   
-06/01/2026
 -- PadraoNacional.GravarXml/SilTecnologia.GravarXml --
 [*] ACBR-8717: Alterações visando gerar corretamente o XML da NFS-e do provedor SilTecnologia.
    Por: Innovae Brasil Engenharia

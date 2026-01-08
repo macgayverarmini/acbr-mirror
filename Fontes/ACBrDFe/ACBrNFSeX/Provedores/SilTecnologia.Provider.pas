@@ -645,17 +645,19 @@ begin
 
   with ConfigGeral do
   begin
+    Layout := loPadraoNacional;
     QuebradeLinha := '|';
     ConsultaLote := False;
     FormatoArqEnvio := tfaXml;
     FormatoArqRetorno := tfaXml;
     FormatoArqEnvioSoap := tfaXml;
     FormatoArqRetornoSoap := tfaXml;
-    {
+
     ServicosDisponibilizados.EnviarUnitario := True;
+    ServicosDisponibilizados.EnviarEvento := True;
+    {
     ServicosDisponibilizados.ConsultarNfseChave := True;
     ServicosDisponibilizados.ConsultarRps := True;
-    ServicosDisponibilizados.EnviarEvento := True;
     ServicosDisponibilizados.ConsultarEvento := True;
     ServicosDisponibilizados.ConsultarDFe := True;
     ServicosDisponibilizados.ConsultarParam := True;
@@ -922,7 +924,7 @@ begin
     Nota.XmlRps := ChangeLineBreak(Nota.XmlRps, '');
 
     if (ConfigAssinar.Rps and (Response.ModoEnvio in [meLoteAssincrono, meLoteSincrono])) or
-       (ConfigAssinar.RpsGerarNFSe and (Response.ModoEnvio = meUnitario)) then
+       (ConfigAssinar.RpsGerarNFSe and (Response.ModoEnvio in [meUnitario, meAutomatico])) then
     begin
       Nota.XmlRps := FAOwner.SSL.Assinar(Nota.XmlRps,
                                          ConfigMsgDados.XmlRps.DocElemento,
