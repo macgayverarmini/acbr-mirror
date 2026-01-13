@@ -32,89 +32,72 @@
 
 {$I ACBr.inc}
 
-unit WebISS.GravarXml;
+unit WebISS.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrDFe.Conversao,
-  ACBrNFSeXConversao,
-  ACBrNFSeXGravarXml_ABRASFv1,
-  ACBrNFSeXGravarXml_ABRASFv2,
-  ACBrXmlDocument;
-
+  ACBrXmlDocument,
+  ACBrNFSeXLerXml_ABRASFv1,
+  ACBrNFSeXLerXml_ABRASFv2;
 
 type
-  { TNFSeW_WebISS }
+  { TNFSeR_WebISS }
 
-  TNFSeW_WebISS = class(TNFSeW_ABRASFv1)
+  TNFSeR_WebISS = class(TNFSeR_ABRASFv1)
   protected
-    procedure Configuracao; override;
+
+  public
 
   end;
 
-  { TNFSeW_WebISS202 }
+  { TNFSeR_WebISS202 }
 
-  TNFSeW_WebISS202 = class(TNFSeW_ABRASFv2)
+  TNFSeR_WebISS202 = class(TNFSeR_ABRASFv2)
   protected
-    procedure Configuracao; override;
-
-    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
-
+    procedure LerInfDeclaracaoPrestacaoServico(const ANode: TACBrXmlNode); override;
+    procedure LerInfNfse(const ANode: TACBrXmlNode); override;
   public
-    function GerarXml: Boolean; Override;
+
   end;
 
 implementation
 
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
 //     WebISS
 //==============================================================================
 
-{ TNFSeW_WebISS }
+{ TNFSeR_WebISS202 }
 
-procedure TNFSeW_WebISS.Configuracao;
+procedure TNFSeR_WebISS202.LerInfDeclaracaoPrestacaoServico(
+  const ANode: TACBrXmlNode);
+var
+  node: TACBrXmlNode;
 begin
-  inherited Configuracao;
+  inherited LerInfDeclaracaoPrestacaoServico(ANode);
 
-  DivAliq100 := True;
-
-  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
-    DivAliq100 := False;
-
-  FormatoItemListaServico := filsSemFormatacao;
-  NrOcorrAliquota := 1;
+  node := ANode.Childrens.FindAnyNs('InfDeclaracaoPrestacaoServico');
+  if node <> nil then
+    LerXMLIBSCBSDPS(node.Childrens.FindAnyNs('IBSCBS'), NFSe.IBSCBS);
 end;
-
-{ TNFSeW_WebISS202 }
-
-procedure TNFSeW_WebISS202.Configuracao;
+procedure TNFSeR_WebISS202.LerInfNfse(const ANode: TACBrXmlNode);
+var
+  NodeIBS: TACBrXmlNode;
+  NodeInfNfse: TACBrXmlNode;
+  i: Integer;
 begin
-  inherited Configuracao;
+  NodeInfNfse := ANode.Childrens.FindAnyNs('InfNfse');
+  inherited LerInfNfse(ANode);
 
-  FormatoItemListaServico := filsSemFormatacao;
-end;
+  if NodeInfNfse <> nil then
+  begin
+    NodeIBS := NodeInfNfse.Childrens.FindAnyNs('IBSCBS');
 
-function TNFSeW_WebISS202.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
-begin
-  Result := inherited GerarInfDeclaracaoPrestacaoServico;
-
-  // Reforma Tributária
-  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
-     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
-     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
-     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
-    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
-end;
-
-function TNFSeW_WebISS202.GerarXml: Boolean;
-begin
-  if NFSe.OptanteSimplesNacional = snSim then
-    NrOcorrAliquota := 1;
-
-  Result := inherited GerarXml;
+    if NodeIBS <> nil then
+      LerXMLIBSCBSNFSe(NodeIBS, NFSe.infNFSe.IBSCBS);
+  end;
 end;
 
 end.
