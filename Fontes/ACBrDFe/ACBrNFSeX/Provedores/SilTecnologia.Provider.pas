@@ -399,7 +399,7 @@ begin
 
   if not Response.Sucesso then
   begin
-    if Pos(Response.ArquivoRetorno, '<return>') > 0 then
+    if Pos('<return>', Response.ArquivoRetorno) > 0 then
     begin
       AErro := Response.Erros.New;
       AErro.Codigo := '';
@@ -643,8 +643,7 @@ var
   AErro: TNFSeEventoCollectionItem;
 begin
   Response.InfEvento.pedRegEvento.ID := Response.InfEvento.pedRegEvento.chNFSe +
-                                        OnlyNumber(tpEventoToStr(Response.InfEvento.pedRegEvento.tpEvento)) +
-                                        FormatFloat('000', Response.InfEvento.pedRegEvento.nPedRegEvento);
+                                        OnlyNumber(tpEventoToStr(Response.InfEvento.pedRegEvento.tpEvento));
 
   IdAttrEVT := 'Id="' + 'EVT' + Response.InfEvento.pedRegEvento.ID + '"';
 
@@ -896,6 +895,15 @@ begin
       AAlerta.Codigo := ObterConteudoTag(RootNode.Childrens.FindAnyNs('codigo'), tcStr);
       AAlerta.Descricao := Mensagem;
       AAlerta.Correcao := ObterConteudoTag(RootNode.Childrens.FindAnyNs('correcao'), tcStr);
+    end
+    else
+    begin
+      if Pos('<return>', Copy(Response.ArquivoRetorno,1,20)) > 0 then
+      begin
+        AAlerta := Response.Erros.New;
+        AAlerta.Codigo := Cod201;
+        AAlerta.Descricao := ACBrStr(SeparaDados(Response.ArquivoRetorno, 'return'));
+      end;
     end;
   end;
 end;
@@ -1048,8 +1056,7 @@ begin
                       '</CNPJAutor>';
     end;
 
-    ID := chNFSe + OnlyNumber(tpEventoToStr(tpEvento)) +
-              FormatFloat('000', nPedRegEvento);
+    ID := chNFSe + OnlyNumber(tpEventoToStr(tpEvento));
 
     IdAttrPRE := 'Id="' + 'PRE' + ID + '"';
     IdAttrEVT := 'Id="' + 'EVT' + ID + '"';
