@@ -32,90 +32,43 @@
 
 {$I ACBr.inc}
 
-unit Tinus.GravarXml;
+unit Tinus.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXGravarXml_ABRASFv1,
-  ACBrNFSeXGravarXml_ABRASFv2,
-  ACBrDFe.Conversao,
-  ACBrNFSeXConversao,
-  ACBrXmlDocument;
+  PadraoNacional.LerXml,
+  ACBrNFSeXLerXml_ABRASFv1,
+  ACBrNFSeXLerXml_ABRASFv2;
 
 type
-  { TNFSeW_Tinus }
+  { TNFSeR_Tinus }
 
-  TNFSeW_Tinus = class(TNFSeW_ABRASFv1)
+  TNFSeR_Tinus = class(TNFSeR_ABRASFv1)
   protected
-    procedure Configuracao; override;
 
   public
-    function GerarXml: Boolean; Override;
 
   end;
 
-  { TNFSeW_Tinus203 }
+  { TNFSeR_Tinus203 }
 
-  TNFSeW_Tinus203 = class(TNFSeW_ABRASFv2)
+  {
+    O provedor esta retornando o XML segundo o Padrão Nacional em vez ABRASF.
+  }
+  TNFSeR_Tinus203 = class(TNFSeR_PadraoNacional)
   protected
-    procedure Configuracao; override;
 
-    function GerarServico: TACBrXmlNode; override;
+  public
 
   end;
 
 implementation
 
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
 //     Tinus
 //==============================================================================
-
-{ TNFSeW_Tinus }
-
-procedure TNFSeW_Tinus.Configuracao;
-begin
-  inherited Configuracao;
-
-  DivAliq100 := True;
-
-  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
-    DivAliq100 := False;
-
-  NrOcorrValorIss := 1;
-end;
-
-function TNFSeW_Tinus.GerarXml: Boolean;
-begin
-  if NFSe.OptanteSimplesNacional = snSim then
-  begin
-    NrOcorrAliquota := 1;
-    NrOcorrValorIss := -1;
-  end;
-
-  Result := inherited GerarXml;
-end;
-
-{ TNFSeW_Tinus203 }
-
-procedure TNFSeW_Tinus203.Configuracao;
-begin
-  inherited Configuracao;
-
-end;
-
-function TNFSeW_Tinus203.GerarServico: TACBrXmlNode;
-begin
-  Result := inherited GerarServico;
-
-  // Reforma Tributária
-  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
-     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
-     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
-     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
-    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
-end;
 
 end.

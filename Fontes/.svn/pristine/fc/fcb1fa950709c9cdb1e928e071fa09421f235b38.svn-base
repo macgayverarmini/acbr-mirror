@@ -32,39 +32,96 @@
 
 {$I ACBr.inc}
 
-unit Tinus.LerXml;
+unit Digifred.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXLerXml_ABRASFv1,
-  ACBrNFSeXLerXml_ABRASFv2;
+  ACBrXmlBase,
+  ACBrNFSeXGravarXml_ABRASFv2,
+  PadraoNacional.GravarXml;
 
 type
-  { TNFSeR_Tinus }
+  { TNFSeW_Digifred200 }
 
-  TNFSeR_Tinus = class(TNFSeR_ABRASFv1)
+  TNFSeW_Digifred200 = class(TNFSeW_ABRASFv2)
   protected
-
-  public
+    procedure Configuracao; override;
 
   end;
 
-  { TNFSeR_Tinus203 }
+  { TNFSeW_DigifredAPIPropria }
 
-  TNFSeR_Tinus203 = class(TNFSeR_ABRASFv2)
+  TNFSeW_DigifredAPIPropria = class(TNFSeW_PadraoNacional)
   protected
 
   public
-
+    function GerarXml: Boolean; override;
   end;
 
 implementation
 
+uses
+  ACBrXmlDocument,
+  ACBrDFe.Conversao;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     Tinus
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+//     Digifred
 //==============================================================================
+
+{ TNFSeW_Digifred200 }
+
+procedure TNFSeW_Digifred200.Configuracao;
+begin
+  inherited Configuracao;
+
+  FormatoEmissao := tcDatHor;
+  FormatoCompetencia := tcDatHor;
+  FormatoAliq := tcDe2;
+  NrOcorrCodigoPaisServico := -1;
+end;
+
+{ TNFSeW_DigifredAPIPropria }
+
+function TNFSeW_DigifredAPIPropria.GerarXml: Boolean;
+var
+  NFSeNode: TACBrXmlNode;
+begin
+  Configuracao;
+
+  {
+    Alguns dados merecem atenção para não serem confundidos:
+    Os tags "nNFSe" e "nDFSe" devem aparecer no xml, porém, não devem ser preenchidos.
+    Os tags "infNFSe" e "infDPS" devem conter o "Id", este também deve estar vazio.
+    Como no exemplo 'infDPS Id=""' .Os tags "infNFSe" e "infDPS" devem conter o "Id",
+    este também deve estar vazio. Como no exemplo 'infDPS Id=""'.
+    Item de Serviço: A tag "cTribNac" - Item da Lista de Serviços deve ser informado
+    com o código da lista de serviços da Lei Complementar 116/2003 -
+    http://www.planalto.gov.br/ccivil_03/Leis/LCP/Lcp116.htm porém com 6 dígitos,
+    conforme o desdobro que consta na planilha do layout Nacional
+    ANEXO_B-NBS2-LISTA_SERVICO_NACIONAL-SNNFSe-v1.00-20251210 A atualização nos
+    Cadastros de Estabelecimentos, foram realizados por padrão, com desdobro
+    final 00. Após, o Fiscal deverá conferir e ajustar conforme melhor se adequar
+    para cada prestador.
+  }
+  ListaDeAlertas.Clear;
+
+  FDocument.Clear();
+
+  NrOcorrtpAmb := -1;
+  IDNFSeVazio := True;
+  IDDPSVazio := True;
+  GerarIBSCBSNFSe := True;
+
+  NFSe.infNFSe.nNFSe := '';
+  NFSe.infNFSe.nDFSe := '';
+
+  NFSeNode := GerarXMLNFSe;
+  FDocument.Root := NFSeNode;
+
+  Result := True;
+end;
 
 end.
