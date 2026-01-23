@@ -419,12 +419,9 @@ var
         ANode := ANode.Childrens.FindAnyNs('infDPS');
         NumDps := ObterConteudoTag(ANode.Childrens.FindAnyNs('nDPS'), tcStr);
 
-        with Response do
-        begin
-          NumeroNota := NumNFSe;
-          Data := DataAut;
-          XmlRetorno := NFSeXml;
-        end;
+        Response.NumeroNota := NumNFSe;
+        Response.Data := DataAut;
+        Response.XmlRetorno := NFSeXml;
 
         ANota := TACBrNFSeX(FAOwner).NotasFiscais.FindByRps(NumDps);
 
@@ -611,7 +608,7 @@ begin
             end;
 
             DocumentXml.LoadFromXml(NFSeXml);
-
+            Response.XmlRetorno := NFSeXml;
             ANode := DocumentXml.Root.Childrens.FindAnyNs('infNFSe');
 
             NumNFSe := ObterConteudoTag(ANode.Childrens.FindAnyNs('nNFSe'), tcStr);
@@ -906,7 +903,7 @@ var
   i: Integer;
   AErro: TNFSeEventoCollectionItem;
   AResumo: TNFSeResumoCollectionItem;
-  IDEvento, TipoEvento, ArquivoXml, nomeArq: string;
+  IDEvento, ArquivoXml, nomeArq: string;
   DocumentXml: TACBrXmlDocument;
   ANode: TACBrXmlNode;
   Ok: Boolean;
@@ -936,9 +933,9 @@ begin
 
         AResumo := Response.Resumos.New;
         AResumo.ChaveDFe := JSon.AsString['chaveAcesso'];
-        TipoEvento := 'e' + JSon.AsString['tipoEvento'];
+        AResumo.TipoEvento := 'e' + JSon.AsString['tipoEvento'];
         AResumo.TipoDoc := 'Evento de ' +
-                           tpEventoToDesc(StrTotpEvento(Ok, TipoEvento));
+                           tpEventoToDesc(StrTotpEvento(Ok, AResumo.TipoEvento));
 
         ArquivoXml := JSon.AsString['arquivoXml'];
 

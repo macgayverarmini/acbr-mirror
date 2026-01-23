@@ -32,96 +32,131 @@
 
 {$I ACBr.inc}
 
-unit Digifred.GravarXml;
+unit SigCorp.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
   ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv2,
-  PadraoNacional.GravarXml;
+  ACBrXmlDocument,
+  ACBrNFSeXGravarXml_ABRASFv2;
 
 type
-  { TNFSeW_Digifred200 }
+  { TNFSeW_SigCorp203 }
 
-  TNFSeW_Digifred200 = class(TNFSeW_ABRASFv2)
+  TNFSeW_SigCorp203 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
 
   end;
 
-  { TNFSeW_DigifredAPIPropria }
+  { TNFSeW_SigCorp204 }
 
-  TNFSeW_DigifredAPIPropria = class(TNFSeW_PadraoNacional)
+  TNFSeW_SigCorp204 = class(TNFSeW_ABRASFv2)
   protected
+    procedure Configuracao; override;
 
-  public
-    function GerarXml: Boolean; override;
+    function GerarServico: TACBrXmlNode; override;
+    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
+    function GerarConstrucaoCivil: TACBrXmlNode; override;
   end;
 
 implementation
 
 uses
-  ACBrXmlDocument,
-  ACBrDFe.Conversao;
+  ACBrDFe.Conversao,
+  ACBrNFSeXConsts;
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Digifred
+//     SigCorp
 //==============================================================================
 
-{ TNFSeW_Digifred200 }
+{ TNFSeW_SigCorp203 }
 
-procedure TNFSeW_Digifred200.Configuracao;
+procedure TNFSeW_SigCorp203.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoEmissao := tcDatHor;
-  FormatoCompetencia := tcDatHor;
   FormatoAliq := tcDe2;
-  NrOcorrCodigoPaisServico := -1;
+
+  NrOcorrValorPis := 1;
+  NrOcorrValorCofins := 1;
+  NrOcorrValorInss := 1;
+  NrOcorrValorIr := 1;
+  NrOcorrValorCsll := 1;
+  NrOcorrValorIss := 1;
+  NrOcorrDescIncond := 1;
+  NrOcorrDescCond := 1;
 end;
 
-{ TNFSeW_DigifredAPIPropria }
+{ TNFSeW_SigCorp204 }
 
-function TNFSeW_DigifredAPIPropria.GerarXml: Boolean;
-var
-  NFSeNode: TACBrXmlNode;
+procedure TNFSeW_SigCorp204.Configuracao;
 begin
-  Configuracao;
+  inherited Configuracao;
 
-  {
-    Alguns dados merecem atenção para não serem confundidos:
-    Os tags "nNFSe" e "nDFSe" devem aparecer no xml, porém, não devem ser preenchidos.
-    Os tags "infNFSe" e "infDPS" devem conter o "Id", este também deve estar vazio.
-    Como no exemplo 'infDPS Id=""' .Os tags "infNFSe" e "infDPS" devem conter o "Id",
-    este também deve estar vazio. Como no exemplo 'infDPS Id=""'.
-    Item de Serviço: A tag "cTribNac" - Item da Lista de Serviços deve ser informado
-    com o código da lista de serviços da Lei Complementar 116/2003 -
-    http://www.planalto.gov.br/ccivil_03/Leis/LCP/Lcp116.htm porém com 6 dígitos,
-    conforme o desdobro que consta na planilha do layout Nacional
-    ANEXO_B-NBS2-LISTA_SERVICO_NACIONAL-SNNFSe-v1.00-20251210 A atualização nos
-    Cadastros de Estabelecimentos, foram realizados por padrão, com desdobro
-    final 00. Após, o Fiscal deverá conferir e ajustar conforme melhor se adequar
-    para cada prestador.
-  }
-  ListaDeAlertas.Clear;
+  FormatoAliq := tcDe2;
 
-  FDocument.Clear();
+  NrOcorrInformacoesComplemetares := 0;
+  NrOcorrCepTomador := 1;
+  NrOcorrAliquota := 1;
+  NrOcorrCodigoPaisTomador := -1;
+  NrOcorrCodigoNBS := -1;
 
-  NrOcorrtpAmb := -1;
-  IDNFSeVazio := True;
-  IDDPSVazio := True;
-  GerarIBSCBSNFSe := True;
+  TagTomador := 'TomadorServico';
+end;
 
-  NFSe.infNFSe.nNFSe := '';
-  NFSe.infNFSe.nDFSe := '';
+function TNFSeW_SigCorp204.GerarConstrucaoCivil: TACBrXmlNode;
+var
+  vEnderecoObra: TACBrXmlNode;
+begin
+  Result := nil;
 
-  NFSeNode := GerarXMLNFSe;
-  FDocument.Root := NFSeNode;
+  if (NFSe.ConstrucaoCivil.CodigoObra <> '') then
+  begin
+    Result := CreateElement('Obra');
 
-  Result := True;
+    Result.AppendChild(AddNode(tcStr, '#51', 'CodigoObra', 1, 15, 1,
+                                   NFSe.ConstrucaoCivil.CodigoObra, DSC_COBRA));
+  end
+  else
+  if NFSe.ConstrucaoCivil.Endereco.Endereco <> '' then
+  begin
+    Result := CreateElement('Obra');
+
+    vEnderecoObra := CreateElement('EnderecoObra');
+
+    vEnderecoObra.AppendChild(AddNode(tcStr, '#52', 'Logradouro', 1, 100, 1,
+                            NFSe.ConstrucaoCivil.Endereco.Endereco, DSC_EOBRA));
+
+    vEnderecoObra.AppendChild(AddNode(tcStr, '#53', 'Numero', 1, 10, 0,
+                             NFSe.ConstrucaoCivil.Endereco.Numero, DSC_NEOBRA));
+
+    vEnderecoObra.AppendChild(AddNode(tcStr, '#54', 'Bairro', 1, 100, 1,
+                             NFSe.ConstrucaoCivil.Endereco.Bairro, DSC_BEOBRA));
+
+    vEnderecoObra.AppendChild(AddNode(tcStr, '#55', 'Cep', 1, 10, 1,
+                               NFSe.ConstrucaoCivil.Endereco.CEP, DSC_CEPOBRA));
+
+    Result.AppendChild(vEnderecoObra);
+  end;
+end;
+
+function TNFSeW_SigCorp204.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
+begin
+  Result := inherited GerarInfDeclaracaoPrestacaoServico;
+
+  Result.AppendChild(GerarXMLIBSCBSNFSe);
+end;
+
+function TNFSeW_SigCorp204.GerarServico: TACBrXmlNode;
+begin
+  Result := inherited GerarServico;
+
+  Result.AppendChild(AddNode(tcStr, '#32', 'cNBS', 1, 9, 1,
+                                                   NFSe.Servico.CodigoNBS, ''));
 end;
 
 end.
