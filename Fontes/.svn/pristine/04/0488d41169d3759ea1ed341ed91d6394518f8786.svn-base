@@ -32,37 +32,31 @@
 
 {$I ACBr.inc}
 
-unit SilTecnologia.GravarXml;
+unit Citta.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv1,
   ACBrNFSeXGravarXml_ABRASFv2,
   PadraoNacional.GravarXml;
 
 type
-  { TNFSeW_SilTecnologia }
+  { TNFSeW_Citta203 }
 
-  TNFSeW_SilTecnologia = class(TNFSeW_ABRASFv1)
-  protected
-
-  end;
-
-  { TNFSeW_SilTecnologia203 }
-
-  TNFSeW_SilTecnologia203 = class(TNFSeW_ABRASFv2)
+  TNFSeW_Citta203 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
 
   end;
 
-  { TNFSeW_SilTecnologiaAPIPropria }
+  { TNFSeW_CittaAPIPropria }
 
-  TNFSeW_SilTecnologiaAPIPropria = class(TNFSeW_PadraoNacional)
+  TNFSeW_CittaAPIPropria = class(TNFSeW_PadraoNacional)
+  private
+
   protected
+    procedure Configuracao; override;
 
   public
     function GerarXml: Boolean; override;
@@ -72,40 +66,39 @@ implementation
 
 uses
   ACBrXmlDocument,
-  ACBrDFe.Conversao;
+  ACBrNFSeXConversao;
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     SilTecnologia
+//     Citta
 //==============================================================================
 
-{ TNFSeW_SilTecnologia203 }
+{ TNFSeW_Citta203 }
 
-procedure TNFSeW_SilTecnologia203.Configuracao;
+procedure TNFSeW_Citta203.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoAliq := tcDe2;
-
-  NrOcorrInformacoesComplemetares := 0;
-  NrOcorrAliquota := 1;
-  NrOcorrCodigoPaisServico := -1;
-  NrOcorrDiscriminacao_1 := -1;
-  NrOcorrCodigoMunic_1 := -1;
-
-  NrOcorrDiscriminacao_2 := 1;
-  NrOcorrCodigoMunic_2 := 1;
+  GerarIDRps := True;
 end;
 
-{ TNFSeW_SilTecnologiaAPIPropria }
+{ TNFSeW_CittaAPIPropria }
 
-function TNFSeW_SilTecnologiaAPIPropria.GerarXml: Boolean;
+procedure TNFSeW_CittaAPIPropria.Configuracao;
+begin
+  inherited Configuracao;
+
+  NrOcorrtpAmb := -1;
+
+  GerarNSRps := False;
+end;
+
+function TNFSeW_CittaAPIPropria.GerarXml: Boolean;
 var
   NFSeNode: TACBrXmlNode;
 begin
   Configuracao;
-
-  NrOcorrtpAmb := -1;
+  LerParamsTabIni(True);
 
   ListaDeAlertas.Clear;
 

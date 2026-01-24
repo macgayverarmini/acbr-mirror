@@ -42,6 +42,50 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+23/01/2026
+-- ACBrNFSeXServicos --
+[*] Ajuste nas URLs do município de Cubatão/SP.
+   Por: Italo Giurizzato Junior
+[*] Ajuste nas URLs do município de Cataguases MG Homologacao.
+	Por: AltC
+-- Conam.GravarXml.pas --
+[-] ACBR-8775 - Quando Tomador for Consumidor ou Exterior CEP nao deve ser informado.
+	https://www.projetoacbr.com.br/forum/topic/89066-acbr-8775provedor-conam-tabo%C3%A3o-da-serrasp-processamento-rejeitado-informe-vers%C3%A3o-400/?&_rid=1706#findComment-582890
+   Por: Daniel de Morais
+-- Giss.Provider -- 
+[*] Correção de erro de assinatura no método Emitir - https://www.projetoacbr.com.br/forum/topic/89734-erro-de-assinatura-para-emiss%C3%A3o-para-o-provedor-giss-santossp/
+   Por: [Bruno]
+
+22/01/2026
+-- ACBrNFSeXServicos --
+[*] Ajuste nas URLs do município de Catanduva
+    por: Elias
+[*] Ajuste do provedor do município Piraju para padrão nacional;
+[*] Ajuste do provedor do município Irecê para o Saatri.
+    Por: Matheus Klein
+
+23/01/2026
+-- GovDigital.Provider.pas --
+[-] ACBR-8843 - No cancelamento v200 e v201 feita sobrescrita do metodo e adicionado CMotivo
+	https://www.projetoacbr.com.br/forum/topic/89669-cancelamento-no-govdigital-201-e-200
+	https://www.projetoacbr.com.br/forum/topic/89748-acbr-8843ajustes-cancelamento-nfs-e-govdigital
+   Por: bremen.sistemas/Daniel de Morais
+
+23/01/2026
+-- ACBrNFSeXGravarXml/Citta.GravarXml/Citta.Provider/Digifred.GravarXml --
+-- SilTecnologia.GravarXml/PadraoNacional.GravarXml --
+[*] Os provedores Citta, Digifred e SilTecnologia exige que seja enviado para 
+    a API deles o XML da NFS-e em vez do DPS, realizado ajustes visando gerar
+    as tags do grupo infNFSe com as informações já existentes em infDPS.
+   por: Victor Gonzales/Italo Giurizzato Junior
+-- GeisWeb.GravarXml/GeisWeb.Provider --
+[*] Ajustes para aceita os dois layouts em uso pelo provedor.
+   por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] A cidade Campo Limpo Paulista/SP ainda continua com a URL e layout que não
+    atende a reforma tributária.
+   por: Destak/Italo Giurizzato Junior
+
 22/01/2026
 -- iiBrasil.GravarXml --
 [*] ACBR-8813 - Ajustes visando a reforma tributária.
