@@ -42,6 +42,23 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+25/01/2025
+-- Diversos --
+[*] ACBR-8805 - Implementado o WebService novo do provedor Fiorilli, mas não esta funcional.
+    por: Diego Folieni/Italo Giuizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBR-8781 - Alterado as URLs da cidade Rondonópolis/MT, o provedor continua o mesmo.
+    por: Etimus Sistemas
+-- WebFisco.GravarXml/WebFisco.LerXml --
+[*] ACBR-8536 - Alteração visando a Reforma Tributária.
+   A alteração realizada no provedor WebFisco se reflete nos provedores:
+   Facundo, FGMaiss, PriMax e Sam, pois esses provedores usam o mesmo layout usado
+   pelo WebFisco.
+    por: Antônio Carlos
+-- GestaoISS.GravarXml --
+[*] ACBR-8754 - Alteração visando a Reforma Tributária.
+    por: Alessandro dos Santos
+
 24/01/2025
 -- ACBrNFSeXServicos --
 [*] ACBR-8822 - Incluída a cidade Tremembé/SP, o provedor é SigISS

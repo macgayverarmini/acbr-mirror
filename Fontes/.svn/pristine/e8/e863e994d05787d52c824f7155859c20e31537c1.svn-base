@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,97 +32,66 @@
 
 {$I ACBr.inc}
 
-unit Digifred.GravarXml;
+unit GestaoISS.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
   ACBrNFSeXGravarXml_ABRASFv2,
-  PadraoNacional.GravarXml;
+  ACBrNFSeXConversao,
+  ACBrXmlDocument,
+  ACBrDFe.Conversao;
 
 type
-  { TNFSeW_Digifred200 }
+  { TNFSeW_GestaoISS202 }
 
-  TNFSeW_Digifred200 = class(TNFSeW_ABRASFv2)
+  TNFSeW_GestaoISS202 = class(TNFSeW_ABRASFv2)
   protected
     procedure Configuracao; override;
-
-  end;
-
-  { TNFSeW_DigifredAPIPropria }
-
-  TNFSeW_DigifredAPIPropria = class(TNFSeW_PadraoNacional)
-  protected
-
+    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
   public
-    function GerarXml: Boolean; override;
+    function GerarXml: Boolean; Override;
   end;
 
 implementation
 
-uses
-  ACBrXmlDocument,
-  ACBrDFe.Conversao;
-
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Digifred
+//     GestaoISS
 //==============================================================================
 
-{ TNFSeW_Digifred200 }
+{ TNFSeW_GestaoISS202 }
 
-procedure TNFSeW_Digifred200.Configuracao;
+procedure TNFSeW_GestaoISS202.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoEmissao := tcDatHor;
-  FormatoCompetencia := tcDatHor;
-  FormatoAliq := tcDe2;
-  NrOcorrCodigoPaisServico := -1;
+  FormatoItemListaServico := filsSemFormatacao;
+
+  NrOcorrDiscriminacao_1 := -1;
+  NrOcorrDiscriminacao_2 := 1;
+  NrOcorrCodigoMunic_1 := -1;
+  NrOcorrCodigoMunic_2 := 1;
 end;
 
-{ TNFSeW_DigifredAPIPropria }
-
-function TNFSeW_DigifredAPIPropria.GerarXml: Boolean;
-var
-  NFSeNode: TACBrXmlNode;
+function TNFSeW_GestaoISS202.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
 begin
-  Configuracao;
-  LerParamsTabIni(True);
+  Result := inherited GerarInfDeclaracaoPrestacaoServico;
 
-  {
-    Alguns dados merecem atenção para não serem confundidos:
-    Os tags "nNFSe" e "nDFSe" devem aparecer no xml, porém, não devem ser preenchidos.
-    Os tags "infNFSe" e "infDPS" devem conter o "Id", este também deve estar vazio.
-    Como no exemplo 'infDPS Id=""' .Os tags "infNFSe" e "infDPS" devem conter o "Id",
-    este também deve estar vazio. Como no exemplo 'infDPS Id=""'.
-    Item de Serviço: A tag "cTribNac" - Item da Lista de Serviços deve ser informado
-    com o código da lista de serviços da Lei Complementar 116/2003 -
-    http://www.planalto.gov.br/ccivil_03/Leis/LCP/Lcp116.htm porém com 6 dígitos,
-    conforme o desdobro que consta na planilha do layout Nacional
-    ANEXO_B-NBS2-LISTA_SERVICO_NACIONAL-SNNFSe-v1.00-20251210 A atualização nos
-    Cadastros de Estabelecimentos, foram realizados por padrão, com desdobro
-    final 00. Após, o Fiscal deverá conferir e ajustar conforme melhor se adequar
-    para cada prestador.
-  }
-  ListaDeAlertas.Clear;
+  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
+     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
+     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
+     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
+    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
+end;
 
-  FDocument.Clear();
+function TNFSeW_GestaoISS202.GerarXml: Boolean;
+begin
+  if NFSe.OptanteSimplesNacional = snSim then
+    NrOcorrAliquota := 1;
 
-  NrOcorrtpAmb := -1;
-  IDNFSeVazio := True;
-  IDDPSVazio := True;
-  GerarIBSCBSNFSe := False;
-
-//  NFSe.infNFSe.nNFSe := '';
-//  NFSe.infNFSe.nDFSe := '';
-
-  NFSeNode := GerarXMLNFSe;
-  FDocument.Root := NFSeNode;
-
-  Result := True;
+  Result := inherited GerarXml;
 end;
 
 end.
