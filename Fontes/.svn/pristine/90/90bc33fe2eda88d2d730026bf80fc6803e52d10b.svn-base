@@ -42,6 +42,29 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+
+26/01/2026
+-- ACBrNFSeXLerXml_ABRASFv2/GovDigital.GravarXml --
+[*] ACBR-8800 - Ajuste na geração da propriedade MunicipioPrestacao que deve ser obrigatória se o serviço
+   for no Brasil
+   Por: Antonio Carlos Junior
+-- PadraoNacional.GravarXml --
+[*] ACBR-8785 - Quando o CST do PIS/COFINS for 00 não deve gerar no XML o valor da BC.
+   Por: ML Gonçalves
+-- ACBrNFSeXLerXml_ABRASFv2.pas --
+[-] ACBR-8800 - Ajustado para ler as propriedades CClassTribReg, CIndOp na seção Servicos
+	https://www.projetoacbr.com.br/forum/topic/89319-acbr-8800-ajustes-para-o-provedor-govdigital-v-201/page/2/?&_rid=1706#findComment-583338	
+	Por: Italo Giurizzato Junior/ Antonio Carlos Junior / Daniel de Morais Incotidiano
+-- ACBrNFSeXProviderABRASFv2 --
+[*] Correção de AV no tratamento de retorno da emissão quando não encontrar a tag InfNfse
+   Por: Renato Rubinho
+
+26/01/2026
+-- GovDigital.Provider.pas --
+[-] ACBR-8843 - Ajustes na configuracao para consulta da faixa apos cancelar
+	https://www.projetoacbr.com.br/forum/topic/89669-cancelamento-no-govdigital-201-e-200
+	Por: Daniel de Morais Incotidiano
+   
 25/01/2025
 -- Diversos --
 [*] ACBR-8805 - Implementado o WebService novo do provedor Fiorilli, mas não esta funcional.
