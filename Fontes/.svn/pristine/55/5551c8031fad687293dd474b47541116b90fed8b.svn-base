@@ -32,66 +32,56 @@
 
 {$I ACBr.inc}
 
-unit Saatri.GravarXml;
+unit ISSDigital.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrNFSeXConversao,
+  PadraoNacional.GravarXml;
 
 type
-  { TNFSeW_Saatri201 }
+  { TNFSeW_ISSDigital200 }
 
-  TNFSeW_Saatri201 = class(TNFSeW_ABRASFv2)
+  TNFSeW_ISSDigital200 = class(TNFSeW_ABRASFv2)
   protected
-    procedure DefinirIDDeclaracao; override;
-    procedure DefinirIDRps; override;
-
     procedure Configuracao; override;
 
   end;
 
-  { TNFSeW_Saatri203 }
+  { TNFSeW_ISSDigitalAPIPropria }
 
-  TNFSeW_Saatri203 = class(TNFSeW_Saatri201)
+  TNFSeW_ISSDigitalAPIPropria = class(TNFSeW_PadraoNacional)
+  private
+
   protected
 
   end;
 
 implementation
 
-uses
-  ACBrUtil.Strings;
-
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Saatri
+//     ISSDigital
 //==============================================================================
 
-{ TNFSeW_Saatri201 }
+{ TNFSeW_ISSDigital200 }
 
-procedure TNFSeW_Saatri201.Configuracao;
+procedure TNFSeW_ISSDigital200.Configuracao;
 begin
   inherited Configuracao;
 
+  FormatoItemListaServico := filsSemFormatacaoSemZeroEsquerda;
+
   NrOcorrValorISS := 1;
   NrOcorrAliquota := 1;
+  NrOcorrProducao := 1;
+  NrOcorrSenha := 1;
+  NrOcorrFraseSecreta := 1;
 
   GerarIDRps := True;
-end;
-
-procedure TNFSeW_Saatri201.DefinirIDDeclaracao;
-begin
-  NFSe.InfID.ID := 'Declaracao_' +
-                      OnlyNumber(NFSe.Prestador.IdentificacaoPrestador.CpfCnpj);
-end;
-
-procedure TNFSeW_Saatri201.DefinirIDRps;
-begin
-  NFSe.InfID.ID := 'rps' + OnlyNumber(NFSe.IdentificacaoRps.Numero) +
-                    NFSe.IdentificacaoRps.Serie +
-                    FpAOwner.TipoRPSToStr(NFSe.IdentificacaoRps.Tipo);
 end;
 
 end.

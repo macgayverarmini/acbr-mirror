@@ -43,6 +43,39 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+27/01/2026
+-- PadraoNacional.GravarXml/PadraoNacional.Provider --
+[*] Ajuste visando gerar corretamente o ID da NFS-e
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Para cidade Caxias do Sul/RS foi alterado para usar as URLs da API própria do provedor, pois temos 
+    relatos de que estão enviado, consultando e cancelando sem nenhum problema.
+   Por: Desenv. AT Info Sistemas/Italo Giurizzato Junior
+-- PadraoNacional.GravarXml/PadraoNacional.LerXml --
+[-] ACBR-8871 - Ajuste visando correta geração das tags dhProc e nDPS a partir do INI
+   Por: Diego Folieni
+-- Saatri.GravarXml --
+[*] ACBR-8866 - Ajuste na procedure Configuração para que a tag CodigoNbs seja gerada na posição correta.
+   Por: João Antônio/Italo Giurizzato Junior
+-- ACBrNFSeXClass/ACBrNFSeXLerXml_ABRASFv1/SpeedGov.GravarXml/SpeedGov.LerXml/SpeedGov.Provider --
+[*] ACBR-8730 - Ajustes visando adequar o provedor SpeedGov para a Reforma Tributária.
+   Por: Diego Folieni
+-- ISSCampinas.GravarXml --
+[*] ACBR-8830 - Ajuste na procedure Configuração para que a tag CodigoNbs seja gerada na posição correta.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBR-8854 - A cidade Promissão/SP, tem uma nova URL de produção para consumir a API Própria do provedor Fiorilli.
+    por: Marcello Cainelli
+-- Tiplan.GravarXml --
+[-] Imposta uma condição para gerar a tag SituacaoTributariaPISCOFIN, pois dependo do CST a tag não deve 
+    ser gerada.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXProviderManager/ISSDigital.GravarXml/ISSDigital.LerXml/ISSDigital.Provider --
+[+] ACBR-8759 - Realizado as alterações necessárias para consumir o novo WebService Soap do provedor
+    que recepciona o XML segundo o Padrão Nacional, falta implementar as 2 consultas disponibilizadas 
+    no WebService.
+   Por: Italo Giurizzato Junior
+
 26/01/2026
 -- ACBrNFSeXLerXml_ABRASFv2/GovDigital.GravarXml --
 [*] ACBR-8800 - Ajuste na geração da propriedade MunicipioPrestacao que deve ser obrigatória se o serviço
@@ -58,8 +91,6 @@ Símbolo : Significado
 -- ACBrNFSeXProviderABRASFv2 --
 [*] Correção de AV no tratamento de retorno da emissão quando não encontrar a tag InfNfse
    Por: Renato Rubinho
-
-26/01/2026
 -- GovDigital.Provider.pas --
 [-] ACBR-8843 - Ajustes na configuracao para consulta da faixa apos cancelar
 	https://www.projetoacbr.com.br/forum/topic/89669-cancelamento-no-govdigital-201-e-200

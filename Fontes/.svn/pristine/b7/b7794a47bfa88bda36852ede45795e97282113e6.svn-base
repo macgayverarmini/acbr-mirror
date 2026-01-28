@@ -16530,13 +16530,11 @@ Versao=2.04
 ProRecepcionar=https://icaraideminas.sintesenotafiscal.com.br/nfsews/NfseWS
 
 [3130101]
-; Atualizado em 24/01/2025
 Nome=Igarape
 UF=MG
 Provedor=ISSDigital
-Versao=2.00
 ProRecepcionar=https://igarape.mg.issqn.quasar.srv.br/nfe/snissdigitalsvc
-HomRecepcionar=https://igarape.mg.issqn.quasar.srv.br/nfe/snissdigitalsvc
+HomRecepcionar=https://igarape.mg.des.issqn.quasar.tec.br/nfe/snissdigitalsvc
 
 [3130200]
 Nome=Igaratinga
@@ -17436,12 +17434,9 @@ Versao=2.04
 ProRecepcionar=https://materlandia.sintesenotafiscal.com.br/nfsews/NfseWS
 
 [3140704]
-; Incluído em 30/04/2024
-; Atualizado em 13/01/2025
 Nome=Mateus Leme
 UF=MG
 Provedor=ISSDigital
-Versao=2.00
 ProRecepcionar=https://mateusleme.mg.issqn.quasar.srv.br/nfe/snissdigitalsvc
 HomRecepcionar=https://mateusleme.mg.issqn.quasar.srv.br/nfe/snissdigitalsvc
 
@@ -17966,11 +17961,9 @@ UF=MG
 Provedor=PadraoNacional
 
 [3147105]
-; Atualizado em 22/02/2025
 Nome=Para de Minas
 UF=MG
 Provedor=ISSDigital
-Versao=2.00
 ProRecepcionar=https://parademinas.mg.issqn.quasar.srv.br/nfe/snissdigitalsvc
 HomRecepcionar=https://parademinas.mg.issqn.quasar.srv.br/nfe/snissdigitalsvc
 
@@ -20865,8 +20858,8 @@ HomLinkURL=https://www.spe.angra.rj.gov.br/nfse.aspx?ccm=%InscMunic%&nf=%NumeroN
 
 ; Excluir as 2 linhas acima, descomentar a linha abaixo e informar a URL de produção 
 ; quando a API estiver funcionando
-; ProRecepcionar=https://nfse.angra.rj.gov.br/api/adn/dps/recepcao
-; HomRecepcionar=https://angrahomologacao.nfe.com.br/api/adn/dps/recepcao 
+;ProRecepcionar=https://www.spe.angra.rj.gov.br/api/adn/dps/recepcao
+;HomRecepcionar=https://angrahomologacao.nfe.com.br/api/adn/dps/recepcao
 
 [3300159]
 Nome=Aperibe
@@ -20938,11 +20931,9 @@ UF=RJ
 Provedor=PadraoNacional
 
 [3300704]
-; Atualizado em 18/03/2025
 Nome=Cabo Frio
 UF=RJ
 Provedor=ISSDigital
-Versao=2.00
 ProRecepcionar=http://tributos.fazenda.cabofrio.rj.gov.br:8091/nfe/snissdigitalsvc
 HomRecepcionar=http://tributos.fazenda.cabofrio.rj.gov.br:8091/nfe/snissdigitalsvc
 
@@ -22061,23 +22052,7 @@ Provedor=PadraoNacional
 [3506359]
 Nome=Bertioga
 UF=SP
-Provedor=SilTecnologia
-ProRecepcionar=https://sistemas-smarapd.bertioga.sp.gov.br:443/tbw/services/NotaFiscalNacional
-HomRecepcionar=
-;
-ProConsultarNFSeRps=https://sefin.nfse.gov.br/sefinnacional
-ProConsultarNFSePorChave=https://sefin.nfse.gov.br/sefinnacional
-ProConsultarDFe=https://adn.nfse.gov.br/contribuintes
-ProConsultarParam=https://adn.nfse.gov.br
-ProObterDANFSE=https://adn.nfse.gov.br
-ProLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
-
-HomConsultarNFSeRps=https://sefin.producaorestrita.nfse.gov.br/SefinNacional
-HomConsultarNFSePorChave=https://sefin.producaorestrita.nfse.gov.br/SefinNacional
-HomConsultarDFe=https://adn.producaorestrita.nfse.gov.br/contribuintes
-HomConsultarParam=https://adn.producaorestrita.nfse.gov.br
-HomObterDANFSE=https://adn.producaorestrita.nfse.gov.br
-HomLinkURL=https://www.producaorestrita.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
+Provedor=Ginfes
 
 [3506409]
 Nome=Bilac
@@ -23101,7 +23076,6 @@ Provedor=PadraoNacional
 Nome=Guarei
 UF=SP
 Provedor=GeisWeb
-Versao=1.00
 Params=AliasCidade:guarei
 ProRecepcionar=https://www.gerenciadecidades.com.br/producao/guarei/webservice/GeisWebServiceImpl.php
 HomRecepcionar=https://www.gerenciadecidades.com.br/homologacao/modelo/webservice/GeisWebServiceImpl.php
@@ -24897,7 +24871,6 @@ UF=SP
 Provedor=PadraoNacional
 
 [3541604]
-; Atualizado em 10/10/2023
 Nome=Promissao
 UF=SP
 Provedor=Fiorilli
@@ -24906,7 +24879,7 @@ ProRecepcionar=http://guarani.comunicapromissao.com.br:5661/IssWeb-ejb/IssWebWS/
 ProLinkURL=http://guarani.comunicapromissao.com.br:5661/issweb/formGerarNF.jsf?nroNota=%NumeroNFSe%&codVerificacao=%CodVerif%&cnpj=%Cnpj%&hash=%ChaveAcesso%
 
 ; A URL abaixo deve ser utilizada a partir de 01/02/2026 quando o WebSercice novo vai passar a ser utilizado.
-;ProRecepcionar=https://guarani.comunicapromissao.com.br:5661/IssWeb-ejb/IssWebWSNacional/IssWebWSNacionalPortType
+;ProRecepcionar=https://guarani.comunicapromissao.com.br:8443/IssWeb-ejb/IssWebWSNacional/IssWebWSNacionalPortType
 
 [3541653]
 Nome=Quadra
@@ -26975,7 +26948,7 @@ Provedor=
 [4108957]
 Nome=Guamiranga
 UF=PR
-Provedor=
+Provedor=PadraoNacional
 
 [4109005]
 Nome=Guapirama
@@ -27200,7 +27173,7 @@ Provedor=PadraoNacional
 [4111704]
 Nome=Jaboti
 UF=PR
-Provedor=
+Provedor=PadraoNacional
 
 [4111803]
 Nome=Jacarezinho
@@ -30856,7 +30829,7 @@ HomRecepcionar=https://cachoeirinha.atende.net/atende.php?pg=rest&service=WNERes
 [4303202]
 Nome=Cacique Doble
 UF=RS
-Provedor=
+Provedor=PadraoNacional
 
 [4303301]
 Nome=Caibate
@@ -31046,6 +31019,7 @@ Nome=Carlos Barbosa
 UF=RS
 Provedor=Infisc
 Versao=1.01
+Params=WSProvedor:
 ProRecepcionar=https://nfse.carlosbarbosa.rs.gov.br/services/nfse/ws/Servicos
 HomRecepcionar=https://carlosbarbosa-homol.infisc.com.br/services/nfse/ws/Servicos
 ProLinkURL=https://nfse.carlosbarbosa.rs.gov.br/portal/consulta.jspx?nf=%ChaveAcesso%
@@ -31077,25 +31051,16 @@ ProRecepcionar=https://catuipe.govbr.cloud/NFSe.Api/NotaNacional
 Nome=Caxias do Sul
 UF=RS
 Provedor=Infisc
-Versao=1.01
-Params=WSProvedor:
-; URLs do Webservice atual
-ProRecepcionar=https://nfse.caxias.rs.gov.br/services/nfse/ws/Servicos
-HomRecepcionar=https://nfsehomol.caxias.rs.gov.br/services/nfse/ws/Servicos
-ProLinkURL=https://nfse.caxias.rs.gov.br/portal/consulta.jspx?nf=%ChaveAcesso%
-HomLinkURL=https://nfsehomol.caxias.rs.gov.br/portal/consulta.jspx?nf=%ChaveAcesso%
-
-; URLs da API Própria do provedor visando usar o Padrão Nacional
-;ProRecepcionar=https://sefin.caxias.rs.gov.br/sefinnacional
-;ProConsultarDFe=https://sefin.caxias.rs.gov.br/sefinnacional
-;ProConsultarParam=https://adn.nfse.gov.br
-;ProObterDANFSE=https://sefin.caxias.rs.gov.br/sefinnacional
-;ProLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
-;HomRecepcionar=https://sefinhomol.caxias.rs.gov.br/sefinnacional
-;HomConsultarDFe=https://sefinhomol.caxias.rs.gov.br/sefinnacional
-;HomConsultarParam=https://adn.producaorestrita.nfse.gov.br
-;HomObterDANFSE=https://sefinhomol.caxias.rs.gov.br/sefinnacional
-;HomLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
+ProRecepcionar=https://sefin.caxias.rs.gov.br/sefinnacional
+ProConsultarDFe=https://sefin.caxias.rs.gov.br/sefinnacional
+ProConsultarParam=https://adn.nfse.gov.br
+ProObterDANFSE=https://sefin.caxias.rs.gov.br/sefinnacional
+ProLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
+HomRecepcionar=https://sefinhomol.caxias.rs.gov.br/sefinnacional
+HomConsultarDFe=https://sefinhomol.caxias.rs.gov.br/sefinnacional
+HomConsultarParam=https://adn.producaorestrita.nfse.gov.br
+HomObterDANFSE=https://sefinhomol.caxias.rs.gov.br/sefinnacional
+HomLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
 
 [4305116]
 Nome=Centenario
@@ -31431,7 +31396,7 @@ ProRecepcionar=https://encruzilhadadosul.govbr.cloud/NFSe.Api/NotaNacional
 [4306924]
 Nome=Engenho Velho
 UF=RS
-Provedor=
+Provedor=PadraoNacional
 
 [4306932]
 Nome=Entre-Ijuis
@@ -31447,7 +31412,7 @@ Provedor=PadraoNacional
 [4306973]
 Nome=Erebango
 UF=RS
-Provedor=
+Provedor=PadraoNacional
 
 [4307005]
 Nome=Erechim
@@ -31462,7 +31427,7 @@ Provedor=PadraoNacional
 [4307104]
 Nome=Herval
 UF=RS
-Provedor=
+Provedor=PadraoNacional
 
 [4307203]
 Nome=Erval Grande
@@ -31533,6 +31498,7 @@ Nome=Farroupilha
 UF=RS
 Provedor=Infisc
 Versao=1.01
+Params=WSProvedor:
 ProRecepcionar=https://nfse.farroupilha.rs.gov.br/services/nfse/ws/Servicos
 HomRecepcionar=https://farroupilha-homol.infisc.com.br/services/nfse/ws/Servicos
 ProLinkURL=https://nfse.farroupilha.rs.gov.br/portal/consulta.jspx?nf=%ChaveAcesso%
@@ -31622,9 +31588,6 @@ Provedor=PadraoNacional
 Nome=Garibaldi
 UF=RS
 Provedor=Infisc
-Versao=1.01
-Params=APIPropria:
-; URLs da API Própria do provedor visando usar o Padrão Nacional
 ProRecepcionar=https://sefin.garibaldi.rs.gov.br/sefinnacional
 ProConsultarDFe=https://sefin.garibaldi.rs.gov.br/sefinnacional
 ProConsultarParam=https://adn.nfse.gov.br
@@ -32947,8 +32910,6 @@ HomRecepcionarSincrono=http://homologasantamariadoherval.nfse-tecnos.com.br:9091
 HomGerarNFSe=*
 HomSubstituirNFSe=http://homologasantamariadoherval.nfse-tecnos.com.br:9086/SubstituicaoNFSe.asmx
 
-
-
 [4316972]
 Nome=Santa Margarida do Sul
 UF=RS
@@ -34010,7 +33971,7 @@ Provedor=Betha
 [5000906]
 Nome=Antonio Joao
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5001003]
 Nome=Aparecida do Taboado
@@ -34044,7 +34005,7 @@ ProLinkURL=http://187.86.50.27:8085/issweb/formGerarNF.jsf?nroNota=%NumeroNFSe%&
 [5001508]
 Nome=Bandeirantes
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5001904]
 Nome=Bataguassu
@@ -34330,7 +34291,7 @@ ProRecepcionar=http://177.73.104.87:8080/IssWeb-ejb/IssWebWS/IssWebWS
 [5005202]
 Nome=Ladario
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5005251]
 Nome=Laguna Carapa
@@ -34366,7 +34327,7 @@ ProRecepcionar=https://navirai.govbr.cloud/NFSe.Api/NotaNacional
 [5005806]
 Nome=Nioaque
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5006002]
 Nome=Nova Alvorada do Sul
@@ -34458,7 +34419,7 @@ Provedor=Betha
 [5007307]
 Nome=Rio Negro
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5007406]
 Nome=Rio Verde de Mato Grosso
@@ -34468,7 +34429,7 @@ Provedor=Betha
 [5007505]
 Nome=Rochedo
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5007554]
 Nome=Santa Rita do Pardo
@@ -34538,7 +34499,7 @@ Provedor=Betha
 [5008008]
 Nome=Terenos
 UF=MS
-Provedor=
+Provedor=PadraoNacional
 
 [5008305]
 ; Atualizado em 26/02/2025
@@ -35043,7 +35004,6 @@ Nome=Nobres
 UF=MT
 Provedor=Agili
 Params=NomeTagAtividadeEconomica:ItemLei116AtividadeEconomica|NaoGerarTag:ItemLei116,CodigoCnae|NaoFormatarItemServicoSemZeroEsquerda:
-
 
 [5106000]
 ; Incluído em 21/01/2025
@@ -36710,7 +36670,7 @@ ProRecepcionar=https://palmelo.megasoftarrecadanet.com.br/palmelo/ws/nfseSOAP
 [5215900]
 Nome=Palminopolis
 UF=GO
-Provedor=
+Provedor=PadraoNacional
 
 [5216007]
 Nome=Panama
