@@ -41,7 +41,25 @@ Símbolo : Significado
 [+]     : Novo recurso
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
+28/01/2026
+-- SilTecnologia.GravarXml.pas --
+[*] ACBr-8859 feita sobrescrita da configuração para aplicar GerarIBSCBSNFSe (true) para gerar o grupo q nao estava sendo gerado
+	https://discord.com/channels/798697718800318484/800042186783588364/1466129929988079831
+    Por: Daniel de Morais Infocotidiano
 
+28/01/2026
+-- ACBrNFSeXServicos --
+[*] A cidade Tatui/SP mudou para o PadraoNacional.
+   Por: Italo Giurizzato Junior
+-- ISSDigital.Provider --
+[+] Implementado o ConsultarStatusDps o ConsultarDps.
+   Por: Italo Giurizzato Junior
+-- Tinus.Provider --
+[-] ACBR-8846 - Ajuste visando sanar AV ao tratar retorno de emissão de nota.
+   Por: Diego Folieni
+-- SpeedGov.GravarXml --
+[*] ACBR-8730 - Ajustes para emissão de NFS-e utilizando o SpeedGov.
+   Por: João Antonio
 
 27/01/2026
 -- PadraoNacional.GravarXml/PadraoNacional.Provider --
