@@ -14201,11 +14201,15 @@ UF=MG
 Provedor=PadraoNacional
 
 [3100203]
-; Incluído em 17/11/2023
 Nome=Abaete
 UF=MG
-Provedor=ISSLegal
-Versao=2.03
+Provedor=Fiorilli
+Versao=2.00
+ProRecepcionar=http://pmabaete.redemunicipal.net.br:8080/IssWeb-ejb/IssWebWS/IssWebWS?
+ProLinkURL=http://pmabaete.redemunicipal.net.br:8080/issweb/formGerarNF.jsf?nroNota=%NumeroNFSe%&codVerificacao=%CodVerif%&cnpj=%Cnpj%&hash=%ChaveAcesso%
+
+; A URL abaixo deve ser utilizada a partir de 01/02/2026 quando o WebSercice novo vai passar a ser utilizado.
+;ProRecepcionar=http://pmabaete.redemunicipal.net.br:8080/IssWeb-ejb/IssWebWSNacional/IssWebWSNacionalPortType
 
 [3100302]
 Nome=Abre Campo
@@ -15228,11 +15232,13 @@ UF=MG
 Provedor=PadraoNacional
 
 [3114204]
-; Atualizado em 09/01/2025
 Nome=Carmo do Cajuru
 UF=MG
 Provedor=IPM
-Params=SolicitarCancelamento:
+Versao=1.01
+Params=GerarTag:codigo_atividade|SolicitarCancelamento:
+ProRecepcionar=https://carmodocajuru.atende.net/atende.php?pg=rest&service=WNERestServiceNFSe&cidade=padrao
+HomRecepcionar=https://carmodocajuru.atende.net/atende.php?pg=rest&service=WNERestServiceNFSe&cidade=padrao
 
 [3114303]
 Nome=Carmo do Paranaiba
@@ -17165,7 +17171,8 @@ Provedor=PadraoNacional
 Nome=Lavras
 UF=MG
 Provedor=GovDigital
-Versao=2.00
+Versao=2.01
+Params=NaoDividir100:
 ProRecepcionar=https://ws.nfe-cidades.com.br/ws/lavr
 HomRecepcionar=https://ws.homolog.nfe-cidades.com.br/ws/lavr
 
@@ -22439,8 +22446,8 @@ ProRecepcionar=http://45.175.171.143:5661/IssWeb-ejb/IssWebWS/IssWebWS
 Nome=Catanduva
 UF=SP
 Provedor=RLZ
-ProRecepcionar=https://cidadaoonline.catanduva.sp.gov.br/nota/nacional/nfse
-HomRecepcionar=https://catanduva.prefeitura.rlz.com.br/nota/nacional/nfse
+ProRecepcionar=https://cidadaoonline.catanduva.sp.gov.br/nota/nacional
+HomRecepcionar=https://catanduva.prefeitura.rlz.com.br/nota/nacional
 
 [3511201]
 Nome=Catigua
@@ -23594,7 +23601,7 @@ Provedor=Betha
 Nome=Jandira
 UF=SP
 Provedor=SilTecnologia
-ProRecepcionar=
+ProRecepcionar=https://jandira.siltecnologia.com.br/services/NotaFiscalNacional
 HomRecepcionar=https://homologacao.siltecnologia.com.br/tbjandira/services/NotaFiscalNacional
 ;
 ProConsultarNFSeRps=https://sefin.nfse.gov.br/sefinnacional
@@ -25416,7 +25423,7 @@ Provedor=Ginfes
 ProLinkURL=http://nfse.isssbc.com.br/report/consultarNota?__report=nfs_ver4&cdVerificacao=%CodVerif%&numNota=%NumeroNFSe%&cnpjPrestador=null
 HomLinkURL=http://saobernardo.ginfesh.com.br/report/consultarNota?__report=nfs_sao_bernardo_campo_novo&cdVerificacao=%CodVerif%&numNota=%NumeroNFSe%&cnpjPrestador=null
 
- [3548807]
+[3548807]
 Nome=Sao Caetano do Sul
 UF=SP
 Provedor=Ginfes
@@ -30907,15 +30914,16 @@ ProRecepcionar=https://cangucu.govbr.cloud/NFSe.Api/NotaNacional
 Nome=Canoas
 UF=RS
 Provedor=Infisc
+Versao=2.03
 ProRecepcionar=https://sefin.canoas.rs.gov.br/sefinnacional
 ProConsultarDFe=https://sefin.canoas.rs.gov.br/sefinnacional
 ProConsultarParam=https://adn.nfse.gov.br
 ProObterDANFSE=https://sefin.canoas.rs.gov.br/sefinnacional
 ProLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
-HomRecepcionar=https://sefin.canoas-gif4homol.infisc.com.br/sefinnacional
-HomConsultarDFe=https://sefin.canoas-gif4homol.infisc.com.br/sefinnacional
+HomRecepcionar=https://sefin.canoas-homol.infisc.com.br/sefinnacional
+HomConsultarDFe=https://sefin.canoas-homol.infisc.com.br/sefinnacional
 HomConsultarParam=https://adn.producaorestrita.nfse.gov.br
-HomObterDANFSE=https://sefin.canoas-gif4homol.infisc.com.br/sefinnacional
+HomObterDANFSE=https://sefin.canoas-homol.infisc.com.br/sefinnacional
 HomLinkURL=https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=%CodVerif%
 
 [4304614]
