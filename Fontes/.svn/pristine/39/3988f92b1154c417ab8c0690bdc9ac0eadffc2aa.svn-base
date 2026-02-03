@@ -41,11 +41,29 @@ Símbolo : Significado
 [+]     : Novo recurso
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
+
+02/02/2026
+-- SilTecnologia.Provider --
+[-] Correção na montagem do ID do Evento.
+   Por: Italo Giurizzato Junior
+-- ISSFortaleza.Provider --
+[*] ACBR-8896 - Ajustes para a versão 4 dos serviços do provedor.
+   Por: Italo Giurizzato Junior
+-- SilTecnologia.Provider --
+[*] Possível solução para o erro ao enviar o evento de cancelamento.
+   Por: Italo Giurizzato Junior
+-- Pronim.Provider.pas --
+[*] Ajustado para evitar AV
+    Por: Daniel de Morais Infocotidiano
+-- Conam.GravarXml --
+[*] Ajustes nas function: GerarReg50 e GerarReg50Item.
+   Por: Italo Giurizzato Junior
+
+30/01/2026
 -- Pronim.Provider.pas --
 [-] ACBR-8869 - Ajustado Consultar Evento, Corrigido para solucionar AV
 	https://www.projetoacbr.com.br/forum/topic/89807-nfse-pronim-consulta-nfse-por-chave
     Por: Daniel de Morais Infocotidiano
-30/01/2026
 -- Fiorilli.Provider --
 [-] Ajustes visando correta geração dos arquivos no envio em lote síncrono e assíncrono para nova API.
    Por: Diego Folieni
