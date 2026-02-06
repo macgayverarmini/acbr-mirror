@@ -42,6 +42,19 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+05/02/2026
+-- ACBrNFSeXLerXml --
+[-] ACBR-8756 - Ajuste visando correta normatização do campo ItemListaServico nos casos que vier com 5 dígitos.
+   Por: Diego Folieni
+[*] Incluído a leitura do campo xNBS na seção Serviço.
+   Por: Italo Giurizzato Junior
+-- Sudoeste.GravarXml --
+[*] Alterado a procedure Configuração para não gerar a tag CodigoNBS.
+   Por: Italo Giurizzato Junior
+-- PadraoNacional.LerXml --
+[*] Ajustes no calculo do valor total e valor liquido da nota no que se refere a retenção.
+   Por: Italo Giurizzato Junior
+
 04/02/2026
 --GeisWeb.GravarXml --
 [-] ACBR-8895 - Ajuste visando sanar problema de leitura do XML quando não houver finNFSe no arquivo.

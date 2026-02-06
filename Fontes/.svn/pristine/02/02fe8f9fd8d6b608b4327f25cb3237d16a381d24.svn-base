@@ -32,72 +32,87 @@
 
 {$I ACBr.inc}
 
-unit WebISS.LerXml;
+unit MetropolisWeb.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
   ACBrXmlDocument,
-  ACBrNFSeXLerXml_ABRASFv1,
-  ACBrNFSeXLerXml_ABRASFv2;
+  ACBrDFe.Conversao,
+  ACBrNFSeXGravarXml_ABRASFv1;
 
 type
-  { TNFSeR_WebISS }
+  { TNFSeW_MetropolisWeb }
 
-  TNFSeR_WebISS = class(TNFSeR_ABRASFv1)
+  TNFSeW_MetropolisWeb = class(TNFSeW_ABRASFv1)
   protected
+    procedure Configuracao; override;
 
-  public
-
-  end;
-
-  { TNFSeR_WebISS202 }
-
-  TNFSeR_WebISS202 = class(TNFSeR_ABRASFv2)
-  protected
-    procedure LerInfDeclaracaoPrestacaoServico(const ANode: TACBrXmlNode); override;
-    procedure LerInfNfse(const ANode: TACBrXmlNode); override;
-  public
-
+    function GerarServico: TACBrXmlNode; override;
   end;
 
 implementation
 
+uses
+  ACBrNFSeXConsts,
+  ACBrUtil.Base,
+  ACBrUtil.Strings;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     WebISS
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+//     MetropolisWeb
 //==============================================================================
 
-{ TNFSeR_WebISS202 }
+{ TNFSeW_MetropolisWeb }
 
-procedure TNFSeR_WebISS202.LerInfDeclaracaoPrestacaoServico(
-  const ANode: TACBrXmlNode);
-var
-  node: TACBrXmlNode;
+procedure TNFSeW_MetropolisWeb.Configuracao;
 begin
-  inherited LerInfDeclaracaoPrestacaoServico(ANode);
+  inherited Configuracao;
 
-  node := ANode.Childrens.FindAnyNs('InfDeclaracaoPrestacaoServico');
-  if node <> nil then
-    LerXMLIBSCBSDPS(node.Childrens.FindAnyNs('IBSCBS'), NFSe.IBSCBS);
+  NrOcorrAliquota := 1;
+
+  // Incluida a linha abaixo para a cidade Lauro de Freitas/BA em 23/02/2022
+  DivAliq100 := True;
+
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
 end;
-procedure TNFSeR_WebISS202.LerInfNfse(const ANode: TACBrXmlNode);
+
+function TNFSeW_MetropolisWeb.GerarServico: TACBrXmlNode;
 var
-  NodeIBS: TACBrXmlNode;
-  NodeInfNfse: TACBrXmlNode;
-  i: Integer;
+  item: string;
 begin
-  NodeInfNfse := ANode.Childrens.FindAnyNs('InfNfse');
-  inherited LerInfNfse(ANode);
+  Result := CreateElement('Servico');
 
-  if NodeInfNfse <> nil then
-  begin
-    NodeIBS := NodeInfNfse.Childrens.FindAnyNs('IBSCBS');
+  Result.AppendChild(GerarValores);
 
-    if NodeIBS <> nil then
-      LerXMLIBSCBSNFSe(NodeIBS, NFSe.infNFSe.IBSCBS);
-  end;
+  item := FormatarItemServico(NFSe.Servico.ItemListaServico, FormatoItemListaServico);
+
+  Result.AppendChild(AddNode(tcStr, '#29', 'ItemListaServico', 1, 5, NrOcorrItemListaServico,
+                                                          item, DSC_CLISTSERV));
+
+  Result.AppendChild(AddNode(tcStr, '#30', 'CodigoCnae', 1, 7, NrOcorrCodigoCnae,
+                                OnlyNumber(NFSe.Servico.CodigoCnae), DSC_CNAE));
+
+  Result.AppendChild(AddNode(tcStr, '#31', 'CodigoTributacaoMunicipio', 1, 20, 0,
+                     NFSe.Servico.CodigoTributacaoMunicipio, DSC_CSERVTRIBMUN));
+
+  Result.AppendChild(AddNode(tcStr, '#31', 'CodigoNbs', 1, 9, 0,
+                                                   NFSe.Servico.CodigoNBS, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#1', 'IndOp', 6, 6, 1,
+                                                       NFSe.IBSCBS.cIndOp, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#1', 'CclassTrib', 6, 6, 1,
+                              NFSe.IBSCBS.valores.trib.gIBSCBS.cClassTrib, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#32', 'Discriminacao', 1, 2000, 1,
+    StringReplace(NFSe.Servico.Discriminacao, Opcoes.QuebraLinha,
+               FpAOwner.ConfigGeral.QuebradeLinha, [rfReplaceAll]), DSC_DISCR));
+
+  Result := AddNode(tcStr, '#33', 'CodigoMunicipio', 1, 7, 1,
+                            OnlyNumber(NFSe.Servico.CodigoMunicipio), DSC_CMUN);
 end;
 
 end.
