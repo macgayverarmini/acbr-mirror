@@ -42,6 +42,14 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+06/02/2026
+-- Centi.GravarXml/Centi.Provider --
+[*] ACBR-8880 - Ajustes visando compatibilização com alterações feitas para atender a RTC
+   Por: Valter Patrick
+-- PadraoNacional.LerXml --
+[*] ACBR-8935 - Correção no carregamento do Valor Total da Nota na leitura do xml do Padrão Nacional - https://www.projetoacbr.com.br/forum/topic/90121-acbr-8935-erro-na-impressao-do-campo-valor-total-dos-produtos-na-nota-de-servi%C3%A7o-prefeitura-baurusp/
+   Por: Renato Rubinho
+
 05/02/2026
 -- ACBrNFSeXLerXml --
 [-] ACBR-8756 - Ajuste visando correta normatização do campo ItemListaServico nos casos que vier com 5 dígitos.
