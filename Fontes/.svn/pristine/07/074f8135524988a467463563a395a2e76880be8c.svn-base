@@ -32,56 +32,103 @@
 
 {$I ACBr.inc}
 
-unit ISSDigital.GravarXml;
+unit WebISS.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrDFe.Conversao,
   ACBrNFSeXConversao,
-  PadraoNacional.GravarXml;
+  ACBrNFSeXGravarXml_ABRASFv1,
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrXmlDocument;
 
 type
-  { TNFSeW_ISSDigital200 }
+  { TNFSeW_WebISS }
 
-  TNFSeW_ISSDigital200 = class(TNFSeW_ABRASFv2)
+  TNFSeW_WebISS = class(TNFSeW_ABRASFv1)
   protected
     procedure Configuracao; override;
 
   end;
 
-  { TNFSeW_ISSDigitalAPIPropria }
+  { TNFSeW_WebISS202 }
 
-  TNFSeW_ISSDigitalAPIPropria = class(TNFSeW_PadraoNacional)
-  private
-
+  TNFSeW_WebISS202 = class(TNFSeW_ABRASFv2)
   protected
+    procedure Configuracao; override;
 
+    function GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode; override;
+  public
+    function GerarXml: Boolean; Override;
   end;
 
 implementation
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     ISSDigital
+//     WebISS
 //==============================================================================
 
-{ TNFSeW_ISSDigital200 }
+{ TNFSeW_WebISS }
 
-procedure TNFSeW_ISSDigital200.Configuracao;
+procedure TNFSeW_WebISS.Configuracao;
 begin
   inherited Configuracao;
 
-  FormatoItemListaServico := filsSemFormatacaoSemZeroEsquerda;
+  DivAliq100 := True;
 
-  NrOcorrValorISS := 1;
+  if FpAOwner.ConfigGeral.Params.TemParametro('NaoDividir100') then
+    DivAliq100 := False;
+
+  FormatoItemListaServico := filsSemFormatacao;
   NrOcorrAliquota := 1;
-  NrOcorrProducao := 1;
-  NrOcorrSenha := 1;
-  NrOcorrFraseSecreta := 1;
+end;
 
-  GerarIDRps := True;
+{ TNFSeW_WebISS202 }
+
+procedure TNFSeW_WebISS202.Configuracao;
+begin
+  inherited Configuracao;
+
+  FormatoItemListaServico := filsSemFormatacao;
+
+  NrOcorrCodigoPaisServico := 0;
+
+  NrOcorrCodigoPaisTomador := -1;
+  NrOcorrcCredPres := -1;
+  NrOcorrDiscriminacao_1 := -1;
+  NrOcorrCodigoMunic_1 := -1;
+
+  NrOcorrDiscriminacao_2 := 1;
+  NrOcorrCodigoMunic_2 := 1;
+  NrOcorrExigibilidadeISS := 1;
+
+  GerarDest := False;
+  GerarImovel := False;
+  GerarTribRegular := False;
+  GerargDif := False;
+end;
+
+function TNFSeW_WebISS202.GerarInfDeclaracaoPrestacaoServico: TACBrXmlNode;
+begin
+  Result := inherited GerarInfDeclaracaoPrestacaoServico;
+
+  // Reforma Tributária
+  if (NFSe.IBSCBS.dest.xNome <> '') or (NFSe.IBSCBS.imovel.cCIB <> '') or
+     (NFSe.IBSCBS.imovel.ender.CEP <> '') or
+     (NFSe.IBSCBS.imovel.ender.endExt.cEndPost <> '') or
+     (NFSe.IBSCBS.valores.trib.gIBSCBS.CST <> cstNenhum) then
+    Result.AppendChild(GerarXMLIBSCBS(NFSe.IBSCBS));
+end;
+
+function TNFSeW_WebISS202.GerarXml: Boolean;
+begin
+  if NFSe.OptanteSimplesNacional = snSim then
+    NrOcorrAliquota := 1;
+
+  Result := inherited GerarXml;
 end;
 
 end.
