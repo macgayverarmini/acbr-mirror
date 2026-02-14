@@ -28255,7 +28255,11 @@ HomRecepcionar=https://santafe.oxy.elotech.com.br/iss-ws/nfse203.wsdl
 [4123501]
 Nome=Santa Helena
 UF=PR
-Provedor=PadraoNacional
+Provedor=IPM
+Versao=1.01
+Params=GerarTag:codigo_atividade
+ProRecepcionar=https://santahelena.atende.net/?pg=rest&service=WNERestServiceNFSe
+HomRecepcionar=https://santahelena.atende.net/?pg=rest&service=WNERestServiceNFSe
 
 [4123600]
 Nome=Santa Ines
@@ -29050,7 +29054,7 @@ Provedor=PadraoNacional
 [4203600]
 Nome=Campos Novos
 UF=SC
-Provedor=Betha
+Provedor=PadraoNacional
 
 [4203709]
 Nome=Canelinha
@@ -29335,7 +29339,7 @@ ProRecepcionar=https://guatambu.atende.net/?pg=services&service=WNENotaFiscalEle
 [4206702]
 Nome=Herval D Oeste
 UF=SC
-Provedor=Betha
+Provedor=PadraoNacional
 
 [4206751]
 Nome=Ibiam
@@ -29611,7 +29615,7 @@ HomRecepcionar=https://ws-luizalves.atende.net/?pg=rest&service=WNERestServiceNF
 [4210035]
 Nome=Luzerna
 UF=SC
-Provedor=Betha
+Provedor=PadraoNacional
 
 [4210050]
 Nome=Macieira
@@ -32945,7 +32949,7 @@ Params=AliasCidade:SANANDUVA
 [4316709]
 Nome=Santa Barbara do Sul
 UF=RS
-Provedor=
+Provedor=ABase
 
 [4316733]
 ; Incluído em 15/02/2024
@@ -34703,7 +34707,7 @@ HomSoapAction=http://arenapolis-mt.treino-issintegra.com.br/webservices/abrasf/a
 Nome=Aripuana
 UF=MT
 Provedor=Agili
-Params=NomeTagAtividadeEconomica:ItemLei116AtividadeEconomica|NaoGerarTag:ItemLei116|FormatarItemServicoNaoSeAplica:
+Params=NomeTagAtividadeEconomica:ItemLei116AtividadeEconomica|NaoGerarTag:ItemLei116,CodigoCnae|FormatarItemServicoNaoSeAplica:
 
 [5101605]
 Nome=Barao de Melgaco

@@ -32,27 +32,53 @@
 
 {$I ACBr.inc}
 
-unit Publica.LerXml;
+unit Betha.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils, IniFiles,
-  ACBrXmlBase, ACBrXmlDocument,
-  ACBrNFSeXLerXml_ABRASFv1;
+  ACBrXmlBase,
+  ACBrXmlDocument,
+  ACBrNFSeXLerXml_ABRASFv1,
+  ACBrNFSeXLerXml_ABRASFv2,
+  ACBrNFSeXClass,
+  PadraoNacional.LerXml;
 
 type
-  { TNFSeR_Publica }
+  { TNFSeR_Betha }
 
-  TNFSeR_Publica = class(TNFSeR_ABRASFv1)
+  TNFSeR_Betha = class(TNFSeR_ABRASFv1)
+  private
+    LSecao: string;
   protected
-    procedure LerCondicaoPagamento(const ANode: TACBrXmlNode);
-    procedure LerConstrucaoCivil(const ANode: TACBrXmlNode); override;
-    procedure LerInfNfse(const ANode: TACBrXmlNode); override;
+    procedure LerCondicaoPagamento(const ANode: TACBrXmlNode); override;
 
+    procedure LerINISecaoCondicaoPagamento(const AINIRec: TMemIniFile); override;
     procedure LerINISecaoParcelas(const AINIRec: TMemIniFile); override;
   public
     function LerXmlRps(const ANode: TACBrXmlNode): Boolean; override;
+
+  end;
+
+  { TNFSeR_Betha202 }
+
+  TNFSeR_Betha202 = class(TNFSeR_ABRASFv2)
+  protected
+
+  public
+
+  end;
+
+  { TNFSeR_BethaAPIPropria }
+
+  TNFSeR_BethaAPIPropria = class(TNFSeR_PadraoNacional)
+  protected
+
+    // Reescrito a leitura do grupo IBSCBS do DPS pelo fato do provedor ainda
+    // estar usando o layout definido na NT 003 versão 1.2
+    procedure LerXMLIBSCBSDPS(const ANode: TACBrXmlNode; IBSCBS: TIBSCBSDPS); override;
+  public
 
   end;
 
@@ -60,17 +86,17 @@ implementation
 
 uses
   ACBrDFe.Conversao,
-  ACBrUtil.Base,
-  ACBrNFSeXClass;
+  ACBrNFSeXConversao,
+  ACBrUtil.Base;
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     Publica
+//     Betha
 //==============================================================================
 
-{ TNFSeR_Publica }
+{ TNFSeR_Betha }
 
-procedure TNFSeR_Publica.LerCondicaoPagamento(const ANode: TACBrXmlNode);
+procedure TNFSeR_Betha.LerCondicaoPagamento(const ANode: TACBrXmlNode);
 var
   AuxNode: TACBrXmlNode;
   ANodes: TACBrXmlNodeArray;
@@ -81,70 +107,63 @@ begin
 
   if AuxNode <> nil then
   begin
-    with NFSe do
+    with NFSe.CondicaoPagamento do
     begin
+      Condicao := FpAOwner.StrToCondicaoPag(Ok, ObterConteudo(AuxNode.Childrens.FindAnyNs('Condicao'), tcStr));
+      QtdParcela := ObterConteudo(AuxNode.Childrens.FindAnyNs('QtdParcela'), tcInt);
+
       ANodes := AuxNode.Childrens.FindAllAnyNs('Parcelas');
 
       for i := 0 to Length(ANodes) - 1 do
       begin
-        CondicaoPagamento.Parcelas.New;
+        Parcelas.New;
 
-        CondicaoPagamento.Parcelas[i].Condicao := FpAOwner.StrToCondicaoPag(Ok, ObterConteudo(ANodes[i].Childrens.FindAnyNs('Condicao'), tcStr));
-        CondicaoPagamento.Parcelas[i].Parcela := ObterConteudo(ANodes[i].Childrens.FindAnyNs('Parcela'), tcStr);
-        CondicaoPagamento.Parcelas[i].Valor := ObterConteudo(ANodes[i].Childrens.FindAnyNs('Valor'), tcDe2);
-        CondicaoPagamento.Parcelas[i].DataVencimento := ObterConteudo(ANodes[i].Childrens.FindAnyNs('DataVencimento'), tcDat);
+        Parcelas[i].Parcela := ObterConteudo(ANodes[i].Childrens.FindAnyNs('Parcela'), tcStr);
+        Parcelas[i].DataVencimento := ObterConteudo(ANodes[i].Childrens.FindAnyNs('DataVencimento'), tcDatVcto);
+        Parcelas[i].Valor := ObterConteudo(ANodes[i].Childrens.FindAnyNs('Valor'), tcDe2);
       end;
     end;
   end;
 end;
 
-procedure TNFSeR_Publica.LerConstrucaoCivil(const ANode: TACBrXmlNode);
+procedure TNFSeR_Betha.LerINISecaoCondicaoPagamento(const AINIRec: TMemIniFile);
 var
-  AuxNode, NodeEndereco: TACBrXmlNode;
+  Ok: Boolean;
 begin
-  if not Assigned(ANode) then Exit;
+  LSecao := 'CondicaoPagamento';
 
-  AuxNode := ANode.Childrens.FindAnyNs('ConstrucaoCivil');
-
-  if AuxNode <> nil then
+  if AINIRec.SectionExists(LSecao) then
   begin
-    with NFSe.ConstrucaoCivil do
-    begin
-        Tipo := ObterConteudo(AuxNode.Childrens.FindAnyNs('TipoIdentificacaoObra'), tcInt);
-      CodigoObra := ObterConteudo(AuxNode.Childrens.FindAnyNs('CodigoObra'), tcStr);
-      Art        := ObterConteudo(AuxNode.Childrens.FindAnyNs('Art'), tcStr);
-      NodeEndereco := AuxNode.Childrens.FindAnyNs('EnderecoCompleto');
-      if NodeEndereco <> nil then
-      begin
-        Endereco.CEP := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('Cep'), tcStr);
-        Endereco.Endereco := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('Logradouro'), tcStr);
-        Endereco.Numero := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('Numero'), tcStr);
-        Endereco.Bairro := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('Bairro'), tcStr);
-        Endereco.CodigoMunicipio := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('CodigoMunicipio'), tcStr);
-        Endereco.Complemento := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('Complemento'), tcStr);
-        Endereco.Uf := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('Uf'), tcStr);
-        Endereco.CodigoPais := ObterConteudo(NodeEndereco.Childrens.FindAnyNs('CodigoPais'), tcStr);
-      end;
-      inscImobFisc := ObterConteudo(AuxNode.Childrens.FindAnyNs('Cib'), tcStr);
-    end;
+    NFSe.CondicaoPagamento.QtdParcela := AINIRec.ReadInteger(LSecao, 'QtdParcela', 0);
+    NFSe.CondicaoPagamento.Condicao := FpAOwner.StrToCondicaoPag(Ok, AINIRec.ReadString(LSecao, 'Condicao', 'A_VISTA'));
   end;
 end;
 
-procedure TNFSeR_Publica.LerInfNfse(const ANode: TACBrXmlNode);
+procedure TNFSeR_Betha.LerINISecaoParcelas(const AINIRec: TMemIniFile);
 var
-  AuxNode: TACBrXmlNode;
+  i: Integer;
+  sFim: string;
+  Item: TParcelasCollectionItem;
 begin
-  inherited LerInfNfse(ANode);
+  i := 1;
+  while true do
+  begin
+    LSecao := 'Parcelas' + IntToStrZero(i, 2);
+    sFim := AINIRec.ReadString(LSecao, 'Parcela', 'FIM');
 
-  if not Assigned(ANode) then Exit;
+    if (sFim = 'FIM') then
+      break;
 
-  AuxNode := ANode.Childrens.FindAnyNs('InfNfse');
+    Item := NFSe.CondicaoPagamento.Parcelas.New;
+    Item.Parcela := sFim;
+    Item.DataVencimento := AINIRec.ReadDate(LSecao, 'DataVencimento', Now);
+    Item.Valor := StringToFloatDef(AINIRec.ReadString(LSecao, 'Valor', ''), 0);
 
-  if AuxNode <> nil then
-    LerCondicaoPagamento(AuxNode);
+    Inc(i);
+  end;
 end;
 
-function TNFSeR_Publica.LerXmlRps(const ANode: TACBrXmlNode): Boolean;
+function TNFSeR_Betha.LerXmlRps(const ANode: TACBrXmlNode): Boolean;
 var
   AuxNode: TACBrXmlNode;
 begin
@@ -158,31 +177,22 @@ begin
     LerCondicaoPagamento(AuxNode);
 end;
 
-procedure TNFSeR_Publica.LerINISecaoParcelas(const AINIRec: TMemIniFile);
-var
-  i: Integer;
-  sSecao, sFim: string;
-  Item: TParcelasCollectionItem;
-  Ok: Boolean;
+{ TNFSeR_BethaAPIPropria }
+
+procedure TNFSeR_BethaAPIPropria.LerXMLIBSCBSDPS(const ANode: TACBrXmlNode;
+  IBSCBS: TIBSCBSDPS);
 begin
-  i := 1;
-  while true do
-  begin
-    sSecao := 'Parcelas' + IntToStrZero(i, 2);
-    sFim := AINIRec.ReadString(sSecao, 'Parcela'  ,'FIM');
+  if not Assigned(ANode) then Exit;
 
-    if (sFim = 'FIM') then
-      break;
+  IBSCBS.finNFSe := StrTofinNFSe(ObterConteudo(ANode.Childrens.FindAnyNs('finNFSe'), tcStr));
+  IBSCBS.indFinal := StrToindFinal(ObterConteudo(ANode.Childrens.FindAnyNs('indFinal'), tcStr));
+  IBSCBS.cIndOp := ObterConteudo(ANode.Childrens.FindAnyNs('cIndOp'), tcStr);
+  IBSCBS.tpEnteGov := StrTotpEnteGov(ObterConteudo(ANode.Childrens.FindAnyNs('tpEnteGov'), tcStr));
+  IBSCBS.indDest := StrToindDest(ObterConteudo(ANode.Childrens.FindAnyNs('indPessoas'), tcStr));
 
-    Item := NFSe.CondicaoPagamento.Parcelas.New;
-
-    Item.Parcela := sFim;
-    Item.DataVencimento := AINIRec.ReadDate(sSecao, 'DataVencimento', Now);
-    Item.Valor := StringToFloatDef(AINIRec.ReadString(sSecao, 'Valor', ''), 0);
-    Item.Condicao := FpAOwner.StrToCondicaoPag(Ok, AINIRec.ReadString(sSecao, 'Condicao', ''));
-
-    Inc(i);
-  end;
+  LerXMLDestinatario(ANode.Childrens.FindAnyNs('dest'), IBSCBS.dest);
+  LerXMLImovel(ANode.Childrens.FindAnyNs('imovel'), IBSCBS.imovel);
+  LerXMLIBSCBSValores(ANode.Childrens.FindAnyNs('valores'), IBSCBS.valores);
 end;
 
 end.
