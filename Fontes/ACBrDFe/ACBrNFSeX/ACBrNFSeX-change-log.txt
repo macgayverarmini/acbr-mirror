@@ -43,6 +43,48 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+18/02/2026
+-- ACBrNFSeXConsts/ABase.Provider --
+[*] Ajustes para consumir os serviços disponibilizados pela API do Padrão Nacional.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Incluído as URLs de homologação e de produção para acessar os serviços da API do Padrão Nacional
+    para as cidades atendidas pelo provedor ABase
+   Por: Italo Giurizzato Junior
+-- ISSIntel.GravarXml --
+[*] ACBR-8964 - Adiciona CodigoServicoNacional no grupo serviço conforme novos schemas.
+   Por: Valter Patrick
+-- Agili.GravarXml/Agili.LerXml --
+[*] Incluído a escrita e a leitura do campo CodigoNBS no arquivo INI.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBR-9011 - A cidade de Pantano Grande/RS mudou de provedor, agora é Pronim.
+   Por: Diego Folieni
+[*] ACBR-8913 - Altera o ProLinkURL para o município de Três Lagoas/MS
+   Por: Sunny / Rev: Valter Patrick
+[+] ACBR-8914 - Adiciona ProLinkURL para o município de Castilho/SP
+   Por: Sunny / Rev: Valter Patrick
+[*] Incluído o Params para a cidade Novo Progresso/PA.
+    https://www.projetoacbr.com.br/forum/topic/90196-erro-na-emiss%C3%A3o-de-nfse-novo-progresso-pa-tag-unidadegestora-n%C3%A3o-esta-sendo-preenchida/#comment-588505
+   Por: Matheus Klein
+-- PadraoNacional.LerXml --
+[*] Breve documentação sobre os enumerados de: tpRetPisCofins.
+-- PadraoNacional.Provider --
+[*] Removido a função: DecodeToString pois estava ocorrendo erro de UTF-8 quando o 
+    XML retornado possui vogais acentuadas e cedilha.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Incluído as URLs dos demais serviços para as cidades atendidas pelo provedor RLZ.
+   Por: Italo Giurizzato Junior
+[*] Alterado as URLs da cidade Carlos Barbosa/RS, o provedor continua o mesmo.
+   Por: dna Automacao
+-- ACBrNFSeXDANFSeRLRetrato --
+[*] Ajuste no DANFSe para exibir Optante SN corretamente na impressão de xmls do padrão nacional - https://www.projetoacbr.com.br/forum/topic/90408-diverg%C3%AAncia-nas-informa%C3%A7%C3%B5es-impressas-no-site-prefeitura-x-rotina-acbr/
+   Por: Renato Rubinho
+-- SigCorp.Provider --
+[*] Configurado provedor para preencher o motivo do cancelamento - https://www.projetoacbr.com.br/forum/topic/89881-erro-consulta-e-cancelamento-nfs-e-caraguatatubasp-sigcorp/
+   Por: Renato Rubinho
+
 17/02/2026
 -- Diversos --
 [*] Para alguns métodos a função PrepararArquivoEnvio estava retornando uma string vazia.
