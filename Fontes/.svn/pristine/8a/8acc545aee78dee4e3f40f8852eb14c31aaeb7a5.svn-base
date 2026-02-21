@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,26 +32,30 @@
 
 {$I ACBr.inc}
 
-unit FGMaiss.LerXml;
+unit PriMax.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  WebFisco.LerXml;
+  WebFisco.GravarXml;
 
 type
-  { TNFSeR_FGMaiss }
+  { TNFSeW_PriMax }
 
-  TNFSeR_FGMaiss = class(TNFSeR_WebFisco)
+  TNFSeW_PriMax = class(TNFSeW_WebFisco)
+
+  end;
+
+  TNFSeW_PriMax101 = class(TNFSeW_WebFisco101)
 
   end;
 
 implementation
 
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     FGMaiss que é igual a do provedor WebFisco
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+//     PriMax que usa o mesmo layout do WebFisco
 //==============================================================================
 
 end.

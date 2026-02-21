@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit PriMax.GravarXml;
+unit Facundo.GravarXml;
 
 interface
 
@@ -41,9 +41,13 @@ uses
   WebFisco.GravarXml;
 
 type
-  { TNFSeW_PriMax }
+  { TNFSeW_Facundo }
 
-  TNFSeW_PriMax = class(TNFSeW_WebFisco)
+  TNFSeW_Facundo = class(TNFSeW_WebFisco)
+
+  end;
+
+  TNFSeW_Facundo101 = class(TNFSeW_WebFisco101)
 
   end;
 
@@ -51,7 +55,7 @@ implementation
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     PriMax que usa o mesmo layout do WebFisco
+//     Facundo que usa o mesmo layout do WebFisco
 //==============================================================================
 
 end.

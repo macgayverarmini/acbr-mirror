@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,26 +32,30 @@
 
 {$I ACBr.inc}
 
-unit Facundo.GravarXml;
+unit Sam.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  WebFisco.GravarXml;
+  WebFisco.LerXml;
 
 type
-  { TNFSeW_Facundo }
+  { TNFSeR_Sam }
 
-  TNFSeW_Facundo = class(TNFSeW_WebFisco)
+  TNFSeR_Sam = class(TNFSeR_WebFisco)
+
+  end;
+
+  TNFSeR_Sam101 = class(TNFSeR_WebFisco101)
 
   end;
 
 implementation
 
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
-//     Facundo que usa o mesmo layout do WebFisco
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+//     Sam que é igual a do provedor WebFisco
 //==============================================================================
 
 end.

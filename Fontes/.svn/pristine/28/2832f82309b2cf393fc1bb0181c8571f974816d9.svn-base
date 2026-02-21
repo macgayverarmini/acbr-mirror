@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit Sam.LerXml;
+unit FGMaiss.LerXml;
 
 interface
 
@@ -41,9 +41,13 @@ uses
   WebFisco.LerXml;
 
 type
-  { TNFSeR_Sam }
+  { TNFSeR_FGMaiss }
 
-  TNFSeR_Sam = class(TNFSeR_WebFisco)
+  TNFSeR_FGMaiss = class(TNFSeR_WebFisco)
+
+  end;
+
+  TNFSeR_FGMaiss101 = class(TNFSeR_WebFisco101)
 
   end;
 
@@ -51,7 +55,7 @@ implementation
 
 //==============================================================================
 // Essa unit tem por finalidade exclusiva ler o XML do provedor:
-//     Sam que é igual a do provedor WebFisco
+//     FGMaiss que é igual a do provedor WebFisco
 //==============================================================================
 
 end.

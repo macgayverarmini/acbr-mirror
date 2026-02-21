@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2024 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit PriMax.Provider;
+unit Sam.Provider;
 
 interface
 
@@ -45,7 +45,7 @@ uses
   ACBrNFSeXWebserviceBase;
 
 type
-  TACBrNFSeXWebservicePriMax = class(TACBrNFSeXWebserviceWebFisco)
+  TACBrNFSeXWebserviceSam = class(TACBrNFSeXWebserviceWebFisco)
   protected
     function GetSoapActionURL: string; override;
 
@@ -53,7 +53,19 @@ type
     property SoapActionURL: string read GetSoapActionURL;
   end;
 
-  TACBrNFSeProviderPriMax = class (TACBrNFSeProviderWebFisco)
+  TACBrNFSeProviderSam = class (TACBrNFSeProviderWebFisco)
+  protected
+    function CriarGeradorXml(const ANFSe: TNFSe): TNFSeWClass; override;
+    function CriarLeitorXml(const ANFSe: TNFSe): TNFSeRClass; override;
+    function CriarServiceClient(const AMetodo: TMetodo): TACBrNFSeXWebservice; override;
+
+  end;
+
+  TACBrNFSeXWebserviceSam101 = class(TACBrNFSeXWebserviceSam)
+
+  end;
+
+  TACBrNFSeProviderSam101 = class (TACBrNFSeProviderWebFisco101)
   protected
     function CriarGeradorXml(const ANFSe: TNFSe): TNFSeWClass; override;
     function CriarLeitorXml(const ANFSe: TNFSe): TNFSeRClass; override;
@@ -65,26 +77,26 @@ implementation
 
 uses
   ACBrDFe.Conversao,
-  ACBrDFeException, ACBrNFSeX,
-  PriMax.GravarXml, PriMax.LerXml;
+  ACBrDFeException,
+  Sam.GravarXml, Sam.LerXml;
 
-{ TACBrNFSeProviderPriMax }
+{ TACBrNFSeProviderSam }
 
-function TACBrNFSeProviderPriMax.CriarGeradorXml(
+function TACBrNFSeProviderSam.CriarGeradorXml(
   const ANFSe: TNFSe): TNFSeWClass;
 begin
-  Result := TNFSeW_PriMax.Create(Self);
+  Result := TNFSeW_Sam.Create(Self);
   Result.NFSe := ANFSe;
 end;
 
-function TACBrNFSeProviderPriMax.CriarLeitorXml(
+function TACBrNFSeProviderSam.CriarLeitorXml(
   const ANFSe: TNFSe): TNFSeRClass;
 begin
-  Result := TNFSeR_PriMax.Create(Self);
+  Result := TNFSeR_Sam.Create(Self);
   Result.NFSe := ANFSe;
 end;
 
-function TACBrNFSeProviderPriMax.CriarServiceClient(
+function TACBrNFSeProviderSam.CriarServiceClient(
   const AMetodo: TMetodo): TACBrNFSeXWebservice;
 var
   URL: string;
@@ -92,7 +104,7 @@ begin
   URL := GetWebServiceURL(AMetodo);
 
   if URL <> '' then
-    Result := TACBrNFSeXWebservicePriMax.Create(FAOwner, AMetodo, URL)
+    Result := TACBrNFSeXWebserviceSam.Create(FAOwner, AMetodo, URL)
   else
   begin
     if ConfigGeral.Ambiente = taProducao then
@@ -102,17 +114,45 @@ begin
   end;
 end;
 
-{ TACBrNFSeXWebservicePriMax }
+{ TACBrNFSeXWebserviceSam }
 
-function TACBrNFSeXWebservicePriMax.GetSoapActionURL: string;
+function TACBrNFSeXWebserviceSam.GetSoapActionURL: string;
 begin
-  if FPConfiguracoes.WebServices.AmbienteCodigo = 2 then
-    Result := TACBrNFSeX(FPDFeOwner).Provider.ConfigWebServices.Homologacao.SoapAction
-  else
-    Result := TACBrNFSeX(FPDFeOwner).Provider.ConfigWebServices.Producao.SoapAction;
+  Result := 'https://www2.samtributacao.com.br/issqn/wservice/';
+end;
 
-  if Result = '' then
-    Result := 'https://www.primaxonline.com.br/issqn/wservice/';
+{ TACBrNFSeProviderSam101 }
+
+function TACBrNFSeProviderSam101.CriarGeradorXml(
+  const ANFSe: TNFSe): TNFSeWClass;
+begin
+  Result := TNFSeW_Sam101.Create(Self);
+  Result.NFSe := ANFSe;
+end;
+
+function TACBrNFSeProviderSam101.CriarLeitorXml(
+  const ANFSe: TNFSe): TNFSeRClass;
+begin
+  Result := TNFSeR_Sam101.Create(Self);
+  Result.NFSe := ANFSe;
+end;
+
+function TACBrNFSeProviderSam101.CriarServiceClient(
+  const AMetodo: TMetodo): TACBrNFSeXWebservice;
+var
+  URL: string;
+begin
+  URL := GetWebServiceURL(AMetodo);
+
+  if URL <> '' then
+    Result := TACBrNFSeXWebserviceSam101.Create(FAOwner, AMetodo, URL)
+  else
+  begin
+    if ConfigGeral.Ambiente = taProducao then
+      raise EACBrDFeException.Create(ERR_SEM_URL_PRO)
+    else
+      raise EACBrDFeException.Create(ERR_SEM_URL_HOM);
+  end;
 end;
 
 end.

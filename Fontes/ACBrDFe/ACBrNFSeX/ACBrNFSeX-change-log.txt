@@ -43,6 +43,32 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+20/02/2026
+-- Conam.GravarXml --
+[-] ACBR-8919 - Ajustes para a geração correta do XML do RPS.
+   Por: Henrique Souza
+-- Diversos --
+[+] ACBR-8969 - Adiciona novo leiaute 1.01 para WebFisco, Facundo, SAM, FGMais e Primax a fim de atender a Reforma Tributária.
+   Por: Diego Folieni
+-- ACBrNFSeXNotasFiscais/ACBrNFSeXLerXml/ACBrNFSeXLerXml_ABRASFv1 --
+[*] ACBR-8946 - Alterações visando ler um lote de NFSe obtidos do site da prefeitura que
+   utiliza o provedor Ginfes.
+ Por: Italo Giurizzato Junior
+-- EloTech.GravarXml --
+[-] ACBR-8933 - Alterado o formato do ItemListaServico para que seja gerado o XML conforme o usuário informar.
+ Por: Italo Giurizzato Junior
+-- ModernizacaoPublica.Provider --
+[-] ACBR-8948 - Correção para emissão em produção, requer informar Usuário e senha em Basic Auth.
+ Por: Jefferson Junglaus
+-- ISSDigital.Provider --
+[-] ACBR-8959 - Correção na montagem do XML das consultas: Situação e Lote.
+ Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBR-8969 - Altera as URLs de Tres Rios/RJ para versão 1.01 criada para atender ao Padrão Nacional
+   Por: Diego Folieni
+[*] ACBR-9018 - A cidade São Caetano do Sul/SP vai passar a usar o provedor Giss a partir de 01/03/2026
+   Por: João Siscom
+
 19/02/2026
 -- Agili.LerXml --
 [-] Adiciona o campo ItemListaServico na leitura das seções do arquivo INI.
