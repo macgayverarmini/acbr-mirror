@@ -43,6 +43,28 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+21/02/2026
+-- Digifred.Provider/Ginfes.GravarXml/WebFisco.GravarXml --
+[*] Ajustes para eliminar alguns Warnings e Hints.
+   Por: Italo Giurizzato Junior
+-- PadraoNacional.LerXml --
+[*] ACBR-8845 - Ajustes na leitura do grupo infNFSe visando pegar a base de calculo já 
+    retornada no XML em vez de calcular ela.
+   Por: Microsys Sistemas
+-- PadraoNacional.GravarXml --
+[*] ACBR-8894 - Ajustes para gerar o campo pTotTribSN se o emitente for diferente de
+    não Optante SN.
+   Por: Italo Giurizzato Junior
+-- IPM.GravarXml/IPM.Provider --
+[+] ACBR-8855 - Ajustes para gerar o grupo pis_cofins.
+   Por: WLE
+-- GovDigital.GravarXml --
+[+] ACBR-8887 - Ajustes para gerar o grupo AtvEvento.
+   Por: Milton Campanhã
+-- ACBrNFSeXServicos --
+[*] ACBR-8887 - A cidade Guaxupé/MG continua com o provedor GovDigital.
+   Por: Milton Campanhã
+
 20/02/2026
 -- Conam.GravarXml --
 [-] ACBR-8919 - Ajustes para a geração correta do XML do RPS.
