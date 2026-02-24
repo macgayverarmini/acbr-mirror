@@ -42,6 +42,22 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+23/02/2026
+-- ACBrNFSeXConsts/ACBrNFSeXLerXml_ABRASFv2/iiBrasil.GravarXml --
+[*] ACBR-9029 - Criado a constante para o campo CodigoTributacaoNacional e incluído a leitura do mesmo
+    no INI.
+   Por: Italo Giurizzato Junior
+-- PadraoNacional.GravarXml --
+[*] ACBR-9030 - Ajuste para que a geração do campo vRetCSLL não seja amarrada ao valor de tpRetPisCofins.
+   Por: cezar.sakugawa 
+-- ISSNet.Provider --
+[*] ACBR-8496 - Ajustes na leitura dos retornos dos serviços implementados pelo provedor.
+    Como o ambiente de homologação e produção ainda não estão funcionando não tem como saber se 
+    os ajustes feitos estão 100%.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] A cidade de Bofete/SP mudou de provedor, agora é Fiorilli.
+   Por: willians.wsac
 
 21/02/2026
 -- Digifred.Provider/Ginfes.GravarXml/WebFisco.GravarXml --
