@@ -42,6 +42,32 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+26/02/2026
+-- SigISSWeb.Provider --
+[*] ACBR-8987 - Ajuste para retornar informações da nota cancelada ao executar o ConsultarNSePorRps.
+    https://www.projetoacbr.com.br/forum/topic/90398-acbr-8987-sigissweb-consultanfseporrps-n%C3%A3o-captura-se-est%C3%A1-cancelada/   
+   Por: HUGO753
+-- SilTecnologia.Provider --
+[*] ACBR-8995 - Correção no tratamento de erros.
+    https://www.projetoacbr.com.br/forum/topic/90038-tratamento-de-erros-na-emiss%C3%A3o-da-nfs-e-provedor-siltecnologia/
+   Por: ArecoDesenv
+-- ACBrNFSeXConversao --
+[+] ACBR-8969 - Adiciona novo enumerado para ser considerado e campo ser gerado vazio para o WebFisco.
+   Por: Diego Folieni
+-- WebFisco.GravarXml/WebFisco.LerXml --
+[*] ACBr-8969 - Ajustes visando a correta geração de alguns campos conforme novo manual que atende a Reforma Tributaria.
+   Por: Marcelo Gonçalves / Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/90155-acbr-8969-nfs-e-tr%C3%AAs-riosrj-n%C3%A3o-sincroniza-com-portal-nacional/?&_rid=124795#findComment-590096
+-- ModernizacaoPublica.Provider --
+[*] ACBR-9007 - Ajustes para mostrar corretamente o erro retornado pela API.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBR-9007 - As cidades Cabo Frio/RJ, trocou de provedor, agora é ModernizacaoPulica
+   Por: Marcelo Toller/Italo Giurizzato Junior
+-- MegaSoft.GravarXml/MegaSoft.Provider --
+[*] ACBR-9001 - Alteração visando gerar a tag NumeroNbs.
+   Por: Italo Giurizzato Junior
+
 25/02/2026
 -- ACBrNFSeXServicos --
 [*] ACBR-9012 - As cidades Treviso/SC, Guaramirim/SC e Bombinhas/SC mudaram para o provedor IPM versão 1.01
