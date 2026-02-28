@@ -42,6 +42,23 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+27/02/2026
+-- ACBrNFSeXServicos --
+[*] Alteração nas seções de alguns provedores para realizar a leitura do parâmetro: ServicosPadraoNacional.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeX --
+[*] ACBR-9024 - Alteração visando realizar a consulta automatizada também para os provedores que aderiram o layout
+    do Padrão Nacional
+-- ACBrNFSeXConsts --
+[+] Incluída as constantes: Cod215 e Desc215.
+-- ACBrNFSeXGravarXml --
+[*] Melhorias na procedure: ConsolidarVariosItensServicosEmUmSo visando reconhecer nos novos campos da lista de itens.
+-- ACBrNFSeXProviderBase --
+[+] Incluída a checagem para saber se deve ou não substitui as URLs do provedor pelas do Padrão Nacional.
+-- EL.Provider --
+[*] Verifica se não ocorreu o retorno do Hash, caso afirmativo levanta o erro Desc215.
+   Por: Italo Giurizzato Junior
+
 26/02/2026
 -- SigISSWeb.Provider --
 [*] ACBR-8987 - Ajuste para retornar informações da nota cancelada ao executar o ConsultarNSePorRps.
