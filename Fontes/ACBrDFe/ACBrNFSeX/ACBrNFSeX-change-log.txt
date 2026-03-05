@@ -42,6 +42,25 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+04/03/2026
+-- ACBrNFSeXServicos --
+[+] Incluído o Params: ServicosPadraoNacional para todas as cidades dos provedores IPM e SigCorp.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXWebServiceBase/Fiorilli.Provider/ACBrNFSeXServicos --
+[+] ACBR-8782 - Implementa o envio de evento através dos ServicosPadraoNacional para o Fiorilli
+ * Implementa nova classe WebService Misto.
+   Por: Italo Giurizzato Junior / Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/90696-nfs-e-fiorilli/
+-- ACBrNFSeX.LerIni --
+[+] ACBR-9054 - Implementado uma unit exclusiva para realizar a leitura do arquivo INI que contem os 
+    dados do serviço prestado, esse arquivo INI vai ser utilizado para todos os provedores.
+    Observação: a unit ainda não esta em uso, pois requer testes.
+   Por: Italo Giurizzato Junior
+-- PadraoNacional.GravarXml --
+[*] ACBR-8786 - Ajuste para gerar corretamente o Local de incidência.
+    https://www.projetoacbr.com.br/forum/topic/89349-acbr-8786-informar-munic%C3%ADpio-de-incid%C3%AAncia-do-iss/
+   Por: mlgoncalves
+
 03/03/2026
 -- ACBrNFSeXDANFSeRLPadraoNacional --
 [*] ACBR-9068 - Ajustes na geração do DANFSE - Padrão Nacional - Fortes Report
