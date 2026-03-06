@@ -1321,6 +1321,7 @@ procedure TNFSeR_PadraoNacional.LerXMLTotalTributos(const ANode: TACBrXmlNode);
 var
   AuxNode: TACBrXmlNode;
   Ok: Boolean;
+  lindTotTrib: String;
 begin
   AuxNode := ANode.Childrens.FindAnyNs('totTrib');
 
@@ -1331,7 +1332,11 @@ begin
       LerXMLValorTotalTributos(AuxNode);
       LerXMLPercentualTotalTributos(AuxNode);
 
-      indTotTrib := StrToindTotTrib(Ok, ObterConteudo(AuxNode.Childrens.FindAnyNs('indTotTrib'), tcStr));
+      lindTotTrib := ObterConteudo(AuxNode.Childrens.FindAnyNs('indTotTrib'), tcStr);
+      if lIndTotTrib = EmptyStr then
+        lIndTotTrib := '1'; //indSim para não gerar a tag indTotTrib depois
+
+      indTotTrib := StrToindTotTrib(Ok, lIndTotTrib);
       pTotTribSN := ObterConteudo(AuxNode.Childrens.FindAnyNs('pTotTribSN'), tcDe2);
     end;
   end;
@@ -2236,7 +2241,7 @@ begin
   sSecao := 'totTrib';
   if AINIRec.SectionExists(sSecao) then
   begin
-    NFSe.Servico.Valores.totTrib.indTotTrib := StrToindTotTrib(Ok, AINIRec.ReadString(sSecao, 'indTotTrib', '0'));
+    NFSe.Servico.Valores.totTrib.indTotTrib := StrToindTotTrib(Ok, AINIRec.ReadString(sSecao, 'indTotTrib', '1'));
     NFSe.Servico.Valores.totTrib.pTotTribSN := StringToFloatDef(AINIRec.ReadString(sSecao, 'pTotTribSN', ''), 0);
 
     NFSe.Servico.Valores.totTrib.vTotTribFed := StringToFloatDef(AINIRec.ReadString(sSecao, 'vTotTribFed', ''), 0);
