@@ -282,7 +282,7 @@ HomCancelarNFSe=https://demo.fisslex.com.br/fiss-lex/servlet/aws_cancelarnfse
 HomLinkURL=https://demo.fisslex.com.br/fiss-lex/servlet/apnotafiscalurl?%CodVerif%
 
 [GeisWeb]
-HomRecepcionar=https://www.cidadedofuturo.com.br/homologacao/modelo/webservice/GeisWebServiceImpl.php
+HomRecepcionar=https://www.gerenciadecidades.com.br/homologacao/modelo/webservice/GeisWebServiceImpl.php
 
 [GestaoISS]
 HomRecepcionar=https://homologacao.gestaoiss.com.br/ws/nfse.asmx
@@ -20891,8 +20891,8 @@ HomRecepcionar=https://coplan.inf.br/tributario/barramansa/anfse_ws
 Nome=Belford Roxo
 UF=RJ
 Provedor=ModernizacaoPublica
-ProRecepcionar=
-HomRecepcionar=
+ProRecepcionar=https://nfse.prefeituradebelfordroxo.rj.gov.br/nfe/ReceberDPS.rule?sys=NFE
+HomRecepcionar=http://notabelford.modernizacaopublica.com.br:8054/homologacao/ReceberDPS.rule?sys=NFE
 
 [3300506]
 Nome=Bom Jardim
@@ -21692,7 +21692,7 @@ UF=SP
 Provedor=GeisWeb
 Versao=1.01
 Params=AliasCidade:anhembi
-ProRecepcionar=https://www.cidadedofuturo.com.br/producao/anhembi/webservice/GeisWebServiceImpl.php
+ProRecepcionar=https://www.gerenciadecidades.com.br/producao/anhembi/webservice/GeisWebServiceImpl.php
 
 [3502408]
 Nome=Anhumas
@@ -22246,7 +22246,7 @@ UF=SP
 Provedor=GeisWeb
 Versao=1.01
 Params=AliasCidade:cajamar
-ProRecepcionar=https://www.cidadedofuturo.com.br/producao/cajamar/webservice/GeisWebServiceImpl.php
+ProRecepcionar=https://www.gerenciadecidades.com.br/producao/cajamar/webservice/GeisWebServiceImpl.php
 
 [3509254]
 Nome=Cajati
@@ -22293,7 +22293,6 @@ UF=SP
 Provedor=GeisWeb
 Params=AliasCidade:campolimpopaulista
 ProRecepcionar=https://www.gerenciadecidades.com.br/producao/campolimpopaulista/webservice/GeisWebServiceImpl.php
-HomRecepcionar=https://www.gerenciadecidades.com.br/homologacao/modelo/webservice/GeisWebServiceImpl.php
 
 [3509700]
 Nome=Campos do Jordao
@@ -23014,7 +23013,6 @@ UF=SP
 Provedor=GeisWeb
 Params=AliasCidade:guarei
 ProRecepcionar=https://www.gerenciadecidades.com.br/producao/guarei/webservice/GeisWebServiceImpl.php
-HomRecepcionar=https://www.gerenciadecidades.com.br/homologacao/modelo/webservice/GeisWebServiceImpl.php
 
 [3518602]
 Nome=Guariba
@@ -24345,7 +24343,7 @@ UF=SP
 Provedor=GeisWeb
 Versao=1.01
 Params=AliasCidade:pardinho
-ProRecepcionar=https://www.cidadedofuturo.com.br/producao/pardinho/webservice/GeisWebServiceImpl.php
+ProRecepcionar=https://www.gerenciadecidades.com.br/producao/pardinho/webservice/GeisWebServiceImpl.php
 
 [3536208]
 Nome=Pariquera-Acu
@@ -25740,7 +25738,7 @@ UF=SP
 Provedor=GeisWeb
 Versao=1.01
 Params=AliasCidade:tiete
-ProRecepcionar=https://www.cidadedofuturo.com.br/producao/reforma/tiete/webservice/GeisWebServiceImpl.php
+ProRecepcionar=https://www.gerenciadecidades.com.br/producao/reforma/tiete/webservice/GeisWebServiceImpl.php
 
 [3554607]
 ; Incluído em 17/12/2024
@@ -27001,8 +26999,10 @@ Provedor=
 [4111407]
 Nome=Ivai
 UF=PR
-Provedor=Equiplano
-Params=CodigoCidade:20
+Provedor=EloTech
+Versao=2.03
+ProRecepcionar=https://ivai.oxy.elotech.com.br/iss-ws/nfse203.wsdl
+HomRecepcionar=https://ivai.oxy.elotech.com.br/iss-ws/nfse203.wsdl
 
 [4111506]
 Nome=Ivaipora
@@ -27291,17 +27291,9 @@ UF=PR
 Provedor=PadraoNacional
 
 [4115200]
-; Atualizado em 11/02/2025
 Nome=Maringa
 UF=PR
-Provedor=ISSe
-Versao=2.01
-ProRecepcionar=https://nfse-ws.ecity.maringa.pr.gov.br/MaringaNfse.asmx
-HomRecepcionar=https://nfse-ws.hom-ecity.maringa.pr.gov.br/MaringaNfse.asmx
-ProSoapAction=https://nfse-ws.ecity.maringa.pr.gov.br/v2.01
-HomSoapAction=https://nfse-ws.hom-ecity.maringa.pr.gov.br/v2.01
-ProLinkURL=https://maringa.fintel.com.br/ImprimirNfse/%NumeroNFSe%/%Cnpj%/%CodVerif%
-HomLinkURL=https://nfse.hom-ecity.maringa.pr.gov.br/ImprimirNfse/%NumeroNFSe%/%Cnpj%/%CodVerif%	
+Provedor=PadraoNacional
 
 [4115309]
 Nome=Mariopolis
@@ -28277,7 +28269,7 @@ HomRecepcionar=https://sertanopolis.oxy.elotech.com.br/iss-ws/nfse203.wsdl
 [4126603]
 Nome=Siqueira Campos
 UF=PR
-Provedor=Betha
+Provedor=PadraoNacional
 
 [4126652]
 Nome=Sulina
@@ -28660,7 +28652,7 @@ HomRecepcionar=https://ws-balneariobarradosul.atende.net/?pg=rest&service=WNERes
 [4202073]
 Nome=Balneario Gaivota
 UF=SC
-Provedor=Betha
+Provedor=PadraoNacional
 
 [4202081]
 Nome=Bandeirante
@@ -35705,7 +35697,19 @@ Provedor=
 [5204300]
 Nome=Cacu
 UF=GO
-Provedor=Betha
+Provedor=Centi
+Versao=2.02
+Params=NaoFormatarItemServico:
+ProRecepcionar=*
+ProConsultarNFSeRps=https://api.centi.com.br/nfe/consultar/rps/go/cacu
+ProCancelarNFSe=https://api.centi.com.br/nfe/cancelar/go/cacu
+ProGerarNFSe=https://api.centi.com.br/nfe/gerar/go/cacu
+HomRecepcionar=*
+HomConsultarNFSeRps=https://api.centi.com.br/nfe/consultar/homologacao/rps/go/cacu
+HomCancelarNFSe=https://api.centi.com.br/nfe/cancelar/homologacao/go/cacu
+HomGerarNFSe=https://api.centi.com.br/nfe/gerar/homologacao/go/cacu
+ProLinkURL=https://api.centi.dev.br/portal/nfse/go/cacu/%ID%
+HomLinkURL=https://api.centi.dev.br/portal/nfse/go/cacu/%ID%
 
 [5204409]
 Nome=Caiaponia
@@ -36558,9 +36562,9 @@ ProRecepcionar=https://palestinadegoias.megasoftarrecadanet.com.br/palestinadego
 [5215702]
 Nome=Palmeiras de Goias
 UF=GO
-Provedor=MegaSoft
+Provedor=Fiorilli
 Versao=2.00
-ProRecepcionar=https://palmeirasdegoias.megasoftarrecadanet.com.br/palmeirasdegoias/ws/nfseSOAP
+ProRecepcionar=http://138.94.184.19:8090//IssWeb-ejb/IssWebWS/IssWebWS
 
 [5215801]
 Nome=Palmelo

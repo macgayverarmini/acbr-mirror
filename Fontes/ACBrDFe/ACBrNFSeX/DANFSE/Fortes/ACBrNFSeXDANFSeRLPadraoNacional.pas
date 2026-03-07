@@ -280,6 +280,7 @@ type
   private
     { Private declarations }
     FNumItem: Integer;
+    Detalhar: Boolean;
   public
     { Public declarations }
     class procedure QuebradeLinha(const sQuebradeLinha: String); override;
@@ -513,7 +514,7 @@ begin
   if fpNFSe.Intermediario.RazaoSocial <> '' then
   begin
     rllIntermediarioNaoIdentificado.Visible := False;
-    rlbBanda05_Intermediario.Height := 99;
+    rlbBanda05_Intermediario.Height := 120;
     RLLabel81.Visible := True;
     RLLabel84.Visible := True;
     RLLabel85.Visible := True;
@@ -555,6 +556,9 @@ begin
 
   rllLocalPrestacao.Caption := fpNFSe.Servico.MunicipioPrestacaoServico;
   rllPaisPrestacao.Caption := CodIBGEPaisToDescricao(fpNFSe.Servico.CodigoPais);
+
+  if Detalhar then
+    rlbBanda06_ServicoPrestado.Height := 76;
 end;
 
 procedure TfrlXDANFSeRLPadraoNacional.rlbBanda08_SubItensDataRecord(Sender: TObject;
@@ -749,10 +753,7 @@ begin
   else
     rllValorCSLL.Caption := '-';
 
-//  if fpNFSe.Servico.Valores.tribFed.???? > 0 then
-//    rllDescCSLL.Caption := fpNFSe.Servico.Valores.tribFed.????
-//  else
-    rllDescCSLL.Caption := '-';
+  rllDescCSLL.Caption := tpRetPisCofinsDescricao(fpNFSe.Servico.Valores.tribFed.tpRetPisCofins);
 end;
 
 procedure TfrlXDANFSeRLPadraoNacional.rlbBanda11_ValorTotaNFSeBeforePrint(
@@ -889,8 +890,6 @@ end;
 
 procedure TfrlXDANFSeRLPadraoNacional.RLNFSeBeforePrint(Sender: TObject;
   var PrintIt: Boolean);
-var
-  Detalhar: Boolean;
 begin
   inherited;
 

@@ -42,6 +42,66 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+
+06/03/2026
+-- SigISS.Provider --
+[*] ACBR-9085 - Ajustes na geração do XML de cancelamento.
+    https://www.projetoacbr.com.br/forum/topic/90730-acbr-9085-cancelamento-da-nfse-itapira/
+   Por: Italo Giurizzato Junior
+-- ISSBarueri.GravarXml --
+[*] ACBR-9058 - Ajustes na geração do XML do RPS.
+   Por: Jéter Rabelo Ferreira
+-- ACBrNFSeXConversao/ACBrNFSeXDANFSeRLPadraoNacional --
+[*] ACBR-9082 - Implementado a função que retorna da descrição do tipo de retenção e]
+    alteração no DANFSE para que a descrição seja impressa.
+   Por: Armando Boza
+-- ACBrNFSeXConversao --
+[*] ACBR-9089 - Inclusão dos novos CST para o PIS/COFINS.
+   Por: Equipe Multilógica
+-- ABase.Provider/EL.Provider/Fiorilli.Provider/ModernizacaoPublica.Provider --
+[*] ACBR-8729 - Ajustes visando deixar as informações sobre o provedor mais fieis as suas respectivas particularidades.
+   Por: Diego Folieni
+-- ACBrNFSeXServicos --
+[*] A cidade Caçu/GO trocou de provedor, agora é Centi.
+   Por: eusouhudsonsantos
+-- ACBrNFSeXServicos --
+[*]Atualização do provedor do município de Ivai (PR) para EloTech.
+[*]Atualização do provedor dos municípios de Siqueira Campos (PR) e Maringá (PR) para Padrão Nacional.
+[*]Atualização do provedor do município de Palmeiras de Goiás (GO) para Fiorilli.
+[*]Atualização do provedor do município de Belford Roxo (RJ) para ModernizacaoPublica.
+   Por: Matheus Klein
+-- ACBrNFSeXServicos --
+[*] ACBR-9081 - As cidades cujo provedor é GeisWeb tiveram suas URLs alteradas.
+   Por: Marcos LP
+[*] ACBR-9054 - A cidade Balneário Gaivota/SC trocou de provedor, agora é PadraoNacional.
+   Por: Mario Inacio
+-- ACBrNFSeXDANFSeRLPadraoNacional --
+[*] Melhorias na impressão estava cortando os dados do Intermediário.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXClass --
+[*] ACBR-9054 - Inclusão de novos campos na classe TItemServicoCollectionItem para atender a leitura da 
+    seção [Itensxxx]
+-- ACBrNFSeX.LerIni --
+[*] ACBR-9054 - Inclusão dos novos campos na leitura da seção [Itemxxx]
+-- ACBrNFSeXGravarXml --
+[*] ACBR-9054 - Inclusão dos novos campos na procedure: ConsolidarVariosItensServicosEmUmSo
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXLerXml --
+[-] ACBR-8969 - Adiciona leitura das seções ComercioExterior e Evento no INI para que os campos sejam corretamente gerados no novo leiaute do WebFisco.
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/90809-acbr-9059-e-acbr-8969-situacaotomador-estrangeiro-nao-pode-ter-cnpjcpf-241195560001-60-valido/   
+[*] ACBR-9091 - Correção na leitura dos campos da procedure: LerXMLgReeRepRes
+   Por: Bruno Italo/Italo Giurizzato Junior
+-- Diversos --
+[*] ACBR-9002 - Alterações em diversas units para poder implementar serviços do Padrão Nacional 
+    em provedores que trabalham com WebService Soap.
+    https://www.projetoacbr.com.br/forum/topic/90459-acbr-9002-recuperar-danfse-nacional-provedores-sem-implementa%C3%A7%C3%A3o/
+   Por: Diogo Loff/Italo Giurizzato Junior
+-- ACBrNFSeXDANFSeRLPadraoNacional --
+[*] ACBR-9068 - Mais alguns ajustes no DANFSE.
+    https://www.projetoacbr.com.br/forum/topic/90733-acbr-9068-novo-danfse-segundo-o-layout-do-padr%C3%A3o-nacional/?&_rid=37999#findComment-591675
+   Por: netstart
+
 05/03/2026
 -- PadraoNacional.LerXml/ACBrNFSeXClass --
 [*] ACBR-9038 - Altera inicialização de indTotTrib visando evitar rejeição E0713 ao gerar XML
