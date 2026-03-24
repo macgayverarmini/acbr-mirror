@@ -42,6 +42,38 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+23/03/2026
+-- WebFisco.GravarXml --
+[*] ACBR-9132 - Ajustes para gerar os tributos IBPT.
+   Por: mlgoncalves
+-- ACBrNFSeXServicos --
+[*] Atualização do provedor do município de Virginopolis(MG) para Padrão Nacional.
+    Por: Matheus Klein
+23/03/2026
+-- PadraoNacional.LerXml --
+[*] ACBR-9172 - Ajustes para a leitura do Valor da Dedução quando a dedução informada em percentual.
+   Por: armando.boza
+-- ACBrNFSeXServicos --
+[*] Incluída o campo versão para a cidade Lagarto/SE.
+   Por: Italo Giurizzato Junior
+-- EloTech.GravarXml --
+[*] ACBR-8972 - Alteração para não gerar a tag referente ao código do pais no grupo de serviços.
+   Por: WesleySantos
+-- Tinus.Provider --
+[*] ACBR-8884 - Melhorias no TratarRetornoConsultaNFSeporRps.
+   Por: Milton Campanhã
+-- ABase.Provider --
+[+] ACBR-9131 - Implementado o envio do evento de cancelamento.
+   Por: Dalvan
+-- PadraoNacional.GravarXml --
+[*] ACBR-9125 - Imposta uma condição para gerar a tag pAliq mesmo com o valor zerado.
+   Por: Italo Giurizzato Junior
+-- Publica.GravarXml --
+[+] ACBR-9171 - Implementado a geração do ComercioExterior e EnderecoTomador (especifico para o provedor).
+   Por: HMAX AUTOMAÇÃO HOTELEIRA
+[-] ACBR-9166 - Correção, estava gerando de forma fiz o código do pais no grupo Construção Civil.
+   Por: WLE/Italo Giurizzato Junior
+
 20/03/2026
 -- ACBrNFSeXConversao/ACBrNFSeXProviderManager --
 -- Sudoeste.GravarXml/Sudoeste.LerXml/Sudoeste.Provider --
