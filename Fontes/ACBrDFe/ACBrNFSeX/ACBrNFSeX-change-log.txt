@@ -42,6 +42,22 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+25/03/2026
+-- WebFisco.GravarXml --
+[-] ACBR-9059 - Corrige index utilizado na leitura da informação da classe do item.
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/90809-acbr-9059-e-acbr-8969-situacaotomador-estrangeiro-nao-pode-ter-cnpjcpf-241195560001-60-valido/page/2/#comment-595534
+-- DBSeller.GravarXml --
+[*] ACBR-8960 - Ajustes visando compatibilização com o novo leiaute do provedor para atender a Reforma Tributária.
+   Por: Márcio Lima - TecnicaSoft / Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/89229-acbr-8960-cidade-sapiranga-rs/page/2/?&_rid=124795#findComment-595318 
+-- ACBrNFSeXLerXml/ACBrNFSeX.LerIni --
+[-] ACBR-9059 - Adiciona leitura de tpRetPisCofins, CSTPis, pTotTribFed, pTotTribEst e pTotTribMun para alimentar propriedades usadas pelo provedor Primax.
+   Por: Diego Folieni
+-- ACBrNFSeXServicos --
+[*] ACBR-9158 - Ajustes nas URLs da cidade Matupá/MT o provedor continua o mesmo.
+   Por: Italo Giurizzato Junior
+
 24/03/2026
 -- ACBrNFSeXServicos --
 [*] ACBR-9137 - Ajustes nas URLs das cidades atendidas pelo provedor Tinus, a maioria
