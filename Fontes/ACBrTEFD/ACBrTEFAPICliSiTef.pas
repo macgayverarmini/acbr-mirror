@@ -448,7 +448,7 @@ begin
   else
   begin
     DataHora := Now;
-    DoctoStr := FormatDateTime('YYYYMMDDHHNNSS', DataHora );
+    DoctoStr := FormatDateTime('YYMMDDHHNNSSZZZ', DataHora );
   end;
 
   DataStr := FormatDateTime('YYYYMMDD', DataHora );
@@ -461,13 +461,21 @@ begin
     if not ParamTemChave(ParamAdicFuncao, CPARAM_ExibeMsgOperadorPinpad) then
       ParamAdicFuncao.Values[CPARAM_ExibeMsgOperadorPinpad] := '1';
 
-  // Exibe QRCode na tela ?
-  // https://dev.softwareexpress.com.br/docs/clisitef-interface-aplicacao/parametro-adicional-tratamento-de-qrcode
-  if (TACBrTEFAPI(fpACBrTEFAPI).ExibicaoQRCode = qrapiExibirAplicacao) then
-    if not ParamTemChave(ParamAdicFuncao, CPARAM_DevolveStringQRCode) then
-      ParamAdicFuncao.Values[CPARAM_DevolveStringQRCode] := '1';
-
   ParamAdicStr := StringReplace(Trim(ParamAdicFuncao.Text), sLineBreak, ';', [rfReplaceAll]);
+
+  // Se a automação vai exibir o QRCode, solicitar que a CliSiTef devolva a String do QRCode
+  // no fluxo iterativo (comandos 50/51/52).
+  // https://dev.softwareexpress.com.br/docs/clisitef-interface-aplicacao/parametro-adicional-tratamento-de-qrcode
+  if (pos(CPARAM_DevolveStringQRCode, ParamAdicStr) = 0) then
+  begin
+    if (TACBrTEFAPI(fpACBrTEFAPI).ExibicaoQRCode = qrapiExibirAplicacao) then
+    begin
+      if NaoEstaVazio(ParamAdicStr) then
+        ParamAdicStr := ParamAdicStr + ';';
+      ParamAdicStr := ParamAdicStr + '{' + CPARAM_DevolveStringQRCode + '=1;}';
+    end;
+  end;
+
   fDocumentosFinalizados := '' ;
 
   fpACBrTEFAPI.UltimaRespostaTEF.Clear;
@@ -981,6 +989,7 @@ end;
 
 procedure TACBrTEFAPIClassCliSiTef.DoExibirQRCode(const DadosQRCode: String);
 begin
+  fpACBrTEFAPI.GravarLog( 'TACBrTEFAPIClassCliSiTef.DoExibirQRCode( '+DadosQRCode+' )');
   with TACBrTEFAPI(fpACBrTEFAPI) do
   begin
     if Assigned(QuandoExibirQRCode) then
