@@ -43,6 +43,32 @@ Símbolo : Significado
 [-]     : Correção de Bug (assim esperamos)
 
 
+30/03/2026
+-- WebFisco.GravarXML --
+[*] ACBR-9059 - Ajustes na geração do XML conforme orientações recebidas do Primax.
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/90809-acbr-9059-e-acbr-8969-situacaotomador-estrangeiro-nao-pode-ter-cnpjcpf-241195560001-60-valido/page/3/ 
+-- ISSSaoPaulo.GravarXml/ISSSaoPaulo.LerXml --
+[*] Ajustes para gerar e ler a tag com a grafia NaoNIF em vez de cNaoNIF.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXLerXml_ABRASFv2 --
+--  EloTech.GravarXml/EloTech.LerXml --
+[*] ACBR-9127 - Alteração visando a geração e a leitura do novo campo: CSTPisCofins.
+    Para alimentar esse campo deve-se usar: NFSe.Servico.Valores.tribFed.CST := cst00; (por exemplo)
+   Por: Italo Giurizzato Junior
+-- Centi.Provider --
+[*] ACBR-9189 - Alteração na forma de assinar, foi mudado o algoritmo de canonicalização utilizado
+    de Inclusivo para Exclusivo.
+   Por: Diego Folieni/Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[+] ACBR-9160 - Incluída a cidade de Nova Luzitania/SP, o provedor é BWSistemas.
+   Por: Geraldo Moura/Italo Giurizzato Junior
+-- ACBrNFSeXConversao/ACBrNFSeXProviderManager --
+-- BWSistemas.GravarXml/BWSistemas.LerXml/BWSistemas.Provider --
+[+] ACBR-9160 - Implementação do provedor BWSistemas que utiliza a versão 2 do layout da ABRASF e atende
+    a cidade Nova Lusitânia/SP.
+   Por: Italo Giurizzato Junior
+
 27/03/2026
 -- DBSeller.Provider --
 [-] Ajuste para correta leitura do retorno da consulta por RPS.
