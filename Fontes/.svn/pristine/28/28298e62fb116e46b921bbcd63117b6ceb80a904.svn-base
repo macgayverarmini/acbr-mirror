@@ -16246,16 +16246,9 @@ Versao=2.04
 ProRecepcionar=https://gouveia.sintesenotafiscal.com.br/nfsews/NfseWS
 
 [3127701]
-; Atualizado em 07/06/2024
 Nome=Governador Valadares
 UF=MG
-Provedor=ISSIntel
-ProNameSpace=http://governadorvaladares-mg.issintegra.com.br/webservices/abrasf/api
-HomNameSpace=http://governadorvaladares-mg.treino-issintegra.com.br/webservices/abrasf/api
-ProRecepcionar=https://governadorvaladares-mg.issintegra.com.br/webservices/abrasf/api
-HomRecepcionar=https://governadorvaladares-mg.treino-issintegra.com.br/webservices/abrasf/api
-ProSoapAction=http://governadorvaladares-mg.issintegra.com.br/webservices/abrasf/api/
-HomSoapAction=http://governadorvaladares-mg.treino-issintegra.com.br/webservices/abrasf/api/
+Provedor=PadraoNacional
 
 [3127800]
 Nome=Grao Mogol
@@ -18189,7 +18182,9 @@ ProRecepcionar=http://pmpirangucu.redemunicipal.net.br:8080/IssWeb-ejb/IssWebWS/
 [3151008]
 Nome=Piranguinho
 UF=MG
-Provedor=
+Provedor=Fiorilli
+Versao=2.00
+ProRecepcionar=http://pmpiranguinho.redemunicipal.net.br:8080/IssWeb-ejb/IssWebWS/IssWebWS
 
 [3151107]
 ; Incluído em 07/07/2022
@@ -21451,7 +21446,8 @@ HomRecepcionar=https://prefeituradevassouras.online/wsnfse/
 Nome=Volta Redonda
 UF=RJ
 Provedor=SimplISS
-ProRecepcionar=https://nfsevoltaredonda.simplissweb.com.br
+Versao=2.03
+ProRecepcionar=https://wsvoltaredonda.simplissweb.com.br
 
 [3500105]
 Nome=Adamantina
