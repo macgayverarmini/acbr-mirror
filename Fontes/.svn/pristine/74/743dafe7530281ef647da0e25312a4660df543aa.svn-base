@@ -42,6 +42,25 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+09/04/2026
+-- Conam.LerXml --
+[*] Ajuste para que também leia CodigoServicoNacional com essa nomenclatura no INI.
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/91593-erro-gera%C3%A7%C3%A3o-de-tag-locpreext_codpost-provedor-conam/#comment-597364
+-- PadraoNacional.GravarXml --
+[*] ACBR-9231 - Imposta uma condição para gerar as tags: tpBM e vCalcBM.
+   Por: Quality Automação
+-- Tiplan.GravarXml --
+[*] ACBR-8789 - Alterado de obrigatório para opcional a geração da tag: SituacaoTributariaPISCOFINS.
+   Por: Italo Giurizzato Junior
+-- ISSFortaleza.Provider --
+[*] ACBR-9190 - Possível solução para os escape inseridos nos conteúdos das tags.
+   Por: Italo Giurizzato Junior
+-- ISSNet.GravarXml/ISSNet.LerXml/ISSNet.Provider --
+[*] ACBR-9208 - Diversas alterações visando consumir os serviços do novo webservice do provedor
+    que vai trabalhar com o layout do Padrão Nacional.
+   Por: Jhonlenon Ribeiro/Italo Giurizzato Junior
+
 08/04/2026
 -- ISSDigital.Provider --
 [*] ACBR-9053 - Alteração visando assinar o ConsultarSituacao e o ConsultarLote bem como gerar o
