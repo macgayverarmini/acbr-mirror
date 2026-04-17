@@ -21681,7 +21681,6 @@ Provedor=PadraoNacional
 Nome=Araraquara
 UF=SP
 Provedor=Giap
-Versao=1.01
 Params=NaoDividir100:
 ProRecepcionar=https://araraquara.giap.com.br/ords/pma/ws/nfe/emitir_nfe
 ProConsultarNFSeRps=https://araraquara.giap.com.br/ords/pma/ws/nfe/consulta_nota
@@ -23969,7 +23968,13 @@ ProLinkURL=http://morungabasp.dcfiorilli.com.br:8080/issweb/formGerarNF.jsf?nroN
 [3532058]
 Nome=Motuca
 UF=SP
-Provedor=
+Provedor=Fiorilli
+Versao=2.00
+ProRecepcionar=http://177.52.80.26:8081/IssWeb-ejb/IssWebWS/IssWebWS
+ProLinkURL=http://177.52.80.26:8081/issweb/formGerarNF.jsf?nroNota=%NumeroNFSe%&codVerificacao=%CodVerif%&cnpj=%Cnpj%&hash=%ChaveAcesso%
+
+; A URL abaixo deve ser utilizada a partir de 01/02/2026 quando o WebService novo vai passar a ser utilizado.
+;ProRecepcionar=http://177.52.80.26:8081/IssWeb-ejb/IssWebWSNacional/IssWebWSNacionalPortType
 
 [3532108]
 Nome=Murutinga do Sul
@@ -24878,6 +24883,7 @@ Provedor=PadraoNacional
 Nome=Rio Claro
 UF=SP
 Provedor=Ginfes
+Params=NaoFormatarItemServico:
 ProLinkURL=http://visualizar.ginfes.com.br/report/consultarNota?__report=nfs_ver4&cdVerificacao=%CodVerif%&numNota=%NumeroNFSe%
 HomLinkURL=http://rioclaro.ginfesh.com.br/report/consultarNota?__report=nfs_ver4&cdVerificacao=%CodVerif%&numNota=%NumeroNFSe%&cnpjPrestador=null
 

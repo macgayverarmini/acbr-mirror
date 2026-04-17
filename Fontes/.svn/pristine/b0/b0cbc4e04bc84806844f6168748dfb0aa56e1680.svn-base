@@ -41,6 +41,28 @@ Símbolo : Significado
 [+]     : Novo recurso
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
+
+16/04/2026
+-- ACBrNFSeXConversao --
+[+] ACBr-9080 - Incluídos os enumerados para as Naturezas de Operação:
+    202, 203, 302, 304, 401, 702, 704, 705
+   Por: forbostec/Italo Giurizzato Junior
+-- PadraoNacional.Provider --
+[*] ACBr-9148 - Possível solução para tags que contem os caracteres: < e >.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[-] O município de Araraquara está na versão 1.00 do provedor Giap
+   Por: newstandardsoftware
+   Veja: https://www.projetoacbr.com.br/forum/topic/91561-nfse-giap-prefeitura-de-araraquara/
+[-] Adiciona parâmetro para não formar item no município de Rio Claro/SP
+   Por: randal.gasparini
+   Veja: https://www.projetoacbr.com.br/forum/topic/91421-ginfes-arquivo-enviado-fora-da-estrutura-do-arquivo-xml-de-entrada/   
+[+] ACBr-9209 - Incluída a cidade de Motuca/SP e o provedor é Fiorilli.
+   Por: Light System Software
+-- PadraoNacional.GravarXml --
+[-] Removida condição para chamada da ConsolidarVariosItensServicosEmUmSo quando houverem itens na lista de serviços
+   Por: Renato Rubinho
+
 15/04/2026
 -- ACBr.DANFSeX.FPDFA4Retrato --
 [-] ACBR-9246 - Ajuste na impressão NFSeX FPDF dos campos do XML em lazarus ( Lib/Monitor/Linux ) não estava saindo corretamente os acentos.
