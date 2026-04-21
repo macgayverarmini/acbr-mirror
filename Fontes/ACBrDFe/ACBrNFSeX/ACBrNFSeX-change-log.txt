@@ -42,6 +42,29 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+20/04/2026
+-- ISSDSF.Provider --
+[*] ACBr-9250 - Incluído na função TratarXmlRetornado a função para remover os prefixos
+    desnecessários.
+   Por: Italo Giurizzato Junior
+-- ISSDSF.GravarXml/ISSDSF.Provider --
+[*] ACBr-9229 - Alteração visando assinar tanto o RPS quanto o Lote de RPS sem 
+    ocorrer erro de assinatura invalida.
+   Por: Italo Giurizzato Junior
+-- IPM.GravarXml --
+[*] ACBr-9146 - Alteração visando gerar a tag indFinal com os valores corretos.
+   Por: Centrodata Sistemas/Italo Giurizzato Junior
+-- ACBrNFSeXDANFSeRLPadraoNacional --
+[*] Ajuste para imprimir no DANFSE do Padrão Nacional o conteúdo do campo xInfComp.
+    Ajuste para imprimir a chave por inteiro.
+   Por: ML Gonçalves/Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Ajuste para continuar usando o webservice antigo (ABRASF) do provedor Fiorilli.
+   Por: Italo Giurizzato Junior
+-- ISSDSF.GravarXml --
+[*] Ajuste para gerar a tag CodigoNbs.
+   Por: Italo Giurizzato Junior
+
 17/04/2026
 -- MegaSoft.GravarXml --
 [*] ACBr-9283 - Alteração visando gerar a tag Exigibilidade adicionada pelo provedor.

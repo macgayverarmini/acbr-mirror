@@ -466,15 +466,14 @@ procedure TNFSeW_ISSDSF203.Configuracao;
 begin
   inherited Configuracao;
 
-//  FormatoCompetencia := tcDat;
-
   NrOcorrCodigoPaisTomador := 0;
-  NrOcorrCodigoNbs := -1;
   NrOcorrDiscriminacao_1 := -1;
   NrOcorrCodigoMunic_1 := -1;
 
   NrOcorrDiscriminacao_2 := 1;
   NrOcorrCodigoMunic_2 := 1;
+
+  GerarNSRps := False;
 end;
 
 end.
