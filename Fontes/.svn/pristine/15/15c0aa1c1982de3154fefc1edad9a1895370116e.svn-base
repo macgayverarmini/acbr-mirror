@@ -14514,6 +14514,7 @@ Nome=Barbacena
 UF=MG
 Provedor=WebISS
 Versao=2.02
+Params=FormatarItemServicoNaoSeAplica
 ProRecepcionar=https://barbacenamg.webiss.com.br/ws/nfse.asmx
 HomRecepcionar=https://homologacao.webiss.com.br/ws/nfse.asmx
 ProLinkURL=https://barbacenamg.webiss.com.br/externo/nfse/visualizar/%Cnpj%/%CodVerif%/%NumeroNFSe%
@@ -32513,7 +32514,24 @@ Provedor=ABase
 [4315131]
 Nome=Pouso Novo
 UF=RS
-Provedor=PadraoNacional
+Provedor=Tecnos
+Versao=2.01
+ProRecepcionar=*
+ProConsultarLote=http://nfse-pousonovo.multi24h.com.br:9097/ConsultaLoteRPS.asmx
+ProConsultarNFSeRps=http://nfse-pousonovo.multi24h.com.br:9095/ConsultaNFSePorRPS.asmx
+ProConsultarNFSePorFaixa=http://nfse-pousonovo.multi24h.com.br:9096/ConsultaNFSePorFaixa.asmx
+ProCancelarNFSe=http://nfse-pousonovo.multi24h.com.br:9098/CancelamentoNFSe.asmx
+ProRecepcionarSincrono=http://nfse-pousonovo.multi24h.com.br:9091/EnvioLoteRPSSincrono.asmx
+ProGerarNFSe=*
+ProSubstituirNFSe=http://nfse-pousonovo.multi24h.com.br:9086/SubstituicaoNFSe.asmx
+HomRecepcionar=*
+HomConsultarLote=http://homologanfse-pousonovo.multi24h.com.br:9097/ConsultaLoteRPS.asmx
+HomConsultarNFSeRps=http://homologanfse-pousonovo.multi24h.com.br:9095/ConsultaNFSePorRPS.asmx
+HomConsultarNFSePorFaixa=http://homologanfse-pousonovo.multi24h.com.br:9096/ConsultaNFSePorFaixa.asmx
+HomCancelarNFSe=http://homologanfse-pousonovo.multi24h.com.br:9098/CancelamentoNFSe.asmx
+HomRecepcionarSincrono=http://homologanfse-pousonovo.multi24h.com.br:9091/EnvioLoteRPSSincrono.asmx
+HomGerarNFSe=*
+HomSubstituirNFSe=*
 
 [4315149]
 Nome=Presidente Lucena
