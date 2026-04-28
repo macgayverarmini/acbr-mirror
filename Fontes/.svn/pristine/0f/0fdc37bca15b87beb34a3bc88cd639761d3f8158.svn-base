@@ -42,6 +42,34 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+27/04/2026
+-- SigISSWeb.GravarXml --
+[*] ACBr-9269 - Ajuste para só gerar as BC se o valor dos tributos forem diferentes de zero.
+   Por: NW Software
+-- eGoverneISS.GravarXml --
+[*] ACBR-9267 - Alteração para que possa ser utilizado um endereço de prestação para prestação de serviço diferente do tomador.
+   Por: Valter Patrick
+   Veja: https://www.projetoacbr.com.br/forum/topic/91803-acbr-9267-nfs-e-egoverneiss-osasco-n%C3%A3o-consigo-informar-local-de-presta%C3%A7%C3%A3o-diferente-do-tomador/
+-- ISSDSF.Provider --
+[*] O provedor esta retornando o XML no formato ANSI em vez de UTF8
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBr-9271 - O provedor DBSeller tem um WebService novo que recepciona o XML segundo o Padrão Nacional.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXProviderManager --
+-- DBSeller.GravarXml/DBSeller.LerXml/DBSeller.Provider --
+[+] ACBr-9271 - O provedor implementou um novo webservice que recepciona o XML segundo o Padrão Nacional.
+    Liberado a geração, leitura do XML bem como o envio do mesmo para o WebService, se faz necessário
+    realizar testes com um prestador para obter o XML de retorno que não contenha mensagens de erros.
+   Por: Italo Giurizzato Junior
+-- Giss.LerXml --
+[-] A leitura do grupo tribFed estava zerando os campos: ValorInss, ValorIr e ValorCsll,
+    quando o grupo de tributação federal não consta no XML.
+   Por: Italo Giurizzato Junior
+-- ACBr.DANFSeX.FPDFA4Retrato --
+[-] Ajuste visando evitar que os logotipos sobreponham a linha da caixa de texto.
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/91250-acbr-9246-nfs-e-texto-apresentado-de-forma-estranha-no-pdf/page/2/ 
 
 23/04/2026
 -- ACBrNFSeXServicos.ini --
