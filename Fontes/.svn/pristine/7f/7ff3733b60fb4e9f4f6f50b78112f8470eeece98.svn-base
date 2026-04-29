@@ -42,6 +42,15 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+28/04/2026
+-- Tinus.Provider --
+[*] ACBR-9256 - Ajustes para mostrar corretamente os serviços disponibilizados pelo provedor
+    na versão 2.03
+   Por: Italo Giurizzato Junior
+-- ISSDSF.Provider --
+[*] ACBR-9302 - Alteração visando resolver o erro xmlParseEntityRef.
+   Por: Bremen Sistemas/Italo Giurizzato Junior
+
 27/04/2026
 -- SigISSWeb.GravarXml --
 [*] ACBr-9269 - Ajuste para só gerar as BC se o valor dos tributos forem diferentes de zero.
