@@ -42,6 +42,29 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+05/05/2026
+-- ACBrNFSeXServicos.ini -- 
+[*] ACBr-9342 - A cidade de Ji-Parana/RO passou a usar a versão 1.00 do Padrão Nacional - Fiorilli
+   Por: Diego Reckziegel
+[*] ACBr-9341 - A cidade de Assis/SP passou a usar a versão 1.00 do Padrão Nacional - Fiorilli
+   Por: Diego Reckziegel
+-- Fiorilli.Provider --
+[*] ACBr-9342 - Implementado o TratarRetornoEmitir
+   Por: Diego Reckziegel/Italo Giurizzato Junior
+-- ACBrNFSeX/ACBrNFSeXConfiguracoes/ACBrNFSeXProviderBase/ACBrNFSeXProviderManager --
+-- Fiorilli.GravarXml/Fiorilli.LerXml/Fiorilli.Provider --
+[*] ACBr-9289 - Diversas alterações visando atender as duas versões 1.00 e 1.01 do Layout do
+    Padrão Nacional utilizadas pelo provedor Fiorilli.
+    Temos cidades que utilizam a versão 1.00 (sem os campos da RTC) e outras usando a versão 1.01
+    (com os campos da RTC).
+   Por: Diego Folieni/Italo Giurizzato Junior
+-- Centi.GravarXml/Centi.Provider --
+[*] Possível solução para o erro: Xml inválido. Error: Object reference not set to an instance of an object.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[-] Corrige URL do Sao Valentim do Sul/Sao Valentim
+   Por: doszapro
+   
 04/05/2026
 -- ACBrNFSeXConversao --
 [*] ACBr-9115 - Ajustes no tipo TCSTPis, esta faltando o CST 49.
