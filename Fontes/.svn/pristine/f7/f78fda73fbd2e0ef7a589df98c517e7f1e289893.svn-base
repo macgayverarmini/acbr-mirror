@@ -42,6 +42,24 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+08/05/2026
+-- ACBrNFSeXConfiguracoes.pas --
+[*] Alteração visando sanar o problema com o provedor Fiorilli.
+   Por: Italo Giurizzato Junior
+-- IPM.GravarXml --
+[*] Não estava gerando a tag valor_rps que contem o valor de outras retenções, agora ela
+    vai ser gerada se o for informado o valor no campo: Servico.Valores.OutrasRetencoes.
+   Por: Italo Giurizzato Junior
+-- GeisWeb.GravarXml/GeisWeb.Provider --
+[*] Ajustes para contemplar a Reforma Tributária
+   Por: Italo Giurizzato Junior
+-- ISSNet.Provider --
+[*] ACBr-9208 - Ajuste para a correta leitura do XML de retorno quando este contem o XML da nota.
+   Por: Italo Giurizzato Junior
+-- PadraoNacional.GravarXml.pas --
+[*] Comentada as linhas que geram a tag tpAmb dentro do grupo infNFSe.
+   Por: Italo Giurizzato Junior
+
 07/05/2026
 -- PadraoNacional.Provider --
 [*] ACBr-9347 - Ajuste para gerar a descrição do evento com vogais acentuadas no XML.
