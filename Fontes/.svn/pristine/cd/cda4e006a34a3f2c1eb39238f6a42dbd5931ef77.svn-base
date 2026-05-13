@@ -42,6 +42,28 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+12/05/2026
+-- PadraoNacional.GravarXml/PadraoNacional.LerXml --
+[*] Alteração visando gerar a tag vLiq com o valor correto.
+   Por: Italo Giurizzato Junior
+-- eGoverneISS.GravarXml --
+[*] ACBr-9217 - Alterações visando gerar a tag CodigoCidadeIBGE do tomador.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXProviderBase --
+[*] ACBr-9327 - Possível solução para a leitura correta dos Link que contem a URL para gerar
+    o QR-Code para acesso ao DANFSE ou verificação se a nota realmente foi emitida.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXGravarXml/PadraoNacional.GravarXml/SilTecnologia.GravarXml --
+[*] Alteração visando gerar a tag nNFSe com o valor zero e corrigido para 2000 a quantidade
+    máxima de caracteres no campo xOutInf que estava com apenas 15.
+   Por: Italo Giurizzato Junior
+-- Conam.LerXml --
+[*] Correção na leitura do campo OptanteSN do arquivo INI que estava fora do lugar.
+   Por: Italo Giurizzato Junior
+-- ISSSaoPaulo.LerXml --
+[*] ACBr-9274 - Ajuste para ler a tag ValorDeducoes e calculo da Base de Calculo.
+   Por: Italo Giurizzato Junior
+
 11/05/2026
 -- ACBrNFSeXServicos.ini -- 
 [*] ACBr-9217 - Alterado a URL de homologação da cidade de Osasco/SP, o provedor continua o mesmo.
