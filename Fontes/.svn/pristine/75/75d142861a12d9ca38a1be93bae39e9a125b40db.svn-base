@@ -42,6 +42,31 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+22/05/2026
+-- ACBrNFSeXServicos --
+[+] Adiciona a cidade de Horizonte/CE, provedor é o SpeedGov com APIPropria.
+   Por: Diego Folieni
+-- Fiorilli.GravarXml --
+[-] Adiciona parâmetro para que não seja formatado o ItemListaServico na versão 2.00
+   Por: Diego Folieni
+-- ACBrNFSeXLerXml --
+[*] Ajuste para ler todos os campos da seção ItensXXX.
+   Por: Italo Giurizzato Junior
+-- ISSSaoPaulo.GravarXml --
+[*] Ajuste para normatizar a alíquota informada antes de gerar a tag AliquotaServico.
+   Por: Italo Giurizzato Junior
+-- Tinus.LerXml --
+[*] Implementado a leitura do arquivo INI.
+   Por: Daniel Morais/Italo Giurizzato Junior
+-- ACBrNFSeXClass/ACBrNFSeXConversao/ACBrNFSeX.GravarIni/ACBrNFSeX.LerIni --
+-- ACBrNFSeXLerXml/eGoverneISS.GravarXml --
+[*] ACBR-9375 - Implementado o campo enumerado IdLocalIncidencia para atender o provedor eGoverneISS.
+   Por: Daniel Morais/Italo Giurizzato Junior
+-- ACBrNFSeXConfiguracoes/ACBrNFSeXServicos --
+[-] ACBR-9402 - Ajustes visando permitir convivência do leiaute alterado e da API própria para o SpeedGov.
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/92385-acbr-9402-nfse-juazeiro-do-norte-ce-speedgov-parou-de-funcionar/ 
+
 21/05/2026
 -- ACBrNFSeXGravarXml --
 [*] Ajustes para tratar o ItemListaServico com 6 dígitos.
