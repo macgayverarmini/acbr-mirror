@@ -37,11 +37,16 @@ unit ACBrCIOTWebServices;
 interface
 
 uses
-  Classes, SysUtils,
-  ACBrDFe, ACBrDFeWebService,
-  ACBrCIOTContratos, ACBrCIOTConfiguracoes,
+  Classes,
+  SysUtils,
+  ACBrDFe,
+  ACBrDFeWebService,
+  ACBrCIOTContratos,
+  ACBrCIOTConfiguracoes,
   ACBrConsts,
-  ACBrCIOTConversao, pcnCIOT, pcnRetEnvCIOT;
+  ACBrCIOTConversao,
+  pcnCIOT,
+  pcnRetEnvCIOT;
 
 type
 
@@ -153,7 +158,8 @@ uses
   ACBrUtil.FilesIO,
   ACBrUtil.XMLHTML,
   ACBrCIOT,
-  pcnGerador, pcnLeitor;
+  pcnGerador,
+  pcnLeitor;
 
 { TCIOTWebService }
 
@@ -593,12 +599,43 @@ begin
                                       'xmlns:obj1="http://schemas.ipc.adm.br/efrete/objects"';
         end;
 
+      opObterCodigoIOT:
+        begin
+          Servico := 'http://schemas.ipc.adm.br/efrete/pefV2/';
+
+          FPSoapEnvelopeAtributtes := FPSoapEnvelopeAtributtes +
+                                      'xmlns:pef="http://schemas.ipc.adm.br/efrete/pefV2" '+
+                                      'xmlns:obj="http://schemas.ipc.adm.br/efrete/pef/objects" ' +
+                                      'xmlns:obj1="http://schemas.ipc.adm.br/efrete/objects"';
+        end;
+
+      opAdicionar:
+        begin
+          Servico  := 'http://schemas.ipc.adm.br/efrete/pefV2/';
+
+          FPSoapEnvelopeAtributtes := FPSoapEnvelopeAtributtes +
+                                      'xmlns:pef="http://schemas.ipc.adm.br/efrete/pefV2" ' +
+                                      'xmlns:obj="http://schemas.ipc.adm.br/efrete/objects" ' +
+                                      'xmlns:obj1="http://schemas.ipc.adm.br/efrete/pefV2/objects" ' +
+                                      'xmlns:obj2="http://schemas.ipc.adm.br/efrete/pef/objects"';
+        end;
+
+      opCancelar:
+        begin
+          Servico  := 'http://schemas.ipc.adm.br/efrete/pefV2/';
+
+          FPSoapEnvelopeAtributtes := FPSoapEnvelopeAtributtes +
+                                      'xmlns:pef="http://schemas.ipc.adm.br/efrete/pefV2" ' +
+                                      'xmlns:obj="http://schemas.ipc.adm.br/efrete/pef/objects" ' +
+                                      'xmlns:obj1="http://schemas.ipc.adm.br/efrete/objects"';
+
+        end;
     else
       begin
         Servico  := 'http://schemas.ipc.adm.br/efrete/pefV2/';
 
         FPSoapEnvelopeAtributtes := FPSoapEnvelopeAtributtes +
-                                    'xmlns:pefV2="http://schemas.ipc.adm.br/efrete/pefV2" ' +
+                                    'xmlns:pef="http://schemas.ipc.adm.br/efrete/pefV2" ' +
                                     'xmlns:obj="http://schemas.ipc.adm.br/efrete/pefV2/objects" ' +
                                     'xmlns:obj1="http://schemas.ipc.adm.br/efrete/objects"';
       end;
@@ -663,7 +700,8 @@ begin
           Acao      := 'AdicionarOperacaoTransporte';
 
           FPSoapEnvelopeAtributtes := FPSoapEnvelopeAtributtes +
-                ' xmlns:adic="http://schemas.ipc.adm.br/efrete/pefV2/' + Acao + '"';
+                ' xmlns:adic="http://schemas.ipc.adm.br/efrete/pefV2/' + Acao + '"' +
+                ' xmlns:adic1="http://schemas.ipc.adm.br/efrete/pef/' + Acao + '"';
         end;
 
       opRetificar:

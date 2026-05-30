@@ -42,6 +42,14 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+29/05/2026
+-- PadraoNacional.Provider --
+[-] Altera a mensagem devolvida quando não informa o chNFSe ao enviar evento de "Nenhum evento adicionado" para "Chave da NFSe não informada".
+   Por: Diego Folieni
+-- PadraoNacional.GravarXml --
+[*] Ajuste para que cLocalidadeIncid e xLocalidadeIncid sejam preenchidos automaticamente quando estiverem vazios usando valores que geram as tags cLocIncid e xLocIncid.
+   Por: Diego Folieni
+
 28/05/2026
 -- ACBrNFSeXConfiguracoes --
 [*] ACBR-9402 - Alteração para que asterísco na chave Params do município ignore a seção provedor e permita parâmetros específicos da seção.
