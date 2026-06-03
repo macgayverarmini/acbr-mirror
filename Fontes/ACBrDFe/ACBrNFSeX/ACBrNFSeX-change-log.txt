@@ -42,6 +42,29 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+02/06/2026
+-- ACBrNFSeXConversao/ACBrNFSeXProviderManager --
+[+] ACBR-9105 - Criado o enumerado para o provedor HM2 (proHM2).
+   Por: Italo Giurizzato Junior
+-- HM2.GravarXml/HM2.LerXml/HM2.Provider --
+[+] ACBR-9105 - Implementação do provedor HM2 para a cidade de Carpina/PE, não esta 100%.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] ACBR-9234 - O município de Santa Maria de Jetiba/ES mudou de provedor padrão nacional para o provedor EL
+   Por: Larissa Santos
+   Veja: https://www.projetoacbr.com.br/forum/topic/91667-acbr-9234-acbrnfsexservicosini-santa-maria-de-jetibaes-ibge-n%C2%BA-3204559/#comment-605446
+[*] Ajuste nas URLs e versão das cidades atendidas pelo provedor GeisWeb.
+   Por: Italo Giurizzato Junior
+-- GeisWeb.GravarXml/GeisWeb.Provider --
+[*] Ajustes para atender tanto a versão 1.00 quanto a 1.01 que gera os campos da RTC.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXServicos --
+[*] Ajuste nas URLs da cidade de Itapeva/MG.
+   Por: Italo Giurizzato Junior
+-- Fiorilli.Provider --
+[-] Correção no SoapAction das consultas da versão 1.01
+   Por: Italo Giurizzato Junior
+
 01/06/2026
 -- ACBrNFSeXServicos --
 [*] Incluída a cidade de Carpina/PE, O provedor é HM2
