@@ -1,10 +1,11 @@
-{ Projeto: Componentes ACBr - ACBrNF3e                                         }
+{******************************************************************************}
+{ Projeto: Componentes ACBr - ACBrCIOT                                         }
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2025 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2020 Daniel Simoes de Almeida               }
 {                                                                              }
-{ Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
+{ Colaboradores nesse arquivo: Italo Jurisato Junior                           }
 {                                                                              }
 {  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
 { Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
@@ -29,15 +30,16 @@
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
 
-package DCLACBr_NFAg;
+{$I ACBr.inc}
+
+package ACBr_CIOT;
 
 {$R *.res}
-{$R *.otares}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO OFF}
+{$DEBUGINFO ON}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -45,9 +47,9 @@ package DCLACBr_NFAg;
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION OFF}
-{$OVERFLOWCHECKS ON}
-{$RANGECHECKS ON}
-{$REFERENCEINFO ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$DEFINITIONINFO ON}
 {$SAFEDIVIDE OFF}
 {$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
@@ -57,18 +59,31 @@ package DCLACBr_NFAg;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'ACBr - (design-time) Nota Fiscal da Água e Saneamento Eletrônica - (http://www.projetoacbr.com.br/)'}
-{$DESIGNONLY}
-{$IMPLICITBUILD ON}
+{$DESCRIPTION 'ACBr - CIOT - (http://www.projetoacbr.com.br/)'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  designide,
-  ACBr_NFAg,
-  DCLACBr_Comum,
-  DCLACBr_DFeComum;
+  vcl,
+  ACBr_DFeComum,
+  ACBr_PCNComum;
 
 contains
-  ACBrNFAgReg in '..\..\..\..\Fontes\ACBrDFe\ACBrNFAg\ACBrNFAgReg.pas';
+  ACBrCIOT in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\ACBrCIOT.pas',
+  ACBrCIOTConfiguracoes in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\ACBrCIOTConfiguracoes.pas',
+  ACBrCIOTContratos in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\ACBrCIOTContratos.pas',
+  ACBrCIOTWebServices in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\ACBrCIOTWebServices.pas',
+  
+  pcnCIOT in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnCIOT.pas',
+  pcnCIOTR in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnCIOTR.pas',
+  pcnCIOTW in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnCIOTW.pas',
+  pcnCIOTW_eFrete in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnCIOTW_eFrete.pas',
+  pcnCIOTW_REPOM in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnCIOTW_REPOM.pas',
+  ACBrCIOTConversao in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\ACBrCIOTConversao.pas',
+  ACBrCIOTIniWriter in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\Base\ACBrCIOTIniWriter.pas',
+  ACBrCIOTIniReader in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\Base\ACBrCIOTIniReader.pas',
+  pcnRetEnvCIOT in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnRetEnvCIOT.pas',
+  pcnCIOTW_Pamcard in '..\..\..\..\Fontes\ACBrDFe\ACBrCIOT\PCNCIOT\pcnCIOTW_Pamcard.pas';
 
 end.
