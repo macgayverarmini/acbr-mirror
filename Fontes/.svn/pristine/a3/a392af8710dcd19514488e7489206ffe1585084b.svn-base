@@ -42,6 +42,21 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+05/06/2026
+-- SigISS.LerXml --
+[-] ACBR-9395 - Alteração visando a correta leitura da informação da tag dt_conversao
+   Por: Diego Folieni
+   Veja: https://www.projetoacbr.com.br/forum/topic/92351-acbr-9395-problema-na-impress%C3%A3o-da-nfs-e-data-e-hora-de-emiss%C3%A3o-fixa-no-provedor-sigiss/
+-- ACBrNFSeXDANFSeRLPadraoNacional --
+[*] Ajuste na posição do QR-Code
+   Por: Italo Giurizzato Junior
+-- HM2.GravarXml/HM2.LerXml/HM2.Provider --
+[+] ACBR-9105 - Implementado os Métodos de consultas e de cancelamento.
+   Por: Italo Giurizzato Junior
+-- Diversos --
+[*] Eliminação de Hits
+   Por: Italo Giurizzato Junior
+
 03/06/2026
 -- HM2.Provider --
 [+] ACBR-9105 - Implementado o Método Emitir, falta os demais.

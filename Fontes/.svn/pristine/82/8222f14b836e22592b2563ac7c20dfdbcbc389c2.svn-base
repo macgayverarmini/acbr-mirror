@@ -32,29 +32,67 @@
 
 {$I ACBr.inc}
 
-unit HM2.LerXml;
+unit HM2.GravarXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXLerXml_ABRASFv2;
+  ACBrNFSeXGravarXml_ABRASFv2,
+  ACBrXmlDocument;
 
 type
-  { TNFSeR_HM2203 }
+  { TNFSeW_HM2203 }
 
-  TNFSeR_HM2203 = class(TNFSeR_ABRASFv2)
+  TNFSeW_HM2203 = class(TNFSeW_ABRASFv2)
   protected
+    procedure Configuracao; override;
 
-  public
-
+    function GerarServico: TACBrXmlNode; override;
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao,
+  ACBrNFSeXConversao;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
 //     HM2
 //==============================================================================
+
+{ TNFSeW_HM2203 }
+
+procedure TNFSeW_HM2203.Configuracao;
+begin
+  inherited Configuracao;
+
+  NrOcorrCodigoPaisTomador := 0;
+  NrOcorrCodigoNbs := -1;
+  NrOcorrDiscriminacao_1 := -1;
+  NrOcorrCodigoMunic_1 := -1;
+
+  NrOcorrDiscriminacao_2 := 1;
+  NrOcorrCodigoMunic_2 := 1;
+end;
+
+function TNFSeW_HM2203.GerarServico: TACBrXmlNode;
+begin
+  Result := inherited GerarServico;
+
+  Result.AppendChild(AddNode(tcStr, '#1', 'cTribNac', 6, 6, 1,
+                                    NFSe.Servico.CodigoTributacaoNacional, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#1', 'cNBS', 9, 9, 0,
+                                                   NFSe.Servico.CodigoNBS, ''));
+
+  Result.AppendChild(AddNode(tcStr, '#1', 'tribISSQN', 1, 1, 1,
+                   tribISSQNToStr(NFSe.Servico.Valores.tribMun.tribISSQN), ''));
+
+  if NFSe.Servico.Valores.tribMun.tribISSQN = tiImunidade then
+    Result.AppendChild(AddNode(tcStr, '#1', 'tpImunidade', 1, 1, 0,
+               tpImunidadeToStr(NFSe.Servico.Valores.tribMun.tpImunidade), ''));
+end;
 
 end.

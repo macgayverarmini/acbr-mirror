@@ -32,43 +32,57 @@
 
 {$I ACBr.inc}
 
-unit HM2.GravarXml;
+unit HM2.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrNFSeXLerXml_ABRASFv2,
+  ACBrXmlDocument;
 
 type
-  { TNFSeW_HM2203 }
+  { TNFSeR_HM2203 }
 
-  TNFSeW_HM2203 = class(TNFSeW_ABRASFv2)
+  TNFSeR_HM2203 = class(TNFSeR_ABRASFv2)
   protected
-    procedure Configuracao; override;
+
+    procedure LerServico(const ANode: TACBrXmlNode); override;
+  public
 
   end;
 
 implementation
 
+uses
+  ACBrDFe.Conversao,
+  ACBrNFSeXConversao;
+
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
 //     HM2
 //==============================================================================
 
-{ TNFSeW_HM2203 }
+{ TNFSeR_HM2203 }
 
-procedure TNFSeW_HM2203.Configuracao;
+procedure TNFSeR_HM2203.LerServico(const ANode: TACBrXmlNode);
+var
+  AuxNode: TACBrXmlNode;
+  Ok: Boolean;
 begin
-  inherited Configuracao;
+  inherited LerServico(ANode);
 
-  NrOcorrCodigoPaisTomador := 0;
-  NrOcorrCodigoNbs := -1;
-  NrOcorrDiscriminacao_1 := -1;
-  NrOcorrCodigoMunic_1 := -1;
+  if not Assigned(ANode) then Exit;
 
-  NrOcorrDiscriminacao_2 := 1;
-  NrOcorrCodigoMunic_2 := 1;
+  AuxNode := ANode.Childrens.FindAnyNs('Servico');
+
+  if AuxNode <> nil then
+  begin
+    NFSe.Servico.CodigoTributacaoNacional := ObterConteudo(AuxNode.Childrens.FindAnyNs('cTribNac'), tcStr);
+    NFSe.Servico.CodigoNBS := ObterConteudo(AuxNode.Childrens.FindAnyNs('cNBS'), tcStr);
+    NFSe.Servico.Valores.tribMun.tribISSQN := StrTotribISSQN(Ok, ObterConteudo(AuxNode.Childrens.FindAnyNs('tribISSQN'), tcStr));
+    NFSe.Servico.Valores.tribMun.tpImunidade := StrTotpImunidade(Ok, ObterConteudo(AuxNode.Childrens.FindAnyNs('tpImunidade'), tcStr));
+  end;
 end;
 
 end.
