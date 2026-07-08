@@ -30,30 +30,31 @@
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
 
-{******************************************************************************
-|* ACBrNFAg
-|*
-|* PROPÓSITO: Registro de Alterações
-******************************************************************************}
+{$I ACBr.inc}
 
-Símbolo : Significado
+unit TaxTecnologia.LerXml;
 
-[+]     : Novo recurso
-[*]     : Recurso modificado/melhorado
-[-]     : Correção de Bug (assim esperamos)
+interface
 
-07/07/2026
--- Diversos --
-[*] Ajustes visando o CNPJ Alfa.
-   Por: Italo Giurizzato Junior
+uses
+  SysUtils, Classes, StrUtils,
+  ACBrNFSeXLerXml_ABRASFv2;
 
-03/07/2026
--- Diversos --
-[+] Diversas implementações e ajustes no componente para que o mesmo passe a utilizar
-    as units padrões para a RTC.
-   Por: Italo Giurizzato Junior
+type
+  { TNFSeR_TaxTecnologia204 }
 
-25/02/2026
-[+] Doação do componente para o Projeto ACBr (não esta 100%)
-   Por: Italo Giurizzato Junior
+  TNFSeR_TaxTecnologia204 = class(TNFSeR_ABRASFv2)
+  protected
 
+  public
+
+  end;
+
+implementation
+
+//==============================================================================
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
+//     TaxTecologia
+//==============================================================================
+
+end.
