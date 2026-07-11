@@ -32,29 +32,39 @@
 
 {$I ACBr.inc}
 
-unit DSF.GravarXml;
+unit DSF.LerXml;
 
 interface
 
 uses
   SysUtils, Classes, StrUtils,
-  ACBrXmlBase,
-  ACBrNFSeXGravarXml_ABRASFv1, ACBrNFSeXGravarXml_ABRASFv2;
+  ACBrNFSeXLerXml_ABRASFv1,
+  ACBrNFSeXLerXml_ABRASFv2,
+  PadraoNacional.LerXml;
 
 type
-  { TNFSeW_DSF }
+  { TNFSeR_DSF }
 
-  TNFSeW_DSF = class(TNFSeW_ABRASFv1)
+  TNFSeR_DSF = class(TNFSeR_ABRASFv1)
   protected
-    procedure Configuracao; override;
+
+  public
 
   end;
 
-  { TNFSeW_DSF200 }
+  { TNFSeR_DSF200 }
 
-  TNFSeW_DSF200 = class(TNFSeW_ABRASFv2)
+  TNFSeR_DSF200 = class(TNFSeR_ABRASFv2)
   protected
-    procedure Configuracao; override;
+
+  public
+
+  end;
+
+  { TNFSeR_DSFAPIPropria }
+
+  TNFSeR_DSFAPIPropria = class(TNFSeR_PadraoNacional)
+  protected
 
   public
 
@@ -62,37 +72,9 @@ type
 
 implementation
 
-uses
-  ACBrDFe.Conversao;
-
 //==============================================================================
-// Essa unit tem por finalidade exclusiva gerar o XML do RPS do provedor:
+// Essa unit tem por finalidade exclusiva ler o XML do provedor:
 //     DSF
 //==============================================================================
-
-{ TNFSeW_DSF }
-
-procedure TNFSeW_DSF.Configuracao;
-begin
-  inherited Configuracao;
-
-  NrOcorrAliquota := 1;
-  NrOcorrValorPis := 1;
-  NrOcorrValorCofins := 1;
-  NrOcorrValorInss := 1;
-  NrOcorrValorIr := 1;
-  NrOcorrValorCsll := 1;
-  NrOcorrValorIss := 1;
-end;
-
-{ TNFSeW_DSF200 }
-
-procedure TNFSeW_DSF200.Configuracao;
-begin
-  inherited Configuracao;
-
-  FormatoAliq := tcDe2;
-  GerarNSRps := False;
-end;
 
 end.
