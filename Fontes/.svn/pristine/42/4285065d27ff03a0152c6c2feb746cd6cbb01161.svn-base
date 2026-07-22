@@ -1,8 +1,8 @@
 inherited frlXDANFSeRLPadraoNacional: TfrlXDANFSeRLPadraoNacional
-  Left = 1035
-  Top = 279
+  Left = 273
+  Top = 132
   Caption = 'frlXDANFSeRLPadraoNacional'
-  ClientHeight = 988
+  ClientHeight = 815
   TextHeight = 13
   inherited RLNFSe: TRLReport
     Left = 10
@@ -1756,7 +1756,7 @@ inherited frlXDANFSeRLPadraoNacional: TfrlXDANFSeRLPadraoNacional
         Width = 251
         Height = 63
         Center = True
-        Stretch = True
+        Scaled = True
       end
       object rlmPrefeitura: TRLMemo
         Left = 540
