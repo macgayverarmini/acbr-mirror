@@ -6,8 +6,6 @@
 { Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo:                                                 }
-{ - Cristian Carvalho                                                          }
-{ - Sidnei Alves                                                               }
 {                                                                              }
 {  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
 { Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
@@ -35,11 +33,13 @@
 (*
 
   Documentação
-  https://developers.bancointer.com.br
+  https://developers.c6bank.com.br/pix-api
 
-*)
+*) 
 
-unit ACBrPIXPSPInter;
+{$I ACBr.inc}
+
+unit ACBrPIXPSPC6Bank;
 
 interface
 
@@ -49,43 +49,61 @@ uses
   ACBrPIXCD;
 
 const
-  cInterURLSandbox      = 'https://cdpj-sandbox.partners.uatinter.co';
-  cInterURLProducao     = 'https://cdpj.partners.bancointer.com.br';
-  cInterPathAuthToken   = '/oauth/v2/token';
-  cInterPathAPIPix      = '/pix/v2';
-  cInterURLAuthTeste    = cInterURLSandbox+cInterPathAuthToken;
-  cInterURLAuthProducao = cInterURLProducao+cInterPathAuthToken;
+  cC6URLSandbox      = 'https://baas-api-sandbox.c6bank.info';
+  cC6URLProducao     = 'https://baas-api.c6bank.info';
+  cC6PathAuthToken   = '/v1/auth';
+  cC6PathAPIPix      = '/v2/pix';
+  cC6URLAuthTeste    = cC6URLSandbox + cC6PathAuthToken;
+  cC6URLAuthProducao = cC6URLProducao + cC6PathAuthToken;
 
 type
 
-  { TACBrPSPInter }
+  { TACBrPSPC6Bank }
 
   {$IFDEF RTL230_UP}
   [ComponentPlatformsAttribute(piacbrAllPlatforms)]
   {$ENDIF RTL230_UP}
-  TACBrPSPInter = class(TACBrPSPCertificate)
+  TACBrPSPC6Bank = class(TACBrPSPCertificate)
+  private
+    procedure QuandoReceberRespostaEndPoint(const aEndPoint, aURL, aMethod: String; var aResultCode: Integer; var aRespostaHttp: AnsiString);
   protected
-    function ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String; override;
+    function ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String; override;
   public
+    constructor Create(AOwner: TComponent); override;
     procedure Autenticar; override;
   end;
 
 implementation
 
 uses
-  synautil, DateUtils, ACBrJSON, ACBrUtil.Strings;
+  synautil, blcksock, DateUtils, ACBrJSON, ACBrUtil.Strings;
 
-{ TACBrPSPInter }
+{ TACBrPSPC6Bank }
 
-function TACBrPSPInter.ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String;
+procedure TACBrPSPC6Bank.QuandoReceberRespostaEndPoint(const aEndPoint, aURL, aMethod: String; var aResultCode: Integer; var aRespostaHttp: AnsiString);
 begin
-  if (aAmbiente = ambProducao) then
-    Result := cInterURLProducao + cInterPathAPIPix
-  else
-    Result := cInterURLSandbox + cInterPathAPIPix;
+  if (UpperCase(AMethod) = ChttpMethodPOST) and (AEndPoint = cEndPointCob) and (aResultCode = HTTP_OK) then
+    AResultCode := HTTP_CREATED;
+
+  if (UpperCase(AMethod) = ChttpMethodPUT) and (AEndPoint = cEndPointCob) and (aResultCode = HTTP_OK) then
+    AResultCode := HTTP_CREATED;
 end;
 
-procedure TACBrPSPInter.Autenticar;
+function TACBrPSPC6Bank.ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String;
+begin
+  if (aAmbiente = ambProducao) then
+    Result := cC6URLProducao + cC6PathAPIPix
+  else
+    Result := cC6URLSandbox + cC6PathAPIPix;
+end;
+
+constructor TACBrPSPC6Bank.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  fpQuandoReceberRespostaEndPoint := QuandoReceberRespostaEndPoint;
+end;
+
+procedure TACBrPSPC6Bank.Autenticar;
 var
   wURL, Body: String;
   wRespostaHttp: AnsiString;
@@ -96,17 +114,14 @@ begin
   LimparHTTP;
 
   if (ACBrPixCD.Ambiente = ambProducao) then
-    wURL := cInterURLAuthProducao
+    wURL := cC6URLAuthProducao
   else
-    wURL := cInterURLAuthTeste;
-
+    wURL := cC6URLAuthTeste;
 
   qp := TACBrQueryParams.Create;
   try
     qp.Values['grant_type'] := 'client_credentials';
-    qp.Values['client_id'] := ClientID;
-    qp.Values['client_secret'] := ClientSecret;
-    qp.Values['scope'] := ScopesToString(Scopes);
+    //qp.Values['scope'] := ScopesToString(Scopes);
     Body := qp.AsURL;
     WriteStrToStream(Http.Document, Body);
     Http.MimeType := CContentTypeApplicationWwwFormUrlEncoded;
@@ -114,6 +129,10 @@ begin
     qp.Free;
   end;
 
+  Http.UserName := ClientID;
+  Http.Password := ClientSecret;
+  http.Sock.SSL.SSLType := LT_TLSv1_2;
+  Http.Protocol := '1.1';
   TransmitirHttp(ChttpMethodPOST, wURL, wResultCode, wRespostaHttp);
 
   if (wResultCode = HTTP_OK) then

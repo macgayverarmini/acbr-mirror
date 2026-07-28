@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo:                                                 }
 {                                                                              }
@@ -33,77 +33,106 @@
 (*
 
   Documentação
-  https://drive.google.com/file/d/1BqBoJ_nhv63Ma7QXFZSG_6UD9xtQ_ECQ/view
+
 
 *)
 
-unit ACBrPIXPSPBanrisul;
+{$I ACBr.inc}
+
+unit ACBrPIXPSPSicredi;
 
 interface
 
 uses
   Classes, SysUtils,
   {$IFDEF RTL230_UP}ACBrBase,{$ENDIF RTL230_UP}
-  ACBrPIXCD;
+  ACBrPIXCD, ACBrOpenSSLUtils;
 
 const
-  cBanrisulURLSandbox      = 'https://mtls-api-h.banrisul.com.br';
-  cBanrisulURLProducao     = 'https://mtls-api.banrisul.com.br';
-  cBanrisulPathAuthToken   = '/auth/oauth/v2/token';
-  cBanrisulPathAPIPix      = '/pix/api-mtls';
-  cBanrisulURLAuthTeste    = cBanrisulURLSandbox+cBanrisulPathAuthToken;
-  cBanrisulURLAuthProducao = cBanrisulURLProducao+cBanrisulPathAuthToken;
+  cSicrediURLSandbox = 'https://api-pix-h.sicredi.com.br';
+  cSicrediURLProducao = 'https://api-pix.sicredi.com.br';
+  cSicrediPathAuthToken = '/oauth/token';
+  cSicrediPathAPIPix = '/api/v2';
+  cSicrediURLAuthTeste = cSicrediURLSandbox+cSicrediPathAuthToken;
+  cSicrediURLAuthProducao = cSicrediURLProducao+cSicrediPathAuthToken;
+
 
 type
 
-  { TACBrPSPBanrisul }
+  { TACBrPSPItau }
 
+  { TACBrPSPSicredi }
+  
   {$IFDEF RTL230_UP}
   [ComponentPlatformsAttribute(piacbrAllPlatforms)]
   {$ENDIF RTL230_UP}
-  TACBrPSPBanrisul = class(TACBrPSPCertificate)
+  TACBrPSPSicredi = class(TACBrPSPCertificate)
+  private
+    fSandboxStatusCode: String;
+    fxCorrelationID: String;
+    fSSLUtils: TACBrOpenSSLUtils;
+    fQuandoNecessitarCredenciais: TACBrQuandoNecessitarCredencial;
+
+    procedure QuandoReceberRespostaEndPoint(const aEndPoint, aURL, aMethod: String;
+      var aResultCode: Integer; var aRespostaHttp: AnsiString);
   protected
-    function ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String; override;
+    function ObterURLAmbientePadrao(const Ambiente: TACBrPixCDAmbiente): String; override;
+    procedure ConfigurarQueryParameters(const Method, EndPoint: String); override;
   public
+    constructor Create(AOwner: TComponent); override;
+    procedure Clear; override;
     procedure Autenticar; override;
+  published
+    property APIVersion;
+
+    property SandboxStatusCode: String read fSandboxStatusCode write fSandboxStatusCode;
+
+    property QuandoNecessitarCredenciais: TACBrQuandoNecessitarCredencial
+      read fQuandoNecessitarCredenciais write fQuandoNecessitarCredenciais;
   end;
 
 implementation
 
 uses
-  synautil, DateUtils, ACBrJSON, ACBrUtil.Strings;
+  synautil, synacode, DateUtils,
+  ACBrUtil.Strings, ACBrJSON, ACBrPIXSchemasProblema;
 
-{ TACBrPSPBanrisul }
+{ TACBrPSPItau }
 
-function TACBrPSPBanrisul.ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String;
+constructor TACBrPSPSicredi.Create(AOwner: TComponent);
 begin
-  if (aAmbiente = ambProducao) then
-    Result := cBanrisulURLProducao + cBanrisulPathAPIPix
-  else
-    Result := cBanrisulURLSandbox + cBanrisulPathAPIPix;
+  inherited Create(AOwner);
+  fSSLUtils := TACBrOpenSSLUtils.Create(Self);  // Self irá destruir ele...
+  fpQuandoReceberRespostaEndPoint := QuandoReceberRespostaEndPoint;
+  Clear;
 end;
 
-procedure TACBrPSPBanrisul.Autenticar;
+procedure TACBrPSPSicredi.Clear;
+begin
+  inherited Clear;
+  fxCorrelationID := '';
+  fSandboxStatusCode := '';
+  fQuandoNecessitarCredenciais := Nil;
+end;
+
+procedure TACBrPSPSicredi.Autenticar;
 var
-  wURL, Body: String;
-  wRespostaHttp: AnsiString;
-  wResultCode, sec: Integer;
+  AURL, Body, BasicAutentication: String;
+  RespostaHttp: AnsiString;
+  ResultCode, sec: Integer;
   js: TACBrJSONObject;
   qp: TACBrQueryParams;
 begin
   LimparHTTP;
 
   if (ACBrPixCD.Ambiente = ambProducao) then
-    wURL := cBanrisulURLAuthProducao
+    AURL := cSicrediURLAuthProducao
   else
-    wURL := cBanrisulURLAuthTeste;
-
+    AURL := cSicrediURLAuthTeste;
 
   qp := TACBrQueryParams.Create;
   try
     qp.Values['grant_type'] := 'client_credentials';
-    qp.Values['client_id'] := ClientID;
-    qp.Values['client_secret'] := ClientSecret;
     qp.Values['scope'] := ScopesToString(Scopes);
     Body := qp.AsURL;
     WriteStrToStream(Http.Document, Body);
@@ -112,26 +141,54 @@ begin
     qp.Free;
   end;
 
-  TransmitirHttp(ChttpMethodPOST, wURL, wResultCode, wRespostaHttp);
+  BasicAutentication := 'Basic '+EncodeBase64(ClientID + ':' + ClientSecret);
+  Http.Headers.Add(ChttpHeaderAuthorization+' '+BasicAutentication);
+  TransmitirHttp(ChttpMethodPOST, AURL, ResultCode, RespostaHttp);
 
-  if (wResultCode = HTTP_OK) then
+  if (ResultCode = HTTP_OK) then
   begin
-    js := TACBrJSONObject.Parse(wRespostaHttp);
+    js := TACBrJSONObject.Parse(RespostaHttp);
     try
       fpToken := js.AsString['access_token'];
       sec := js.AsInteger['expires_in'];
+      fpRefreshToken := EmptyStr;
     finally
       js.Free;
     end;
 
-    if (Trim(fpToken) = EmptyStr) then
+    if (Trim(fpToken) = '') then
       DispararExcecao(EACBrPixHttpException.Create(ACBrStr(sErroAutenticacao)));
 
     fpValidadeToken := IncSecond(Now, sec);
     fpAutenticado := True;
   end
   else
-    DispararExcecao(EACBrPixHttpException.CreateFmt(sErroHttp, [Http.ResultCode, ChttpMethodPOST, wURL]));
+    DispararExcecao(EACBrPixHttpException.CreateFmt( sErroHttp,
+      [Http.ResultCode, ChttpMethodPOST, AURL]));
+end;
+
+procedure TACBrPSPSicredi.QuandoReceberRespostaEndPoint(const aEndPoint, aURL,
+  aMethod: String; var aResultCode: Integer; var aRespostaHttp: AnsiString);
+begin
+  // Sicredi responde HTTP_OK ao método PUT do Endpoint PIX, de forma diferente da especificada
+  if (UpperCase(AMethod) = ChttpMethodPUT) and (AEndPoint = cEndPointPix) and (AResultCode = HTTP_OK) then
+    AResultCode := HTTP_CREATED;
+end;
+
+function TACBrPSPSicredi.ObterURLAmbientePadrao(const Ambiente: TACBrPixCDAmbiente): String;
+begin
+  if (Ambiente = ambProducao) then
+    Result := cSicrediURLProducao
+  else
+    Result := cSicrediURLSandbox;
+
+  Result := Result + cSicrediPathAPIPix;
+end;
+
+procedure TACBrPSPSicredi.ConfigurarQueryParameters(const Method, EndPoint: String);
+begin
+  if (fSandboxStatusCode <> '') then
+    URLQueryParams.Values['status_code'] := fSandboxStatusCode;
 end;
 
 end.

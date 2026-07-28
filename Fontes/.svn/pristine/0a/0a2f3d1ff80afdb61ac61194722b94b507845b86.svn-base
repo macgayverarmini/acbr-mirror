@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo:                                                 }
 {                                                                              }
@@ -30,98 +30,88 @@
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
 
-{$I ACBr.inc}
+(*
 
-unit ACBrPIXPSPGerenciaNet;
+  Documentação
+  https://drive.google.com/file/d/1BqBoJ_nhv63Ma7QXFZSG_6UD9xtQ_ECQ/view
+
+*)
+
+unit ACBrPIXPSPBanrisul;
 
 interface
 
 uses
   Classes, SysUtils,
   {$IFDEF RTL230_UP}ACBrBase,{$ENDIF RTL230_UP}
-  ACBrPIXCD, ACBrOpenSSLUtils;
+  ACBrPIXCD;
 
 const
-  cGerenciaNetURLSandbox      = 'https://pix-h.api.efipay.com.br';
-  cGerenciaNetURLProducao     = 'https://pix.api.efipay.com.br';
-  cGerenciaNetPathAuthToken   = '/oauth/token';
-  cGerenciaNetPathAPIPix      = '/v2';
-  cGerenciaNetURLAuthTeste    = cGerenciaNetURLSandbox+cGerenciaNetPathAuthToken;
-  cGerenciaNetURLAuthProducao = cGerenciaNetURLProducao+cGerenciaNetPathAuthToken;
-  cGerenciaNetPartinerToken = 'x-partner-token: ';
+  cBanrisulURLSandbox      = 'https://mtls-api-h.banrisul.com.br';
+  cBanrisulURLProducao     = 'https://mtls-api.banrisul.com.br';
+  cBanrisulPathAuthToken   = '/auth/oauth/v2/token';
+  cBanrisulPathAPIPix      = '/pix/api-mtls';
+  cBanrisulURLAuthTeste    = cBanrisulURLSandbox+cBanrisulPathAuthToken;
+  cBanrisulURLAuthProducao = cBanrisulURLProducao+cBanrisulPathAuthToken;
 
 type
 
-  { TACBrPSPGerenciaNet }
+  { TACBrPSPBanrisul }
 
   {$IFDEF RTL230_UP}
   [ComponentPlatformsAttribute(piacbrAllPlatforms)]
   {$ENDIF RTL230_UP}
-  TACBrPSPGerenciaNet = class(TACBrPSPCertificate)
-  private
-    fPartinerToken: String;
+  TACBrPSPBanrisul = class(TACBrPSPCertificate)
   protected
-    function ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String; override;
-    procedure ConfigurarHeaders(const Method, AURL: String); override;
+    function ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String; override;
   public
     procedure Autenticar; override;
-
-  published
-    property ClientID;
-    property ClientSecret;
-
-    property PartinerToken: String read fPartinerToken write fPartinerToken;
   end;
 
 implementation
 
 uses
-  synautil, DateUtils,
-  ACBrJSON, ACBrUtil.Strings;
+  synautil, DateUtils, ACBrJSON, ACBrUtil.Strings;
 
-{ TACBrPSPGerenciaNet }
+{ TACBrPSPBanrisul }
 
-procedure TACBrPSPGerenciaNet.ConfigurarHeaders(const Method, AURL: String);
-begin
-  inherited ConfigurarHeaders(Method, AURL);
-
-  Http.Headers.Add(cGerenciaNetPartinerToken + PartinerToken);
-end;
-
-function TACBrPSPGerenciaNet.ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String;
+function TACBrPSPBanrisul.ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String;
 begin
   if (aAmbiente = ambProducao) then
-    Result := cGerenciaNetURLProducao + cGerenciaNetPathAPIPix
+    Result := cBanrisulURLProducao + cBanrisulPathAPIPix
   else
-    Result := cGerenciaNetURLSandbox + cGerenciaNetPathAPIPix;
+    Result := cBanrisulURLSandbox + cBanrisulPathAPIPix;
 end;
 
-procedure TACBrPSPGerenciaNet.Autenticar;
+procedure TACBrPSPBanrisul.Autenticar;
 var
-  wURL: String;
+  wURL, Body: String;
   wRespostaHttp: AnsiString;
   wResultCode, sec: Integer;
   js: TACBrJSONObject;
+  qp: TACBrQueryParams;
 begin
   LimparHTTP;
 
   if (ACBrPixCD.Ambiente = ambProducao) then
-    wURL := cGerenciaNetURLAuthProducao
+    wURL := cBanrisulURLAuthProducao
   else
-    wURL := cGerenciaNetURLAuthTeste;
+    wURL := cBanrisulURLAuthTeste;
 
-  js := TACBrJSONObject.Create;
+
+  qp := TACBrQueryParams.Create;
   try
-    js.AddPair('grant_type', 'client_credentials');
-    Http.Protocol := '1.1';
-    Http.MimeType := CContentTypeApplicationJSon;
-    WriteStrToStream(Http.Document, js.ToJSON);
+    qp.Values['grant_type'] := 'client_credentials';
+    qp.Values['client_id'] := ClientID;
+    qp.Values['client_secret'] := ClientSecret;
+    qp.Values['scope'] := ScopesToString(Scopes);
+    Body := qp.AsURL;
+    WriteStrToStream(Http.Document, Body);
+    Http.MimeType := CContentTypeApplicationWwwFormUrlEncoded;
   finally
-    js.Free;
+    qp.Free;
   end;
 
-  Http.UserName := ClientID;
-  Http.Password := ClientSecret;
   TransmitirHttp(ChttpMethodPOST, wURL, wResultCode, wRespostaHttp);
 
   if (wResultCode = HTTP_OK) then

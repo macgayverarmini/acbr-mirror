@@ -6,7 +6,8 @@
 { Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo:                                                 }
-{ - Elias César                                                                }
+{ - Cristian Carvalho                                                          }
+{ - Sidnei Alves                                                               }
 {                                                                              }
 {  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
 { Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
@@ -34,37 +35,37 @@
 (*
 
   Documentação
-  https://developercielo.github.io/manual/apipix#introdu%C3%A7%C3%A3o
+  https://developers.bancointer.com.br
 
 *)
 
-unit ACBrPIXPSPCielo;
+unit ACBrPIXPSPInter;
 
 interface
 
 uses
   Classes, SysUtils,
   {$IFDEF RTL230_UP}ACBrBase,{$ENDIF RTL230_UP}
-  ACBrPIXCD, ACBrOpenSSLUtils;
+  ACBrPIXCD;
 
 const
-  cCieloURLSandbox      = 'https://api2.cielo.com.br/sandbox';
-  cCieloURLProducao     = 'https://api-mtls.cielo.com.br';
-  cCieloPathAuthToken   = '/v2/oauth/access-token';
-  cCieloPathAPIPix      = '/cielo-pix/v1';
-  cCieloURLAuthTeste    = cCieloURLSandbox+cCieloPathAuthToken;
-  cCieloURLAuthProducao = 'https://api2.cielo.com.br'+cCieloPathAuthToken;
+  cInterURLSandbox      = 'https://cdpj-sandbox.partners.uatinter.co';
+  cInterURLProducao     = 'https://cdpj.partners.bancointer.com.br';
+  cInterPathAuthToken   = '/oauth/v2/token';
+  cInterPathAPIPix      = '/pix/v2';
+  cInterURLAuthTeste    = cInterURLSandbox+cInterPathAuthToken;
+  cInterURLAuthProducao = cInterURLProducao+cInterPathAuthToken;
 
 type
 
-  { TACBrPSPCielo }
+  { TACBrPSPInter }
 
   {$IFDEF RTL230_UP}
   [ComponentPlatformsAttribute(piacbrAllPlatforms)]
   {$ENDIF RTL230_UP}
-  TACBrPSPCielo = class(TACBrPSPCertificate)
+  TACBrPSPInter = class(TACBrPSPCertificate)
   protected
-    function ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String; override;
+    function ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String; override;
   public
     procedure Autenticar; override;
   end;
@@ -72,49 +73,50 @@ type
 implementation
 
 uses
-  synautil, DateUtils,
-  ACBrJSON, ACBrUtil.Strings;
+  synautil, DateUtils, ACBrJSON, ACBrUtil.Strings;
 
-{ TACBrPSPCielo }
+{ TACBrPSPInter }
 
-function TACBrPSPCielo.ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String;
+function TACBrPSPInter.ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String;
 begin
   if (aAmbiente = ambProducao) then
-    Result := cCieloURLProducao + cCieloPathAPIPix
+    Result := cInterURLProducao + cInterPathAPIPix
   else
-    Result := cCieloURLSandbox + cCieloPathAPIPix;
+    Result := cInterURLSandbox + cInterPathAPIPix;
 end;
 
-procedure TACBrPSPCielo.Autenticar;
+procedure TACBrPSPInter.Autenticar;
 var
   wURL, Body: String;
   wRespostaHttp: AnsiString;
   wResultCode, sec: Integer;
-  js, jb: TACBrJSONObject;
+  js: TACBrJSONObject;
+  qp: TACBrQueryParams;
 begin
   LimparHTTP;
 
   if (ACBrPixCD.Ambiente = ambProducao) then
-    wURL := cCieloURLAuthProducao
+    wURL := cInterURLAuthProducao
   else
-    wURL := cCieloURLAuthTeste;
+    wURL := cInterURLAuthTeste;
 
-  jb := TACBrJSONObject.Create;
+
+  qp := TACBrQueryParams.Create;
   try
-    jb.AddPair('grant_type', 'client_credentials');
-    jb.AddPair('scope', ScopesToString(Scopes));
-    Body := jb.ToJSON;
+    qp.Values['grant_type'] := 'client_credentials';
+    qp.Values['client_id'] := ClientID;
+    qp.Values['client_secret'] := ClientSecret;
+    qp.Values['scope'] := ScopesToString(Scopes);
+    Body := qp.AsURL;
     WriteStrToStream(Http.Document, Body);
-    Http.MimeType := CContentTypeApplicationJSon;
+    Http.MimeType := CContentTypeApplicationWwwFormUrlEncoded;
   finally
-    jb.Free;
+    qp.Free;
   end;
 
-  Http.UserName := ClientID;
-  Http.Password := ClientSecret;
   TransmitirHttp(ChttpMethodPOST, wURL, wResultCode, wRespostaHttp);
 
-  if (wResultCode = HTTP_CREATED) then
+  if (wResultCode = HTTP_OK) then
   begin
     js := TACBrJSONObject.Parse(wRespostaHttp);
     try

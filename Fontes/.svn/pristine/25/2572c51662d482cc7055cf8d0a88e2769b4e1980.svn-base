@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo:                                                 }
 {                                                                              }
@@ -30,109 +30,98 @@
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
 
-(*
-
-  Documentação
-  https://developers.c6bank.com.br/pix-api
-
-*) 
-
 {$I ACBr.inc}
 
-unit ACBrPIXPSPC6Bank;
+unit ACBrPIXPSPGerenciaNet;
 
 interface
 
 uses
   Classes, SysUtils,
   {$IFDEF RTL230_UP}ACBrBase,{$ENDIF RTL230_UP}
-  ACBrPIXCD;
+  ACBrPIXCD, ACBrOpenSSLUtils;
 
 const
-  cC6URLSandbox      = 'https://baas-api-sandbox.c6bank.info';
-  cC6URLProducao     = 'https://baas-api.c6bank.info';
-  cC6PathAuthToken   = '/v1/auth';
-  cC6PathAPIPix      = '/v2/pix';
-  cC6URLAuthTeste    = cC6URLSandbox + cC6PathAuthToken;
-  cC6URLAuthProducao = cC6URLProducao + cC6PathAuthToken;
+  cGerenciaNetURLSandbox      = 'https://pix-h.api.efipay.com.br';
+  cGerenciaNetURLProducao     = 'https://pix.api.efipay.com.br';
+  cGerenciaNetPathAuthToken   = '/oauth/token';
+  cGerenciaNetPathAPIPix      = '/v2';
+  cGerenciaNetURLAuthTeste    = cGerenciaNetURLSandbox+cGerenciaNetPathAuthToken;
+  cGerenciaNetURLAuthProducao = cGerenciaNetURLProducao+cGerenciaNetPathAuthToken;
+  cGerenciaNetPartinerToken = 'x-partner-token: ';
 
 type
 
-  { TACBrPSPC6Bank }
+  { TACBrPSPGerenciaNet }
 
   {$IFDEF RTL230_UP}
   [ComponentPlatformsAttribute(piacbrAllPlatforms)]
   {$ENDIF RTL230_UP}
-  TACBrPSPC6Bank = class(TACBrPSPCertificate)
+  TACBrPSPGerenciaNet = class(TACBrPSPCertificate)
   private
-    procedure QuandoReceberRespostaEndPoint(const aEndPoint, aURL, aMethod: String; var aResultCode: Integer; var aRespostaHttp: AnsiString);
+    fPartinerToken: String;
   protected
-    function ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String; override;
+    function ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String; override;
+    procedure ConfigurarHeaders(const Method, AURL: String); override;
   public
-    constructor Create(AOwner: TComponent); override;
     procedure Autenticar; override;
+
+  published
+    property ClientID;
+    property ClientSecret;
+
+    property PartinerToken: String read fPartinerToken write fPartinerToken;
   end;
 
 implementation
 
 uses
-  synautil, blcksock, DateUtils, ACBrJSON, ACBrUtil.Strings;
+  synautil, DateUtils,
+  ACBrJSON, ACBrUtil.Strings;
 
-{ TACBrPSPC6Bank }
+{ TACBrPSPGerenciaNet }
 
-procedure TACBrPSPC6Bank.QuandoReceberRespostaEndPoint(const aEndPoint, aURL, aMethod: String; var aResultCode: Integer; var aRespostaHttp: AnsiString);
+procedure TACBrPSPGerenciaNet.ConfigurarHeaders(const Method, AURL: String);
 begin
-  if (UpperCase(AMethod) = ChttpMethodPOST) and (AEndPoint = cEndPointCob) and (aResultCode = HTTP_OK) then
-    AResultCode := HTTP_CREATED;
+  inherited ConfigurarHeaders(Method, AURL);
 
-  if (UpperCase(AMethod) = ChttpMethodPUT) and (AEndPoint = cEndPointCob) and (aResultCode = HTTP_OK) then
-    AResultCode := HTTP_CREATED;
+  Http.Headers.Add(cGerenciaNetPartinerToken + PartinerToken);
 end;
 
-function TACBrPSPC6Bank.ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String;
+function TACBrPSPGerenciaNet.ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String;
 begin
   if (aAmbiente = ambProducao) then
-    Result := cC6URLProducao + cC6PathAPIPix
+    Result := cGerenciaNetURLProducao + cGerenciaNetPathAPIPix
   else
-    Result := cC6URLSandbox + cC6PathAPIPix;
+    Result := cGerenciaNetURLSandbox + cGerenciaNetPathAPIPix;
 end;
 
-constructor TACBrPSPC6Bank.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
-  fpQuandoReceberRespostaEndPoint := QuandoReceberRespostaEndPoint;
-end;
-
-procedure TACBrPSPC6Bank.Autenticar;
+procedure TACBrPSPGerenciaNet.Autenticar;
 var
-  wURL, Body: String;
+  wURL: String;
   wRespostaHttp: AnsiString;
   wResultCode, sec: Integer;
   js: TACBrJSONObject;
-  qp: TACBrQueryParams;
 begin
   LimparHTTP;
 
   if (ACBrPixCD.Ambiente = ambProducao) then
-    wURL := cC6URLAuthProducao
+    wURL := cGerenciaNetURLAuthProducao
   else
-    wURL := cC6URLAuthTeste;
+    wURL := cGerenciaNetURLAuthTeste;
 
-  qp := TACBrQueryParams.Create;
+  js := TACBrJSONObject.Create;
   try
-    qp.Values['grant_type'] := 'client_credentials';
-    //qp.Values['scope'] := ScopesToString(Scopes);
-    Body := qp.AsURL;
-    WriteStrToStream(Http.Document, Body);
-    Http.MimeType := CContentTypeApplicationWwwFormUrlEncoded;
+    js.AddPair('grant_type', 'client_credentials');
+    Http.Protocol := '1.1';
+    Http.MimeType := CContentTypeApplicationJSon;
+    WriteStrToStream(Http.Document, js.ToJSON);
   finally
-    qp.Free;
+    js.Free;
   end;
 
   Http.UserName := ClientID;
   Http.Password := ClientSecret;
-  http.Sock.SSL.SSLType := LT_TLSv1_2;
-  Http.Protocol := '1.1';
   TransmitirHttp(ChttpMethodPOST, wURL, wResultCode, wRespostaHttp);
 
   if (wResultCode = HTTP_OK) then

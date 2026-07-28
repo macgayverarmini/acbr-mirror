@@ -6,7 +6,7 @@
 { Direitos Autorais Reservados (c) 2023 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo:                                                 }
-{ - MaagraowaR                                                                 }
+{ - Elias César                                                                }
 {                                                                              }
 {  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
 { Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
@@ -34,13 +34,11 @@
 (*
 
   Documentação
-  https://developer.ailos.coop.br/api-portal/pt-br
+  https://developercielo.github.io/manual/apipix#introdu%C3%A7%C3%A3o
 
 *)
 
-{$I ACBr.inc}
-
-unit ACBrPIXPSPAilos;
+unit ACBrPIXPSPCielo;
 
 interface
 
@@ -50,74 +48,73 @@ uses
   ACBrPIXCD, ACBrOpenSSLUtils;
 
 const
-  cAilosURLSandbox      = 'https://pixcobranca-h.ailos.coop.br/qa/ailos/pix-cobranca/api/v1';
-  cAilosURLProducao     = 'https://pixcobranca.ailos.coop.br/ailos/pix-cobranca/api/v1';
-  cAilosPathAuthToken   = '/client/connect/token';
-  cAilosURLAuthTeste    = cAilosURLSandbox+cAilosPathAuthToken;
-  cAilosURLAuthProducao = cAilosURLProducao+cAilosPathAuthToken;
+  cCieloURLSandbox      = 'https://api2.cielo.com.br/sandbox';
+  cCieloURLProducao     = 'https://api-mtls.cielo.com.br';
+  cCieloPathAuthToken   = '/v2/oauth/access-token';
+  cCieloPathAPIPix      = '/cielo-pix/v1';
+  cCieloURLAuthTeste    = cCieloURLSandbox+cCieloPathAuthToken;
+  cCieloURLAuthProducao = 'https://api2.cielo.com.br'+cCieloPathAuthToken;
 
 type
 
-  { TACBrPSPAilos }
+  { TACBrPSPCielo }
 
-  TACBrPSPAilos = class(TACBrPSPCertificate)
-  private
-    fRootCrt: String;
-    procedure QuandoReceberRespostaEndPoint(const AEndPoint, AURL, AMethod: String;
-      var AResultCode: Integer; var RespostaHttp: AnsiString);
+  {$IFDEF RTL230_UP}
+  [ComponentPlatformsAttribute(piacbrAllPlatforms)]
+  {$ENDIF RTL230_UP}
+  TACBrPSPCielo = class(TACBrPSPCertificate)
   protected
-    function ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String; override;
-    procedure ConfigurarHeaders(const Method, AURL: String); override;
+    function ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String; override;
   public
-    constructor Create(AOwner: TComponent); override;
-    procedure Clear; override;
     procedure Autenticar; override;
-  published
-    property RootCrt: String read fRootCrt write fRootCrt;
   end;
 
 implementation
 
 uses
-  synautil, DateUtils, ACBrJSON,
-  ACBrUtil.Base,
-  ACBrUtil.Strings;
+  synautil, DateUtils,
+  ACBrJSON, ACBrUtil.Strings;
 
-{ TACBrPSPAilos }
+{ TACBrPSPCielo }
 
-procedure TACBrPSPAilos.Autenticar;
+function TACBrPSPCielo.ObterURLAmbientePadrao(const aAmbiente: TACBrPixCDAmbiente): String;
+begin
+  if (aAmbiente = ambProducao) then
+    Result := cCieloURLProducao + cCieloPathAPIPix
+  else
+    Result := cCieloURLSandbox + cCieloPathAPIPix;
+end;
+
+procedure TACBrPSPCielo.Autenticar;
 var
   wURL, Body: String;
   wRespostaHttp: AnsiString;
   wResultCode, sec: Integer;
-  js: TACBrJSONObject;
-  qp: TACBrQueryParams;
+  js, jb: TACBrJSONObject;
 begin
   LimparHTTP;
 
   if (ACBrPixCD.Ambiente = ambProducao) then
-    wURL := cAilosURLAuthProducao
+    wURL := cCieloURLAuthProducao
   else
-    wURL := cAilosURLAuthTeste;
+    wURL := cCieloURLAuthTeste;
 
-  qp := TACBrQueryParams.Create;
+  jb := TACBrJSONObject.Create;
   try
-    qp.Values['client_id'] := ClientID;
-    qp.Values['client_secret'] := ClientSecret;
-    qp.Values['scope'] := ScopesToString(Scopes);
-    qp.Values['cacert'] := RootCrt;
-    qp.Values['key'] := ArquivoChavePrivada;
-    qp.Values['cert'] := ArquivoCertificado;
-    Body := qp.AsURL;
+    jb.AddPair('grant_type', 'client_credentials');
+    jb.AddPair('scope', ScopesToString(Scopes));
+    Body := jb.ToJSON;
     WriteStrToStream(Http.Document, Body);
-    Http.MimeType := CContentTypeApplicationWwwFormUrlEncoded;
+    Http.MimeType := CContentTypeApplicationJSon;
   finally
-    qp.Free;
+    jb.Free;
   end;
 
+  Http.UserName := ClientID;
+  Http.Password := ClientSecret;
   TransmitirHttp(ChttpMethodPOST, wURL, wResultCode, wRespostaHttp);
 
-  if (wResultCode = HTTP_OK) then
+  if (wResultCode = HTTP_CREATED) then
   begin
     js := TACBrJSONObject.Parse(wRespostaHttp);
     try
@@ -137,44 +134,5 @@ begin
     DispararExcecao(EACBrPixHttpException.CreateFmt(sErroHttp, [Http.ResultCode, ChttpMethodPOST, wURL]));
 end;
 
-constructor TACBrPSPAilos.Create(AOwner: TComponent);
-begin
-  inherited;
-  fpQuandoReceberRespostaEndPoint := QuandoReceberRespostaEndPoint;
-  Clear;
-end;
-
-procedure TACBrPSPAilos.Clear;
-begin
-  inherited Clear;
-  fRootCrt := '';
-end;
-
-function TACBrPSPAilos.ObterURLAmbiente(const aAmbiente: TACBrPixCDAmbiente): String;
-begin
-  if (aAmbiente = ambProducao) then
-    Result := cAilosURLProducao
-  else
-    Result := cAilosURLSandbox;
-end;
-
-procedure TACBrPSPAilos.ConfigurarHeaders(const Method, AURL: String);
-begin
-  inherited ConfigurarHeaders(Method, AURL);
-
-  if NaoEstaVazio(fRootCrt) then
-    Http.Sock.SSL.CertCAFile := fRootCrt;
-end;
-
-procedure TACBrPSPAilos.QuandoReceberRespostaEndPoint(const AEndPoint, AURL,
-  AMethod: String; var AResultCode: Integer; var RespostaHttp: AnsiString);
-begin
-  // Ailos responde OK a esse EndPoint, de forma diferente da especificada
-  if (UpperCase(AMethod) = ChttpMethodPUT) and (AEndPoint = cEndPointPix) and (AResultCode = HTTP_OK) then
-    AResultCode := HTTP_CREATED;
-
-  if (UpperCase(AMethod) = ChttpMethodPOST) and (AEndPoint = cEndPointCob) and (AResultCode = HTTP_OK) then
-    AResultCode := HTTP_CREATED;
-end;
-
 end.
+
