@@ -24478,7 +24478,7 @@ Provedor=
 [3538600]
 Nome=Piracaia
 UF=SP
-Provedor=
+Provedor=PadraoNacional
 
 [3538709]
 Nome=Piracicaba
@@ -26664,7 +26664,7 @@ HomRecepcionar=https://florida.oxy.elotech.com.br/iss-ws/nfse203.wsdl
 Nome=Formosa do Oeste
 UF=PR
 Provedor=Pronim
-ProRecepcionar=https://webapp1-formosadooeste.cidade360.cloud/Nfse.Api/NotaNacional
+ProRecepcionar=https://webapp1-formosadoeste.cidade360.cloud/Nfse.Api/NotaNacional
 
 [4108304]
 Nome=Foz do Iguacu
@@ -33447,7 +33447,7 @@ Provedor=
 [4321907]
 Nome=Tres Passos
 UF=RS
-Provedor=PadraoNacional
+Provedor=Betha
 
 [4321956]
 Nome=Trindade do Sul
