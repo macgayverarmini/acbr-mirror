@@ -98,7 +98,7 @@ begin
 
   FormatoEmissao := tcDatHor;
   FormatoCompetencia := tcDatHor;
-  FormatoItemListaServico := filsComFormatacaoSemZeroEsquerda;
+  FormatoItemListaServico := filsSemFormatacaoSemZeroEsquerda;
 
   FormatoAliq := tcDe2;
 
@@ -146,7 +146,7 @@ begin
   NrOcorrInscEstTomador_1 := 0;
 
   NrOcorrRespRetencao := 1;
-  
+
   GerarTagServicos := False;
 end;
 
@@ -367,7 +367,7 @@ begin
   Result.AppendChild(AddNode(tcStr, '#11', 'TipoRetencaoPisCofins', 1, 1, 1,
          tpRetPisCofinsToStr(NFSe.Servico.Valores.tribFed.tpRetPisCofins), ''));
 
-  Result.AppendChild(AddNode(tcStr, '#1', 'TipoEnteGovervamental', 1, 1, 1,
+  Result.AppendChild(AddNode(tcStr, '#1', 'TipoEnteGovernamental', 1, 1, 1,
                                     tpEnteGovToStr(NFSe.IBSCBS.tpEnteGov), ''));
 
   Result.AppendChild(AddNode(tcStr, '#1', 'TipoOperacao', 1, 1, 1,
@@ -508,7 +508,7 @@ var
 begin
   aDoc := OnlyAlphaNum(CPFCNPJ);
 
-  Result := CreateElement('cpf_cnpj');
+  Result := CreateElement('CpfCnpj');
 
   if length(aDoc) <= 11 then
     Result.AppendChild(AddNode(tcStr, '#34', 'Cpf ', 11, 11, 1, aDoc, DSC_CPF))
