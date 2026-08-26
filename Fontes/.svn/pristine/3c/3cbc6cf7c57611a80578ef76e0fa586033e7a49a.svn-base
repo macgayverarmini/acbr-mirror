@@ -42,6 +42,29 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+25/08/2026
+-- ACBrNFSeXServicos --
+[*] Adicionado parametro para cidade de Araras
+https://www.projetoacbr.com.br/forum/topic/94421-acbrnfsex-ararassp-3503307-sigissweb-%E2%80%94-incluir-paramsformataritemservicosemzeroesquerda/
+	Por: Alexandre de Paula e cezar.sakugawa
+
+25/08/2026
+-- ACBrNFSeXProviderABRASFv1/ACBrNFSeXProviderABRASFv2 --
+[*] Ajustes para o CNPJ Alfa.
+   Por: Italo Giurizzato Junior
+-- IPM.GravarXml --
+[*] Alteração visando gerar a tag cLocalidadeIncid para a versão 2.04
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeX --
+[*] ACBR-9752 - Incluído o parâmetro ACodigoMunicipio no ConsultarParametros.
+   Por: Armando Boza
+-- ACBrNFSeXServicos --
+[*] ACBR-9763 - Incluído o Link para gerar o QR-Code - Provedor ISSNet (Padrão Nacional)
+   Por: Intelelecto Programação
+-- ISSNet.Provider --
+[*] ACBR-9763 - Ajustes na leitura do retorno.
+   Por: Intelelecto Programação
+
 24/08/2026
 -- ACBrNFSeXConversao/ACBrNFSeXProviderManager --
 -- NFOnline.GravarXml/NFOnline.LerXml/NFOnline.Provider --
