@@ -42,6 +42,19 @@ Símbolo : Significado
 [*]     : Recurso modificado/melhorado
 [-]     : Correção de Bug (assim esperamos)
 
+26/08/2026
+-- ISSNet.Provider --
+[*] ACBR-9763/ACBR-9770 - Troca do ParseText pela função DecodeHTMLEntities.
+   Por: Italo Giurizzato Junior
+-- ACBrNFSeXLerXml --
+[*] ACBR-9763/ACBR-9770 - Remoção do ParseText da função NormatizarXml.
+    Se for necessário alguma ação a referida função vai ser sobrescrita na unit de leitura
+    do XML do provedor.
+   Por: Italo Giurizzato Junior
+-- ISSSaoPaulo.GravarXml --
+[*] Removida geração do PagamentoParceladoAntecipado conforme o Alerta: 648-O campo PagamentoParceladoAntecipado nao sera mais utilizado e os valores enviados serao desconsiderados
+   Por: Renato Rubinho
+
 25/08/2026
 -- ACBrNFSeXServicos --
 [*] Adicionado parametro para cidade de Araras

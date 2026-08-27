@@ -392,7 +392,7 @@ begin
                                                  qrCode, DSC_INFQRCODE, False));
 
     if NFe.infNFe.Versao >= 4 then
-      xmlNode.AppendChild(AddNode(tcStr, 'ZX03', 'urlChave', 21, 85, 1,
+      xmlNode.AppendChild(AddNode(tcStr, 'ZX03', 'urlChave', 21, 100, 1,
                                  NFe.infNFeSupl.urlChave, DSC_URLCHAVE, False));
   end;
 
@@ -1901,7 +1901,7 @@ begin
       tpNFCredito = 03-Retorno por Recusa Total/Não Localização do Destinatário
       tpNFCredito = 04-Redução de valores
       tpNFCredito = 06-Retorno por recusa parcial na entrega
-      tpNFDebito  = 06-Pagamento Antecipado
+      tpNFDebito  = 06-Pagamento Antecipado - Incluido pela versão 1.51 da NT.
       tpNFDebito  = 07-Perda em estoque
     A versão anterior desta condição só tratava tpNFCredito=03 (tcRetorno)
     e não considerava tpNFDebito nenhuma exceção, causando XML inconsistente
@@ -1921,10 +1921,13 @@ begin
     end
     else
     begin
-      Result.AppendChild(GerarDetImpostoICMS(i));
+      if nfe.Ide.tpNFDebito <> tdPagamentoAntecipado then
+        Result.AppendChild(GerarDetImpostoICMS(i));
+
       Result.AppendChild(GerarDetImpostoIPI(i));
       Result.AppendChild(GerarDetImpostoII(i));
     end;
+
     Result.AppendChild(GerarDetImpostoPIS(i));
     Result.AppendChild(GerarDetImpostoPISST(i));
     Result.AppendChild(GerarDetImpostoCOFINS(i));
