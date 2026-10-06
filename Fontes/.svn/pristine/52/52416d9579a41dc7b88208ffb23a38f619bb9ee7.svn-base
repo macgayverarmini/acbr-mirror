@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit ACBrTEFElginIDHAndroidAPI;
+unit ACBrTEFMSitefAndroidAPI;
 
 interface
 
@@ -51,54 +51,61 @@ uses
   Androidapi.JNI.Os,
   Androidapi.JNI.Embarcadero,
   Androidapi.JNI.GraphicsContentViewText,
-  ACBrTEFComum,
-  ACBrTEFElginIDHComum,
-  ACBrJSON,
-  ACBrBase;
+  ACBrTEFComum, ACBrTEFMSitefComum, ACBrBase;
 
 resourcestring
-  sErrNOTINIT = 'TACBrTEFELWebAndroid não foi inicializada';
-  sErrTRNINIT = 'Já foi iniciada uma Transação[Elgin]';
+  sErrNOTINIT = 'TACBrTEFSIWebAndroid não foi inicializada';
+  sErrTRNINIT = 'Já foi iniciada uma Transação[MSitef]';
   sErrTRNNOTINIT = 'Não foi iniciada uma Transação';
   sErrINTENTNOTFOUND = 'Ação %s não encontrada.';
   sErrCANCELED = 'Operação TEF cancelada';
 
 const
-  CACBrTEFELWebAndroidName = 'ACBrTEFELWebAndroid';
-  CACBrTEFELWebAndroidVersao = '0.1.0';
-  Intent_Payment = 'com.elgin.e1.digitalhub.TEF';
+  CACBrTEFSIWebAndroidName = 'ACBrTEFSIWebAndroid';
+  CACBrTEFSIWebAndroidVersao = '0.1.0';
+  Intent_Payment = 'br.com.softwareexpress.sitef.msitef.ACTIVITY_CLISITEF';
 
   COD_REQUEST_REPORT = 2241;
   Key_EmpresaSitef  = 'empresaSitef';
+  Key_EnderecoSitef = 'enderecoSitef';
   Key_Modalidade    = 'modalidade';
   Key_Operador      = 'operador';
   Key_Data          = 'data';
   Key_Hora          = 'hora';
   Key_NumeroCupom   = 'numeroCupom';
-  Key_NumParcelas   = 'numParcelas';
   Key_Valor         = 'valor';
-  Key_CNPJ_CPF      = 'CNPJ_CPF';
-  Key_Restricoes    = 'restricoes';
   Key_NsuSitef      = 'NSU_SITEF';
+  Key_CNPJ_CPF      = 'CNPJ_CPF';
+  Key_CNPJ_AUTOMACAO = 'cnpj_automacao';
+  Key_pinpadMac      = 'pinpadMac';
+  Key_ComExterna    = 'comExterna';
+  Key_ISDoubleValidation  = 'isDoubleValidation';
+  Key_Restricoes    = 'restricoes';
   Key_TransacoesHabilitadas  = 'transacoesHabilitadas';
-
+  Key_OTP           = 'Otp';
+  Key_AcessibilidadeVisual = 'acessibilidadeVisual';
+  Key_TipoPinpad = 'tipoPinpad';
+  Key_TimeoutColeta = 'timeoutColeta';
+  Key_TokenRegistroTls = 'tokenRegistroTls';
 type
-  EACBrTEFELWebAndroid = class(EACBrTEFErro);
+  EACBrTEFSIWebAndroid = class(EACBrTEFErro);
 
-  TACBrTEFELWebAndroidEstadoTransacao = procedure(AIntent: JIntent) of object;
-  TACBrTEFELWebAndroidAvaliarTransacaoPendente = procedure(pszReqNum: String; pszLocRef: String; pszExtRef: String; pszVirtMerch: String; pszAuthSyst: String) of object;
+  TACBrTEFSIWebAndroidEstadoTransacao = procedure(AIntent: JIntent) of object;
+  TACBrTEFSIWebAndroidAvaliarTransacaoPendente = procedure(pszReqNum: String; pszLocRef: String; pszExtRef: String; pszVirtMerch: String; pszAuthSyst: String) of object;
 
-  TACBrTEFELWebAndroidDadosAutomacao = class
+  TACBrTEFSIWebAndroidDadosAutomacao = class
   private
     fSuportaSaque: Boolean;
     fSuportaDesconto: Boolean;
     fSuportaViasDiferenciadas: Boolean;
     fUtilizaSaldoTotalVoucher: Boolean;
     fImprimeViaClienteReduzida: Boolean;
+    fCNPJSoftwareHouse: String;
 
   public
     constructor Create;
     procedure Clear;
+    property CNPJSoftwareHouse: String read fCNPJSoftwareHouse write fCNPJSoftwareHouse;
     Property SuportaSaque: Boolean read fSuportaSaque write fSuportaSaque default False;
     Property SuportaDesconto: Boolean read fSuportaDesconto write fSuportaDesconto default False;
     property ImprimeViaClienteReduzida: Boolean read fImprimeViaClienteReduzida write fImprimeViaClienteReduzida default True;
@@ -106,23 +113,27 @@ type
     property UtilizaSaldoTotalVoucher: Boolean read fUtilizaSaldoTotalVoucher write fUtilizaSaldoTotalVoucher default False;
   end;
 
-  TACBrTEFELWebAndroidDadosTerminal = class
+  TACBrTEFSIWebAndroidDadosTerminal = class
   private
     fCodEmpresa: String;
     fCodFilial: String;
     fCodTerminal: String;
+    fEnderecoServidor: String;
     fOperador: String;
+    fPortaPinPad: String;
   public
     constructor Create;
     procedure Clear;
   published
+    property EnderecoServidor: String read fEnderecoServidor write fEnderecoServidor;
     property CodEmpresa: String read fCodEmpresa write fCodEmpresa;
     property CodFilial: String read fCodFilial write fCodFilial;
     property CodTerminal: String read fCodTerminal write fCodTerminal;
     property Operador: String read fOperador write fOperador;
+    property PortaPinPad: String read fPortaPinPad write fPortaPinPad;
   end;
 
-  TACBrTEFELWebAndroid = class
+  TACBrTEFSIWebAndroid = class
   private
     fMessageSubscriptionID : integer;
     fValorTotalPagamento : Double;
@@ -134,11 +145,11 @@ type
     fNomeEstabelecimento: String;
     fParametrosAdicionais: TACBrTEFParametros;
     fOnGravarLog: TACBrGravarLog;
-    fOnAntesIniciarTransacao: TACBrTEFELWebAndroidEstadoTransacao;
-    fOnDepoisTerminarTransacao: TACBrTEFELWebAndroidEstadoTransacao;
-    fOnAvaliarTransacaoPendente: TACBrTEFELWebAndroidAvaliarTransacaoPendente;
-    fDadosAutomacao: TACBrTEFELWebAndroidDadosAutomacao;
-    fDadosTerminal : TACBrTEFELWebAndroidDadosTerminal;
+    fOnAntesIniciarTransacao: TACBrTEFSIWebAndroidEstadoTransacao;
+    fOnDepoisTerminarTransacao: TACBrTEFSIWebAndroidEstadoTransacao;
+    fOnAvaliarTransacaoPendente: TACBrTEFSIWebAndroidAvaliarTransacaoPendente;
+    fDadosAutomacao: TACBrTEFSIWebAndroidDadosAutomacao;
+    fDadosTerminal : TACBrTEFSIWebAndroidDadosTerminal;
 
     procedure SetCNPJEstabelecimento(AValue: String);
     procedure SetNomeEstabelecimento(AValue: String);
@@ -188,17 +199,17 @@ type
     property CNPJEstabelecimento: String read fCNPJEstabelecimento write SetCNPJEstabelecimento;
     property ValorTotalPagamento: Double read fValorTotalPagamento write fValorTotalPagamento;
 
-    property DadosAutomacao: TACBrTEFELWebAndroidDadosAutomacao read fDadosAutomacao;
-    property DadosTerminal : TACBrTEFELWebAndroidDadosTerminal read fDadosTerminal;
+    property DadosAutomacao: TACBrTEFSIWebAndroidDadosAutomacao read fDadosAutomacao;
+    property DadosTerminal : TACBrTEFSIWebAndroidDadosTerminal read fDadosTerminal;
 
     property ParametrosAdicionais: TACBrTEFParametros read fParametrosAdicionais;
 
     property ConfirmarTransacoesPendentesNoHost: Boolean read fConfirmarTransacoesPendentesNoHost write fConfirmarTransacoesPendentesNoHost;
 
     property OnGravarLog: TACBrGravarLog read fOnGravarLog write fOnGravarLog;
-    property OnAntesIniciarTransacao: TACBrTEFELWebAndroidEstadoTransacao read fOnAntesIniciarTransacao write fOnAntesIniciarTransacao;
-    property OnDepoisTerminarTransacao: TACBrTEFELWebAndroidEstadoTransacao read fOnDepoisTerminarTransacao write fOnDepoisTerminarTransacao;
-    property OnAvaliarTransacaoPendente: TACBrTEFELWebAndroidAvaliarTransacaoPendente read fOnAvaliarTransacaoPendente write fOnAvaliarTransacaoPendente;
+    property OnAntesIniciarTransacao: TACBrTEFSIWebAndroidEstadoTransacao read fOnAntesIniciarTransacao write fOnAntesIniciarTransacao;
+    property OnDepoisTerminarTransacao: TACBrTEFSIWebAndroidEstadoTransacao read fOnDepoisTerminarTransacao write fOnDepoisTerminarTransacao;
+    property OnAvaliarTransacaoPendente: TACBrTEFSIWebAndroidAvaliarTransacaoPendente read fOnAvaliarTransacaoPendente write fOnAvaliarTransacaoPendente;
   end;
 
 function OperationToPWOPER_(const AOperation: String): Byte;
@@ -208,6 +219,8 @@ implementation
 uses
   StrUtils,
   synacode,
+  synautil,
+  ACBrJSON,
   ACBrUtil.Strings,
   ACBrUtil.Math,
   ACBrUtil.FilesIO,
@@ -227,15 +240,16 @@ begin
     Result := 0;
 end;
 
-{ TACBrTEFELWebAndroidDadosAutomacao }
-constructor TACBrTEFELWebAndroidDadosAutomacao.Create;
+{ TACBrTEFSIWebAndroidDadosAutomacao }
+constructor TACBrTEFSIWebAndroidDadosAutomacao.Create;
 begin
   inherited;
   Clear;
 end;
 
-procedure TACBrTEFELWebAndroidDadosAutomacao.Clear;
+procedure TACBrTEFSIWebAndroidDadosAutomacao.Clear;
 begin
+  fCNPJSoftwareHouse := '';
   fImprimeViaClienteReduzida := True;
   fSuportaDesconto := False;
   fSuportaSaque := False;
@@ -244,7 +258,7 @@ begin
 end;
 
 { TACBrTEFPGWebAndroid }
-constructor TACBrTEFELWebAndroid.Create;
+constructor TACBrTEFSIWebAndroid.Create;
 begin
   inherited;
 
@@ -259,14 +273,14 @@ begin
   fOnDepoisTerminarTransacao := Nil;
   fOnAvaliarTransacaoPendente := Nil;
 
-  fDadosAutomacao := TACBrTEFELWebAndroidDadosAutomacao.Create;
-  fDadosTerminal := TACBrTEFELWebAndroidDadosTerminal.Create;
+  fDadosAutomacao := TACBrTEFSIWebAndroidDadosAutomacao.Create;
+  fDadosTerminal := TACBrTEFSIWebAndroidDadosTerminal.Create;
 
   fDadosTransacao := TACBrTEFParametros.Create;
   fParametrosAdicionais := TACBrTEFParametros.Create;
 end;
 
-destructor TACBrTEFELWebAndroid.Destroy;
+destructor TACBrTEFSIWebAndroid.Destroy;
 begin
   fDadosAutomacao.Free;
   fDadosTerminal.Free;
@@ -276,7 +290,7 @@ begin
   inherited;
 end;
 
-procedure TACBrTEFELWebAndroid.SetInicializada(AValue: Boolean);
+procedure TACBrTEFSIWebAndroid.SetInicializada(AValue: Boolean);
 begin
   if fInicializada = AValue then
     Exit;
@@ -289,23 +303,23 @@ begin
     DesInicializar;
 end;
 
-procedure TACBrTEFELWebAndroid.Inicializar;
+procedure TACBrTEFSIWebAndroid.Inicializar;
 begin
-  GravarLog('TACBrTEFELWebAndroid.Inicializar');
+  GravarLog('TACBrTEFSIWebAndroid.Inicializar');
   fMessageSubscriptionID := TMessageManager.DefaultManager.SubscribeToMessage(TMessageResultNotification, HandleActivityMessage);
   fInicializada := True;
   fEmTransacao := False;
 end;
 
-procedure TACBrTEFELWebAndroid.DesInicializar;
+procedure TACBrTEFSIWebAndroid.DesInicializar;
 begin
-  GravarLog('TACBrTEFELWebAndroid.DesInicializar');
+  GravarLog('TACBrTEFSIWebAndroid.DesInicializar');
   TMessageManager.DefaultManager.Unsubscribe(TMessageResultNotification, HandleActivityMessage);
   fInicializada := False;
   fEmTransacao := False;
 end;
 
-procedure TACBrTEFELWebAndroid.HandleActivityMessage(const Sender: TObject; const M: TMessage);
+procedure TACBrTEFSIWebAndroid.HandleActivityMessage(const Sender: TObject; const M: TMessage);
 begin
   if (M is TMessageResultNotification) then
   begin
@@ -317,22 +331,17 @@ begin
     OnActivityResult( 0, 0, TMessageReceivedNotification(M).Value);
 end;
 
-function TACBrTEFELWebAndroid.OnActivityResult(RequestCode, ResultCode: Integer; AIntent: JIntent): Boolean;
+function TACBrTEFSIWebAndroid.OnActivityResult(RequestCode, ResultCode: Integer; AIntent: JIntent): Boolean;
 begin
-  Result := False;
   fEmTransacao := False;
-  GravarLog(Format('TACBrTEFELWebAndroid.OnActivityResult: RequestCode: %d, ResultCode: %d', [RequestCode, ResultCode]));
+  GravarLog(Format('TACBrTEFSIWebAndroid.OnActivityResult: RequestCode: %d, ResultCode: %d', [RequestCode, ResultCode]));
 
-  if not Assigned(AIntent) then
-  begin
-    GravarLog('   no Intent');
-    Exit;
-  end;
-
+  Result := Assigned(AIntent);
   try
-    Result := True;
+    if not Result then
+      GravarLog('   no Intent');
 
-    if RequestCode = COD_REQUEST_REPORT then
+    if (RequestCode = COD_REQUEST_REPORT) then
       ObterDadosDaTransacao(AIntent);  // Mapeia as respostas intents para as PWINFOs
 
     if Assigned(fOnDepoisTerminarTransacao) then
@@ -343,11 +352,11 @@ begin
   end;
 end;
 
-procedure TACBrTEFELWebAndroid.AdicionarDadosObrigatorios(intent: JIntent);
+procedure TACBrTEFSIWebAndroid.AdicionarDadosObrigatorios(intent: JIntent);
 begin
-  GravarLog('TACBrTEFELWebAndroid.AdicionarDadosObrigatorios');
+  GravarLog('TACBrTEFSIWebAndroid.AdicionarDadosObrigatorios');
 
-  (*Para executar as funções, é obrigatório enviar 3 parâmetros ao Elgin IDH: "empresaSitef", "enderecoSitef",
+  (*Para executar as funções, é obrigatório enviar 4 parâmetros ao m-SiTef: "empresaSitef", "enderecoSitef",
    "modalidade" e "CNPJ_CPF". Para a modalidade 0, também é obrigatório o parâmetro “valor”.*)
 
   GravarLog('  '+Key_EmpresaSitef+': '+fDadosTerminal.fCodEmpresa);
@@ -357,25 +366,37 @@ begin
   else
     intent.putExtra( StringToJString(Key_EmpresaSitef), StringToJString(fDadosTerminal.fCodFilial));
 
+  GravarLog('  '+Key_EnderecoSitef+': '+fDadosTerminal.fEnderecoServidor);
+  intent.putExtra( StringToJString(Key_EnderecoSitef), StringToJString(fDadosTerminal.fEnderecoServidor));
+
   GravarLog('  '+Key_CNPJ_CPF+': '+fCNPJEstabelecimento);
   intent.putExtra( StringToJString(Key_CNPJ_CPF), StringToJString(fCNPJEstabelecimento));
+
+  GravarLog('  '+Key_ComExterna+': '+ParametrosAdicionais.ValueInfo[PWOPER_COMEXTERNA]);
+  intent.putExtra( StringToJString(Key_ComExterna), StringToJString(ParametrosAdicionais.ValueInfo[PWOPER_COMEXTERNA]));
+
+  if (fDadosAutomacao.CNPJSoftwareHouse.Trim <> '') then
+  begin
+    GravarLog('  '+Key_CNPJ_AUTOMACAO+': '+fDadosAutomacao.CNPJSoftwareHouse);
+    intent.putExtra( StringToJString(Key_CNPJ_AUTOMACAO), StringToJString(fDadosAutomacao.CNPJSoftwareHouse));
+  end;
 end;
 
-function TACBrTEFELWebAndroid.GerarTransactionId: String;
+function TACBrTEFSIWebAndroid.GerarTransactionId: String;
 begin
   Result := FormatDateTime('YYYYMMDDHHNNSS', Now);
 end;
 
-procedure TACBrTEFELWebAndroid.DoException(AErrorMsg: String);
+procedure TACBrTEFSIWebAndroid.DoException(AErrorMsg: String);
 begin
   if (Trim(AErrorMsg) = '') then
     Exit;
 
-  GravarLog('EACBrTEFElginIDHWeb: '+AErrorMsg);
-  raise EACBrTEFELWebAndroid.Create(AErrorMsg);
+  GravarLog('EACBrTEFMSitefWeb: '+AErrorMsg);
+  raise EACBrTEFSIWebAndroid.Create(AErrorMsg);
 end;
 
-procedure TACBrTEFELWebAndroid.IniciarTransacao(iOPER: Byte; ParametrosAdicionaisTransacao: TACBrTEFParametros);
+procedure TACBrTEFSIWebAndroid.IniciarTransacao(iOPER: Byte; ParametrosAdicionaisTransacao: TACBrTEFParametros);
 var
   uriDadosAutomacao, uriPersonalizacao: String;
   i: Integer;
@@ -387,7 +408,7 @@ begin
   if fEmTransacao then
     DoException(ACBrStr(sErrTRNINIT));
 
-  GravarLog('TACBrTEFELWebAndroid.IniciarTransacao');
+  GravarLog('TACBrTEFSIWebAndroid.IniciarTransacao');
 
   // Criando a Intent
   intent := TJIntent.JavaClass.init(StringToJString(Intent_Payment));
@@ -399,52 +420,65 @@ begin
   GravarLog('  '+Key_Modalidade+': '+ IntToStr(iOPER));
   intent.putExtra( StringToJString(Key_Modalidade), StringToJString(IntToStr(iOPER)));
 
-  if iOPER = PWOPER_SALEVOID {Cancelamento} then
-  begin
-    GravarLog('  '+Key_Valor+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGAMNT]);
-    intent.putExtra( StringToJString(Key_Valor), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGAMNT]));
+  GravarLog('  '+Key_Restricoes+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_RESTRICOES]);
+  if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_RESTRICOES] <> '' then
+    intent.putExtra( StringToJString(Key_Restricoes), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_RESTRICOES]));
 
-    GravarLog('  '+Key_Data+': '+ ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGDATE]);
-    intent.putExtra( StringToJString(Key_Data), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGDATE]));
+  GravarLog('  '+Key_TransacoesHabilitadas+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TRANSHABILITADA]);
+  if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TRANSHABILITADA] <> '' then
+    intent.putExtra( StringToJString(Key_TransacoesHabilitadas), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TRANSHABILITADA]));
 
-    GravarLog('  '+Key_NsuSitef+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGNSU]);
-    if ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGNSU] <> '' then
-      intent.putExtra( StringToJString(Key_NsuSitef), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TRNORIGNSU]));
-  end
-  else
-  begin
-    GravarLog('  '+Key_Restricoes+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_RESTRICOES]);
-    if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_RESTRICOES] <> '' then
-      intent.putExtra( StringToJString(Key_Restricoes), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_RESTRICOES]));
+  GravarLog('  '+Key_OTP+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_OTP]);
+  if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_OTP] <> '' then
+    intent.putExtra( StringToJString(Key_OTP), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_OTP]));
 
-    GravarLog('  '+Key_TransacoesHabilitadas+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TRANSHABILITADA]);
-    if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TRANSHABILITADA] <> '' then
-      intent.putExtra( StringToJString(Key_TransacoesHabilitadas), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TRANSHABILITADA]));
+  GravarLog('  '+Key_AcessibilidadeVisual+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_ACESSIBILIDADEVISUAL]);
+  if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_ACESSIBILIDADEVISUAL] <> '' then
+    intent.putExtra( StringToJString(Key_AcessibilidadeVisual), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_ACESSIBILIDADEVISUAL]));
 
-    GravarLog('  '+Key_Operador+': '+fDadosTerminal.fOperador);
-    intent.putExtra( StringToJString(Key_Operador), StringToJString(fDadosTerminal.fOperador));
+  GravarLog('  '+Key_TipoPinpad+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TIPOPINPAD]);
+  if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TIPOPINPAD] <> '' then
+    intent.putExtra( StringToJString(Key_TipoPinpad), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TIPOPINPAD]));
 
-    GravarLog('  '+Key_Data+': '+FormatDateTime('yyyyMMdd', Date));
-    intent.putExtra( StringToJString(Key_Data), StringToJString(FormatDateTime('yyyyMMdd', Date)));
+  GravarLog('  '+Key_pinpadMac+': '+fDadosTerminal.PortaPinPad);
+  if trim(fDadosTerminal.PortaPinPad) <> '' then
+    intent.putExtra( StringToJString(Key_pinpadMac), StringToJString(fDadosTerminal.PortaPinPad));
 
-    GravarLog('  '+Key_Hora+': '+FormatDateTime('hhmmss', Time));
-    intent.putExtra( StringToJString(Key_Hora), StringToJString(FormatDateTime('hhmmss', Time)));
+  GravarLog('  '+Key_Operador+': '+fDadosTerminal.fOperador);
+  intent.putExtra( StringToJString(Key_Operador), StringToJString(fDadosTerminal.fOperador));
 
-    GravarLog('  '+Key_NumeroCupom+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_FISCALREF]);
-    intent.putExtra( StringToJString(Key_NumeroCupom), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_FISCALREF]));
+  GravarLog('  '+Key_Data+': '+FormatDateTime('yyyyMMdd', Date));
+  intent.putExtra( StringToJString(Key_Data), StringToJString(FormatDateTime('yyyyMMdd', Date)));
 
-    GravarLog('  '+Key_NumParcelas+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_INSTALLMENTS]);
-    intent.putExtra( StringToJString(Key_NumParcelas), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_INSTALLMENTS]));
+  GravarLog('  '+Key_Hora+': '+FormatDateTime('hhmmss', Time));
+  intent.putExtra( StringToJString(Key_Hora), StringToJString(FormatDateTime('hhmmss', Time)));
 
-    GravarLog('  '+Key_Valor+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TOTAMNT]);
-    intent.putExtra( StringToJString(Key_Valor), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TOTAMNT]));
-  end;
+  GravarLog('  '+Key_NumeroCupom+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_FISCALREF]);
+  intent.putExtra( StringToJString(Key_NumeroCupom), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_FISCALREF]));
+
+  GravarLog('  '+Key_Valor+': '+ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TOTAMNT]);
+  intent.putExtra( StringToJString(Key_Valor), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWINFO_TOTAMNT]));
+
+  GravarLog('  '+Key_ISDoubleValidation+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_DOUBLEVALIDATION]);
+  intent.putExtra( StringToJString(Key_ISDoubleValidation), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_DOUBLEVALIDATION]));
+
+  GravarLog('  '+Key_TimeoutColeta+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TIMEOUT_COLETA]);
+  if (StrToIntDef(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TIMEOUT_COLETA], 0) > 0) then
+    intent.putExtra( StringToJString(Key_TimeoutColeta), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TIMEOUT_COLETA]));
+
+  GravarLog('  '+Key_TokenRegistroTls+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TOKEN_TLS]);
+  if ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TOKEN_TLS] <> '' then
+  Begin
+    intent.putExtra( StringToJString(Key_TokenRegistroTls), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_TOKEN_TLS]));
+    GravarLog('  '+Key_ComExterna+': '+ParametrosAdicionaisTransacao.ValueInfo[PWOPER_COMEXTERNA]);
+    intent.putExtra( StringToJString(Key_ComExterna), StringToJString(ParametrosAdicionaisTransacao.ValueInfo[PWOPER_COMEXTERNA]));
+  End;
 
   //Disparando o Intent
   IniciarIntent(intent);
 end;
 
-procedure TACBrTEFELWebAndroid.IniciarIntent(AIntent: JIntent);
+procedure TACBrTEFSIWebAndroid.IniciarIntent(AIntent: JIntent);
 begin
   if Assigned(fOnAntesIniciarTransacao) then
     fOnAntesIniciarTransacao(AIntent);
@@ -455,32 +489,37 @@ begin
   TAndroidHelper.Activity.startActivityForResult(AIntent, COD_REQUEST_REPORT);
 end;
 
-procedure TACBrTEFELWebAndroid.ObterDadosDaTransacao(AIntent: JIntent);
+procedure TACBrTEFSIWebAndroid.ObterDadosDaTransacao(AIntent: JIntent);
   function buscarStringExtra(name : string) : string;
   begin
     Result := String(DecodeURL( AnsiString(JStringToString(AIntent.getStringExtra(StringToJString(name))))));
-    //Result := String(JStringToString(AIntent.getStringExtra(StringToJString(name))));
-//    Result := AnsiString(JStringToString(AIntent.getStringExtra(StringToJString(name))));
   end;
 
+const
+  cErroNoIntent = -6;   // 'Operacao cancelada pelo usuario (no pinpad).'
 var
+  jsonTipoCampos    : string;
+  js                : TACBrJSONObject;
   viaCliente        : Boolean;
   viaEstabelecimento: Boolean;
-  jsonComplementoDados    : string;
-  js                : TACBrJSONObject;
 begin
   if not Assigned(AIntent) then
   begin
     GravarLog('[ObterDadosDaTransacao] no Intent to read');
+
+    fDadosTransacao.Clear;
+    fDadosTransacao.ValueInfo[PWINFO_RET]          := IntToStr(cErroNoIntent);
+    fDadosTransacao.ValueInfo[PWINFO_RESULTMSG]    := traduzRetorno(cErroNoIntent);
     Exit;
   end;
 
   viaCliente        := False;
   viaEstabelecimento:= False;
+
   fDadosTransacao.Clear;
   fDadosTransacao.ValueInfo[PWINFO_RET]          := buscarStringExtra('CODRESP');
   fDadosTransacao.ValueInfo[PWINFO_RESULTMSG]    := traduzRetorno(StrToIntDef(fDadosTransacao.ValueInfo[PWINFO_RET], 0));
-  fDadosTransacao.ValueInfo[PWINFO_MERCHADDDATA1]:= buscarStringExtra('COMP_DADOS_CONF');
+  fDadosTransacao.ValueInfo[PWINFO_AUTRESPCODE]  := buscarStringExtra('COMP_DADOS_CONF');
   fDadosTransacao.ValueInfo[PWINFO_CARDTYPE]     := buscarStringExtra('CODTRANS');
   fDadosTransacao.ValueInfo[PWINFO_FINTYPE]      := buscarStringExtra('TIPO_PARC');
   fDadosTransacao.ValueInfo[PWINFO_CASHBACKAMT]  := buscarStringExtra('VLTROCO');
@@ -509,44 +548,50 @@ begin
   if ValorTotalPagamento > 0 then //Não é retornado via intents
     fDadosTransacao.ValueInfo[PWINFO_TOTAMNT] := IntToStr(Trunc(RoundTo(ValorTotalPagamento * 100,-2)));
 
-  jsonComplementoDados := buscarStringExtra('COMP_DADOS_CONF');
-  if jsonComplementoDados <> '' then
+  fDadosTransacao.ValueInfo[PWINFO_MERCHADDDATA1]:= buscarStringExtra('TIPO_CAMPOS');
+
+  (*[TIPO_CAMPOS]JsonObject contendo todos os campos da transação com a CliSiTef, incluindo os outros campos da tabela SITEF. Formato: { “Id TipoCampo N” : [ “valor 1”, ....] }
+  Os valores são sempre passados em JsonArray, mesmo ocorrendo somente uma ocorrência do campo pela CliSiTef.*
+  Para descobrir o significado de cada campo contido nessa lista favor olhar a tabela “Tabela de valores para TipoCampo” no documento SiTef - Interface Simplificada
+  com a aplicação seção 5.3.2*)
+  jsonTipoCampos := buscarStringExtra('TIPO_CAMPOS');
+  if jsonTipoCampos <> '' then
   begin
-    js := TACBrJSONObject.Parse(jsonComplementoDados);
+    js := TACBrJSONObject.Parse(jsonTipoCampos);
     try
-      if (js.AsString['nsuRede'] <> '') then
-        fDadosTransacao.ValueInfo[PWINFO_AUTMERCHID]       := js.AsString['nsuRede']; //Código da Rede Autorizadora
 
-      if (js.AsString['cnpjRede'] <> '') then
-        fDadosTransacao.ValueInfo[PWINFO_REDECNPJ]         := js.AsString['cnpjRede']; //CNPJ da rede
+      // campo 131 retorna o Código das Redes Autorizadoras-verificar como implementar isso
+      if (js.AsJSONArray['136'].Count > 0) then
+        fDadosTransacao.ValueInfo[PWINFO_CARDPARCPAN]        := js.AsJSONArray['136'].Items[0]; //Contém as 6 primeiras posições do cartão (bin)
 
-      if (js.AsString['administradora'] <> '') then
-        fDadosTransacao.ValueInfo[PWINFO_CARDNAMESTD]      := js.AsString['administradora']; //CNPJ da rede
+      if (js.AsJSONArray['157'].Count > 0) then
+        fDadosTransacao.ValueInfo[PWINFO_VIRTMERCH]          := js.AsJSONArray['157'].Items[0]; //Código de Estabelecimento
 
-//      if (js.AsString['data'] <> '') then
-//        fDadosTransacao.ValueInfo[PWINFO_DATETIME]         := js.AsString['data']; //Data e hora da transação
+      if (js.AsJSONArray['158'].Count > 0) then
+        fDadosTransacao.ValueInfo[PWINFO_AUTMERCHID]         := js.AsJSONArray['158'].Items[0]; //Código da Rede Autorizadora
 
-      if (js.AsString['numeroCartao'] <> '') then
+      if (js.AsJSONArray['2003'].Count > 0) then
+        fDadosTransacao.ValueInfo[PWINFO_CHOLDERNAME]        := js.AsJSONArray['2003'].Items[0]; //Nome do portador
+
+      if (js.AsJSONArray['2021'].Count > 0) then
       begin
         //Número do cartão mascarado no formato BIN + *** + 4 últimos dígitos. Ex: 543211******987
-        fDadosTransacao.ValueInfo[PWINFO_CARDPARCPAN]        := Copy(js.AsString['numeroCartao'], 1, 6); //Contém as 6 primeiras posições do cartão (bin)
-        fDadosTransacao.ValueInfo[PWINFO_DEFAULTCARDPARCPAN] := js.AsString['numeroCartao'];
-        fDadosTransacao.ValueInfo[PWINFO_CARDFULLPAN]        := js.AsString['numeroCartao'];
+        fDadosTransacao.ValueInfo[PWINFO_DEFAULTCARDPARCPAN] := js.AsJSONArray['2021'].Items[0];
+        fDadosTransacao.ValueInfo[PWINFO_CARDFULLPAN]        := js.AsJSONArray['2021'].Items[0];
       end;
 
-      if (js.AsString['tipoCartao'] <> '') then
-        fDadosTransacao.ValueInfo[PWINFO_CARDENTMODE]        := js.AsString['tipoCartao']; //Tipo do cartão Lido
+      if (js.AsJSONArray['2090'].Count > 0) then
+        fDadosTransacao.ValueInfo[PWINFO_CARDENTMODE]        := js.AsJSONArray['2090'].Items[0]; //Tipo do cartão Lido
 
-      if (js.AsString['mensagem'] <> '') then
-        fDadosTransacao.ValueInfo[PWINFO_PROCESSMSG]         := js.AsString['mensagem']; //Mensagem para pinpad
+      if (js.AsJSONArray['2601'].Count > 0) then
+        fDadosTransacao.ValueInfo[PWINFO_PROCESSMSG]         := js.AsJSONArray['2601'].Items[0]; //Mensagem para pinpad
     finally
       js.Free;
     end;
   end;
-  //TIPO_CAMPOS não retorna na aplicação da Elgin
 end;
 
-function TACBrTEFELWebAndroid.ObterUltimoRetorno: String;
+function TACBrTEFSIWebAndroid.ObterUltimoRetorno: String;
 begin
   if (fDadosTransacao.Count < 1) then
     ObterDadosDaTransacao(nil);
@@ -554,7 +599,7 @@ begin
   Result := fDadosTransacao.ValueInfo[PWINFO_RESULTMSG];
 end;
 
-procedure TACBrTEFELWebAndroid.GravarLog(const AString: AnsiString; Traduz: Boolean);
+procedure TACBrTEFSIWebAndroid.GravarLog(const AString: AnsiString; Traduz: Boolean);
 Var
   Tratado: Boolean;
   AStringLog: AnsiString;
@@ -571,19 +616,19 @@ begin
   fOnGravarLog(String(AStringLog), Tratado);
 end;
 
-procedure TACBrTEFELWebAndroid.GravarLog(const AString: String; Traduz: Boolean);
+procedure TACBrTEFSIWebAndroid.GravarLog(const AString: String; Traduz: Boolean);
 begin
   GravarLog(AnsiString(AString), Traduz);
 end;
 
-procedure TACBrTEFELWebAndroid.SetCNPJEstabelecimento(AValue: String);
+procedure TACBrTEFSIWebAndroid.SetCNPJEstabelecimento(AValue: String);
 var
   ACNPJ, ErroMsg: String;
 begin
   if fCNPJEstabelecimento = AValue then
     Exit;
 
-  ACNPJ := OnlyNumber(AValue);
+  ACNPJ := OnlyCPFCNPJAlphaNum(AValue);
   if (ACNPJ <> '') then
   begin
     ErroMsg := ACBrValidador.ValidarCNPJ(ACNPJ);
@@ -594,7 +639,7 @@ begin
   fCNPJEstabelecimento := ACNPJ;
 end;
 
-procedure TACBrTEFELWebAndroid.SetNomeEstabelecimento(AValue: String);
+procedure TACBrTEFSIWebAndroid.SetNomeEstabelecimento(AValue: String);
 begin
   if fNomeEstabelecimento = AValue then
     Exit;
@@ -602,37 +647,39 @@ begin
   fNomeEstabelecimento := LeftStr(Trim(AValue), 100);
 end;
 
-procedure TACBrTEFELWebAndroid.ConfirmarTransacao(AStatus: LongWord; confirmTransactionIdentifier: String);
+procedure TACBrTEFSIWebAndroid.ConfirmarTransacao(AStatus: LongWord; confirmTransactionIdentifier: String);
 begin
-  GravarLog('ConfirmarTransacao: Não disponível na Elgin');
+  GravarLog('ConfirmarTransacao: Não disponível no MSitef');
 end;
 
-procedure TACBrTEFELWebAndroid.TratarTransacaoPendente(AStatus: LongWord;
+procedure TACBrTEFSIWebAndroid.TratarTransacaoPendente(AStatus: LongWord;
                                                        pszReqNum: String;
                                                        pszLocRef: String;
                                                        pszExtRef: String;
                                                        pszVirtMerch: String;
                                                        pszAuthSyst: String);
 begin
-  GravarLog('TratarTransacaoPendente: Não disponível no Elgin');
+  GravarLog('TratarTransacaoPendente: Não disponível no MSitef');
 end;
 
-procedure TACBrTEFELWebAndroid.ResolverTransacaoPendente(AStatus: LongWord; pszReqNum, pszLocRef, pszExtRef, pszVirtMerch, pszAuthSyst: String);
+procedure TACBrTEFSIWebAndroid.ResolverTransacaoPendente(AStatus: LongWord; pszReqNum, pszLocRef, pszExtRef, pszVirtMerch, pszAuthSyst: String);
 begin
-  GravarLog('ResolverTransacaoPendente: Não disponível no Elgin');
+  GravarLog('ResolverTransacaoPendente: Não disponível no MSitef');
 end;
 
-{ TACBrTEFELWebAndroidDadosTerminal }
+{ TACBrTEFSIWebAndroidDadosTerminal }
 
-procedure TACBrTEFELWebAndroidDadosTerminal.Clear;
+procedure TACBrTEFSIWebAndroidDadosTerminal.Clear;
 begin
   fCodEmpresa       := '';
   fCodFilial        := '';
   fCodTerminal      := '';
+  fEnderecoServidor := '';
   fOperador         := '';
+  fPortaPinPad      := '';
 end;
 
-constructor TACBrTEFELWebAndroidDadosTerminal.Create;
+constructor TACBrTEFSIWebAndroidDadosTerminal.Create;
 begin
   inherited;
   Clear;
