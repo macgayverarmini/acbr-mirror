@@ -3,7 +3,7 @@
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
-{ Direitos Autorais Reservados (c) 2026 Daniel Simoes de Almeida               }
+{ Direitos Autorais Reservados (c) 2022 Daniel Simoes de Almeida               }
 {                                                                              }
 { Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
 {                                                                              }
@@ -32,7 +32,7 @@
 
 {$I ACBr.inc}
 
-unit ACBrNFAg.Consts;
+unit ACBrNF3eConsts;
 
 interface
 
@@ -40,26 +40,24 @@ uses
   SysUtils;
 
 const
-  NAME_SPACE_NFAG = 'xmlns="http://www.portalfiscal.inf.br/nfag"';
+  NAME_SPACE_NF3e = 'xmlns="http://www.portalfiscal.inf.br/nf3e"';
 
-  DSC_INFQRCODE = 'Texto com o QR-Code impresso no DANFAg NFAg.';
-  DSC_FINNFAg = 'Finalidade de emissão da NFAg';
-  DSC_TPFAT = 'Tipo de Faturamento da NFAg';
+  DSC_INFQRCODE = 'Texto com o QR-Code impresso no DANF3e NF3-e.';
+  DSC_FINNF3e = 'Finalidade de emissão da NF3e';
   DSC_IDESTR = 'Documento de Identificação do Estrangeiro';
   DSC_INDIEDEST = 'Indicador da IE do Destinatário';
-  DSC_IDLIGACAO = 'Código único de Identificação da Ligação';
+  DSC_IDACESSO = 'Código de Identificação da Unidade Consumidora';
   DSC_IDCODCLIENTE = 'Código de Identificação do Cliente';
-  DSC_TPLIGACAO = 'Tipo de Ligação';
+  DSC_TPACESSO = 'Tipo de Acessante';
   DSC_XNOMEUC = 'Nome da Unidade Consumidora';
   DSC_TPCLASSE = 'Classe de Consumo da Unidade Consumidora';
   DSC_TPSUBCLASSE = 'Subclasse de Consumo da Unidade Consumidora';
   DSC_TPFASE = 'Tipo de Ligação';
-  DSC_CHNFAGFAT = 'Chave de acesso da NFAg faturada';
   DSC_TPGRPTENSAO = 'Grupo e Subgrupo de Tensão';
   DSC_TPMODTAR = 'Modalidade Tarifária';
   DSC_LATGPS = 'Latitude da localização da captura';
   DSC_LONGGPS = 'Longitude da localização da captura';
-  DSC_CHNFAg = 'Chave da NFAg Referenciada';
+  DSC_CHNF3E = 'Chave da NF3e Referenciada';
   DSC_COMPETEMIS = 'Ano e Mês da Emissão da NF';
   DSC_COMPETAPUR = 'Ano e Mês da Apuração';
   DSC_HASH115 = 'Hash do registro no arquivo do convênio 115';
@@ -153,6 +151,8 @@ const
   DSC_CMUNFG = 'Código do Município FG';
   DSC_VITEM = 'Valor líquido do Item';
   DSC_VPROD = 'Valor Total Bruto dos Produtos ou Serviços';
+  DSC_VITEMLIQ = 'Valor unitário do item sem tributos';
+  DSC_VPRODLIQ = 'Valor líquido total do item sem tributos';
   DSC_VBC = 'Valor da BC do ICMS';
   DSC_PICMS = 'Alíquota do imposto';
   DSC_VICMS = 'Valor do ICMS';
@@ -169,7 +169,7 @@ const
   DSC_VST = 'Valor TOTAL Icms substituição Tributária';
   DSC_DVENC = 'Data de vencimento';
   DSC_NFAT = 'Número da fatura';
-  DSC_QTDE = 'Quantidade de Dias';
+  DSC_QTDE = 'Quantidade';
   DSC_VBCSTRET = 'Valor da BC do ICMS ST Retido';
   DSC_PICMSSTRET = 'Alíquota do ICMS Substituição Tributaria Retido';
   DSC_VICMSSTRET = 'Valor do ICMS Substituição Tributaria Retido';
@@ -180,42 +180,6 @@ const
   DSC_VBCEFET = 'Valor da base de cálculo efetiva';
   DSC_PICMSEFET = 'Alíquota do ICMS efetiva';
   DSC_VICMSEFET = 'Valor do ICMS efetivo';
-  DSC_VTFS = 'Valor TFS';
-  DSC_VTFU = 'Valor TFU';
-  DSC_ECON = 'Demonstrativo de economia de agua';
-  DSC_ECONACUMULADA = 'Demonstrativo de economia de agua acumulada no período';
-  DSC_SPRESTADOR = 'Selo de segurança do prestador';
-  DSC_DEMISSSELO = 'Data de emissão do Selo de segurança do prestador';
-  DSC_SREGULADOR = 'Selo de segurança do Regulador';
-  DSC_NAGENCIAATEND = 'Agencia responsável pelo atendimento';
-  DSC_ENDERAGENCIAATEND = 'Endereço da Agencia responsável pelo atendimento';
-  DSC_XHISTORICO = 'Nome do histórico para exibição/apresentação';
-  DSC_MEDMENSAL = 'Média Mensal de consumo';
-  DSC_MEDDIARIA = 'Média Diária de consumo';
-  DSC_CONSUMO = 'Consumo no mês';
-  DSC_VOLFAT = 'Volume Faturado';
-  DSC_TPFAIXACONS = 'Faixa Prevista de Consumo';
-  DSC_FATORPOLUICAO = 'Fator de poluição';
-  DSC_TPCATEGORIA = 'Categoria da ligação';
-  DSC_XCATEGORIA = 'Detalhamento da Categoria';
-  DSC_QECONOMIAS = 'Quantidade de economias';
-  DSC_NUNIDCONSUMO = 'Número da unidade de consumo';
-  DSC_VUNIDCONSUMO = 'Volume por unidade de consumo em m3';
-  DSC_VBCTFS = 'Valor BC TFS';
-  DSC_PTFS = 'Alíquota do TFS';
-  DSC_VBCTFU = 'Valor BC TFU';
-  DSC_PTFU = 'Alíquota do TFU';
-  DSC_COMPETANALISE = 'Ano e mês referência da analise (AAAAMM)';
-  DSC_CONCLUSAO = 'Conclusão da Análise';
-  DSC_CPROCESSO = 'Legislação aplicada';
-  DSC_SISTEMAABAST = 'Nome do Sistema de abastecimento';
-  DSC_XITEMANALISADO = 'Nome do item analisado';
-  DSC_NAMOSTRAMINIMA = 'Número de amostra minima';
-  DSC_NAMOSTRAANALISADA = 'Número de amostra analisada';
-  DSC_NAMOSTRAFPADRAO = 'Número de amostra fora do padrão';
-  DSC_NAMOSTRADPADRAO = 'Número de amostra dentro do padrão';
-  DSC_NMEDIDAMENSAL = 'Media mensal dos valores da analise';
-  DSC_xVALORREFERENCIA = 'Valor de referência';
 
 implementation
 
