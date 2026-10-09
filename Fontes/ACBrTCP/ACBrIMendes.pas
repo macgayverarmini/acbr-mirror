@@ -149,6 +149,7 @@ type
     procedure Clear; override;
     procedure Assign(Source: TACBrImendesRemoveDevolvidosRequest);
     function IsEmpty: Boolean; override;
+    function LoadFromIni(const AIniStr: String): Boolean;
 
     property Produtos: TACBrIMendesProdutosId read getProdutos;
     property CNPJ: string read fCNPJ write fCNPJ;
@@ -270,7 +271,6 @@ type
     fdataLimite: TDateTime;
     fportal: TACBrIMendesPortal;
     fregimeEspecial: String;
-    fsubstTribUfDestino: Boolean;
     function GetPortal: TACBrIMendesPortal;
   protected
     procedure AssignSchema(aSource: TACBrAPISchema); override;
@@ -299,7 +299,6 @@ type
     property dataLimite: TDateTime read fdataLimite write fdataLimite;
     property portal: TACBrIMendesPortal read GetPortal;
     property regimeEspecial: String read fregimeEspecial write fregimeEspecial;
-    property substTribUfDestino: Boolean read fsubstTribUfDestino write fsubstTribUfDestino;
   end;
 
   { TACBrIMendesCaracTrib }
@@ -334,6 +333,7 @@ type
     fprodZFM: String;
     fregimeEspecial: String;
     ffabricacaoPropria: Boolean;
+    fsubstTribUfDestino: Boolean;
 
     function GetCaracTrib: TACBrIMendesCaracTrib;
     function GetUF: TStringList;
@@ -360,6 +360,7 @@ type
     property prodZFM: String read fprodZFM write fprodZFM;
     property regimeEspecial: String read fregimeEspecial write fregimeEspecial;
     property fabricacaoPropria: Boolean read ffabricacaoPropria write ffabricacaoPropria;
+    property substTribUfDestino: Boolean read fsubstTribUfDestino write fsubstTribUfDestino;
   end;
 
   { TACBrIMendesGradesRequest }
@@ -381,6 +382,7 @@ type
     procedure Clear; override;
     procedure Assign(Source: TACBrIMendesGradesRequest);
     function IsEmpty: Boolean; override;
+    function LoadFromIni(const AIniStr: String): Boolean;
 
     property emit: TACBrIMendesEmitente read GetEmit;
     property perfil: TACBrIMendesPerfil read GetPerfil;
@@ -1326,6 +1328,7 @@ type
     procedure DoReadFromJSon(aJSon: TACBrJSONObject); override;
   public
     constructor Create(const ObjectName: String = ''); override;
+    destructor Destroy; override;
     procedure Clear; override;
     function IsEmpty: Boolean; override;
     procedure Assign(Source: TACBrIMendesSaneamentoResponse);
@@ -1442,6 +1445,7 @@ type
     procedure Clear; override;
     function IsEmpty: Boolean; override;
     procedure Assign(Source: TACBrIMendesInativarRequest);
+    function LoadFromIni(const AIniStr: String): Boolean;
 
     property cnpj: string read fCnpj write fCnpj;
     property produtos: TACBrIMendesInativarProdutos read GetProdutos;
@@ -1484,6 +1488,9 @@ type
     function CalcularURL: String;
     function TokenInativarValido: Boolean;
     procedure SetSenha(AValue: AnsiString);
+    procedure SetCNPJ(const AValue: String);
+    procedure SetAmbiente(AValue: TACBrIMendesAmbiente);
+    procedure LimparTokens;
     procedure ValidarConfiguracao;
   public
     constructor Create(AOwner: TComponent); override;
@@ -1513,16 +1520,17 @@ type
 
     property RespostaErro: TACBrIMendesErro read GetRespostaErro;
   published
-    property Ambiente: TACBrIMendesAmbiente read fAmbiente write fAmbiente;
+    property Ambiente: TACBrIMendesAmbiente read fAmbiente write SetAmbiente;
 
-    property CNPJ: String read fCNPJ write fCNPJ;
+    property CNPJ: String read fCNPJ write SetCNPJ;
     property Senha: AnsiString read GetSenha write SetSenha;
   end;
 
 implementation
 
 uses
-  StrUtils, synautil,
+  StrUtils, synautil, IniFiles,
+  ACBrUtil.Strings,
   ACBrUtil.FilesIO,
   ACBrUtil.DateTime;
 
@@ -1910,7 +1918,6 @@ begin
   fano := 0;
   fdataLimite := 0;
   fregimeEspecial := EmptyStr;
-  fsubstTribUfDestino := False;
   if Assigned(fportal) then
     fportal.Clear;
 end;
@@ -1933,7 +1940,6 @@ begin
     EstaZerado(fano) and
     EstaZerado(fdataLimite) and
     EstaVazio(fregimeEspecial) and
-    (not fsubstTribUfDestino) and
     (not Assigned(fportal) or fportal.IsEmpty);
 end;
 
@@ -1968,8 +1974,7 @@ begin
     .Value('mes', fmes)
     .Value('ano', fano)
     .Value('dataLimite', s3)
-    .Value('regimeEspecial', fregimeEspecial)
-    .Value('substTribUfDestino', fsubstTribUfDestino);
+    .Value('regimeEspecial', fregimeEspecial);
   fsubstICMS := (s1 = 'S');
   finterdependente := (s2 = 'S');
   if NaoEstaVazio(s3) then
@@ -1998,8 +2003,6 @@ begin
 
   if (fdataLimite > 0) then
     aJSon.AddPair('dataLimite', FormatDateBr(fdataLimite, 'YYYY-MM-DD'));
-  if fsubstTribUfDestino then
-    aJSon.AddPair('substTribUfDestino', fsubstTribUfDestino);
 
   if Assigned(fportal) and (not fportal.IsEmpty) then
     fportal.WriteToJSon(aJSon);
@@ -2028,7 +2031,6 @@ begin
   fano := Source.ano;
   fdataLimite := Source.dataLimite;
   fregimeEspecial := Source.regimeEspecial;
-  fsubstTribUfDestino := Source.substTribUfDestino;
   if Assigned(Source.portal) then
     Portal.Assign(Source.portal);
 end;
@@ -2112,6 +2114,7 @@ begin
   fprodZFM := EmptyStr;
   fregimeEspecial := EmptyStr;
   ffabricacaoPropria := False;
+  fsubstTribUfDestino := False;
 end;
 
 function TACBrIMendesPerfil.IsEmpty: Boolean;
@@ -2128,7 +2131,8 @@ begin
     EstaVazio(fregimeTrib) and
     EstaVazio(fprodZFM) and
     EstaVazio(fregimeEspecial) and
-    (not ffabricacaoPropria);
+    (not ffabricacaoPropria) and
+    (not fsubstTribUfDestino);
 end;
 
 function TACBrIMendesPerfil.GetUF: TStringList;
@@ -2161,7 +2165,8 @@ begin
     .Value('regimeTrib', fregimeTrib)
     .Value('prodZFM', fprodZFM)
     .Value('regimeEspecial', fregimeEspecial)
-    .Value('fabricacaoPropria', ffabricacaoPropria);
+    .Value('fabricacaoPropria', ffabricacaoPropria)
+    .Value('substTribUfDestino', fsubstTribUfDestino);
 
   if aJSon.IsJSONArray('uf') then
   begin
@@ -2193,7 +2198,8 @@ begin
     .AddPair('regimeTrib', fregimeTrib)
     .AddPair('prodZFM', fprodZFM)
     .AddPair('regimeEspecial', fregimeEspecial)
-    .AddPair('fabricacaoPropria', ffabricacaoPropria);
+    .AddPair('fabricacaoPropria', ffabricacaoPropria)
+    .AddPair('substTribUfDestino', fsubstTribUfDestino);
 
   if Assigned(fcaracTrib) and NaoEstaZerado(fcaracTrib.Count) then
   begin
@@ -2235,6 +2241,7 @@ begin
   fprodZFM := Source.prodZFM;
   fregimeEspecial := Source.regimeEspecial;
   ffabricacaoPropria := Source.fabricacaoPropria;
+  fsubstTribUfDestino := Source.substTribUfDestino;
   caracTrib.Clear;
   for i := 0 to Source.caracTrib.Count - 1 do
     caracTrib.Add(Source.caracTrib[i]);
@@ -2323,6 +2330,94 @@ begin
     perfil.Assign(Source.perfil);
   if Assigned(Source.produtos) then
     produtos.Assign(Source.produtos);
+end;
+
+function TACBrIMendesGradesRequest.LoadFromIni(const AIniStr: String): Boolean;
+var
+  wIni: TMemIniFile;
+  wSecao: String;
+  wLista: TStringList;
+  i: Integer;
+begin
+  Clear;
+  wIni := TMemIniFile.Create('');
+  wLista := TStringList.Create;
+  try
+    LerIniArquivoOuString(AIniStr, wIni);
+
+    wSecao := 'Emitente';
+    emit.amb := wIni.ReadInteger(wSecao, 'amb', 0);
+    emit.cnpj := wIni.ReadString(wSecao, 'cnpj', EmptyStr);
+    emit.crt := wIni.ReadInteger(wSecao, 'crt', 0);
+    emit.regimeTrib := wIni.ReadString(wSecao, 'regimeTrib', EmptyStr);
+    emit.uf := wIni.ReadString(wSecao, 'uf', EmptyStr);
+    emit.municipio := wIni.ReadInteger(wSecao, 'municipio', 0);
+    emit.cnae := wIni.ReadString(wSecao, 'cnae', EmptyStr);
+    emit.cnaeSecundario := wIni.ReadString(wSecao, 'cnaeSecundario', EmptyStr);
+    emit.substICMS := wIni.ReadBool(wSecao, 'substICMS', False);
+    emit.interdependente := wIni.ReadBool(wSecao, 'interdependente', False);
+    emit.dia := wIni.ReadInteger(wSecao, 'dia', 0);
+    emit.mes := wIni.ReadInteger(wSecao, 'mes', 0);
+    emit.ano := wIni.ReadInteger(wSecao, 'ano', 0);
+    emit.dataLimite := StringToDateTimeDef(wIni.ReadString(wSecao, 'dataLimite', EmptyStr), 0, 'DD/MM/YYYY');
+    emit.regimeEspecial := wIni.ReadString(wSecao, 'regimeEspecial', EmptyStr);
+
+    wSecao := 'Portal';
+    if wIni.SectionExists(wSecao) then
+    begin
+      emit.portal.UserID := wIni.ReadInteger(wSecao, 'userID', 0);
+      emit.portal.Method := wIni.ReadString(wSecao, 'method', EmptyStr);
+    end;
+
+    wSecao := 'Perfil';
+    AddDelimitedTextToList(wIni.ReadString(wSecao, 'uf', EmptyStr), '|', perfil.uf);
+    AddDelimitedTextToList(wIni.ReadString(wSecao, 'caracTrib', EmptyStr), '|', wLista);
+    for i := 0 to wLista.Count - 1 do
+      perfil.caracTrib.Add(StrToIntDef(Trim(wLista[i]), 0));
+    perfil.municipio := wIni.ReadInteger(wSecao, 'municipio', 0);
+    perfil.cfop := wIni.ReadString(wSecao, 'cfop', EmptyStr);
+    perfil.finalidade := wIni.ReadInteger(wSecao, 'finalidade', 0);
+    perfil.simplesN := wIni.ReadString(wSecao, 'simplesN', EmptyStr);
+    perfil.origem := wIni.ReadInteger(wSecao, 'origem', 0);
+    perfil.substICMS := wIni.ReadString(wSecao, 'substICMS', EmptyStr);
+    perfil.regimeTrib := wIni.ReadString(wSecao, 'regimeTrib', EmptyStr);
+    perfil.prodZFM := wIni.ReadString(wSecao, 'prodZFM', EmptyStr);
+    perfil.regimeEspecial := wIni.ReadString(wSecao, 'regimeEspecial', EmptyStr);
+    perfil.fabricacaoPropria := wIni.ReadBool(wSecao, 'fabricacaoPropria', False);
+    perfil.substTribUfDestino := wIni.ReadBool(wSecao, 'substTribUfDestino', False);
+
+    i := 1;
+    wSecao := 'Produto' + IntToStrZero(i, 3);
+    while wIni.SectionExists(wSecao) do
+    begin
+      with produtos.New do
+      begin
+        Id := wIni.ReadString(wSecao, 'id', EmptyStr);
+        Descricao := wIni.ReadString(wSecao, 'descricao', EmptyStr);
+        Ean := wIni.ReadString(wSecao, 'ean', EmptyStr);
+        Ncm := wIni.ReadString(wSecao, 'ncm', EmptyStr);
+        Cest := wIni.ReadString(wSecao, 'cest', EmptyStr);
+        DescricaoGrupo := wIni.ReadString(wSecao, 'descricaoGrupo', EmptyStr);
+        Codigo := wIni.ReadString(wSecao, 'codigo', EmptyStr);
+        CodInterno := wIni.ReadString(wSecao, 'codInterno', EmptyStr);
+        CodImendes := wIni.ReadString(wSecao, 'codImendes', EmptyStr);
+        Importado := wIni.ReadString(wSecao, 'importado', EmptyStr);
+        Encontrado := wIni.ReadBool(wSecao, 'encontrado', False);
+        Tipo := wIni.ReadInteger(wSecao, 'tipo', 0);
+        ChaveRetorno := wIni.ReadString(wSecao, 'chave_retorno', EmptyStr);
+        DtUltCons := StringToDateTimeDef(wIni.ReadString(wSecao, 'dtultcons', EmptyStr), 0, 'DD/MM/YYYY');
+        DtRev := StringToDateTimeDef(wIni.ReadString(wSecao, 'dtrev', EmptyStr), 0, 'DD/MM/YYYY');
+      end;
+
+      Inc(i);
+      wSecao := 'Produto' + IntToStrZero(i, 3);
+    end;
+  finally
+    wLista.Free;
+    wIni.Free;
+  end;
+
+  Result := (not IsEmpty);
 end;
 
 procedure TACBrIMendesGradesRequest.AssignSchema(aSource: TACBrAPISchema);
@@ -2886,6 +2981,19 @@ constructor TACBrIMendesSaneamentoResponse.Create(const ObjectName: String);
 begin
   inherited Create(ObjectName);
   Clear;
+end;
+
+destructor TACBrIMendesSaneamentoResponse.Destroy;
+begin
+  if Assigned(fCabecalho) then
+    fCabecalho.Free;
+  if Assigned(fGrupos) then
+    fGrupos.Free;
+  if Assigned(fSemRetorno) then
+    fSemRetorno.Free;
+  if Assigned(fBaixaSimilaridade) then
+    fBaixaSimilaridade.Free;
+  inherited Destroy;
 end;
 
 procedure TACBrIMendesSaneamentoResponse.Clear;
@@ -4930,6 +5038,31 @@ begin
 
   fKey := FormatDateTime('hhnnsszzz', Now);
   fSenha := StrCrypt(AValue, fKey);  // Salva Senha de forma Criptografada, para evitar "Inspect"
+  LimparTokens;
+end;
+
+procedure TACBrIMendes.SetCNPJ(const AValue: String);
+begin
+  if (fCNPJ = AValue) then
+    Exit;
+
+  fCNPJ := AValue;
+  LimparTokens;
+end;
+
+procedure TACBrIMendes.SetAmbiente(AValue: TACBrIMendesAmbiente);
+begin
+  if (fAmbiente = AValue) then
+    Exit;
+
+  fAmbiente := AValue;
+  LimparTokens;
+end;
+
+procedure TACBrIMendes.LimparTokens;
+begin
+  fToken := EmptyStr;
+  fTokenInativar := EmptyStr;
 end;
 
 procedure TACBrIMendes.ValidarConfiguracao;
@@ -4968,6 +5101,8 @@ begin
   fConsultarDescricaoResponse := Nil;
   fConsultarRegimeEspecialResponse := Nil;
   fHistoricoAcessoResponse := Nil;
+  fInativarRequest := Nil;
+  fRemoveDevolvidosRequest := Nil;
 end;
 
 destructor TACBrIMendes.Destroy;
@@ -5070,7 +5205,7 @@ begin
   ValidarConfiguracao;
 
   if SaneamentoGradesRequest.IsEmpty then
-    raise EACBrAPIException.CreateFmt('sErroObjetoNaoPrenchido', ['SaneamentoGradesRequest']);
+    raise EACBrAPIException.CreateFmt(ACBrStr(sErroObjetoNaoPrenchido), ['SaneamentoGradesRequest']);
   if EstaVazio(fToken) then
     Autenticar;
 
@@ -5297,7 +5432,7 @@ begin
   ValidarConfiguracao;
 
   if InativarRequest.IsEmpty or InativarRequest.produtos.IsEmpty then
-    raise EACBrAPIException.CreateFmt(sErroObjetoNaoPrenchido, ['InativarRequest']);
+    raise EACBrAPIException.CreateFmt(ACBrStr(sErroObjetoNaoPrenchido), ['InativarRequest']);
   if not TokenInativarValido then
     AutenticarInativar;
 
@@ -5338,7 +5473,7 @@ begin
   ValidarConfiguracao;
 
   if RemoveDevolvidosRequest.IsEmpty or RemoveDevolvidosRequest.Produtos.IsEmpty then
-    raise EACBrAPIException.CreateFmt(sErroObjetoNaoPrenchido, ['RemoveDevolvidosRequest']);
+    raise EACBrAPIException.CreateFmt(ACBrStr(sErroObjetoNaoPrenchido), ['RemoveDevolvidosRequest']);
 
   LimparHTTP;
   HttpSend.Protocol := '1.1';
@@ -5632,6 +5767,35 @@ begin
   fCNPJ := Source.CNPJ;
   if Assigned(Source.Produtos) then
     fProdutos.Assign(Source.Produtos);
+end;
+
+function TACBrImendesRemoveDevolvidosRequest.LoadFromIni(const AIniStr: String): Boolean;
+var
+  wIni: TMemIniFile;
+  wSecao: String;
+  i: Integer;
+begin
+  Clear;
+  wIni := TMemIniFile.Create('');
+  try
+    LerIniArquivoOuString(AIniStr, wIni);
+
+    CNPJ := wIni.ReadString('RemoveDevolvidos', 'cnpj', EmptyStr);
+
+    i := 1;
+    wSecao := 'Produto' + IntToStrZero(i, 3);
+    while wIni.SectionExists(wSecao) do
+    begin
+      Produtos.New.Id := wIni.ReadString(wSecao, 'id', EmptyStr);
+
+      Inc(i);
+      wSecao := 'Produto' + IntToStrZero(i, 3);
+    end;
+  finally
+    wIni.Free;
+  end;
+
+  Result := (not IsEmpty);
 end;
 
 procedure TACBrImendesRemoveDevolvidosRequest.AssignSchema(
@@ -6038,6 +6202,39 @@ begin
   fCnpj := Source.fCnpj;
   if Assigned(Source.produtos) then
     fProdutos.Assign(Source.produtos);
+end;
+
+function TACBrIMendesInativarRequest.LoadFromIni(const AIniStr: String): Boolean;
+var
+  wIni: TMemIniFile;
+  wSecao: String;
+  i: Integer;
+begin
+  Clear;
+  wIni := TMemIniFile.Create('');
+  try
+    LerIniArquivoOuString(AIniStr, wIni);
+
+    cnpj := wIni.ReadString('Inativar', 'cnpj', EmptyStr);
+
+    i := 1;
+    wSecao := 'Produto' + IntToStrZero(i, 3);
+    while wIni.SectionExists(wSecao) do
+    begin
+      with produtos.New do
+      begin
+        codigo := wIni.ReadString(wSecao, 'codigo', EmptyStr);
+        interno := wIni.ReadString(wSecao, 'interno', EmptyStr);
+      end;
+
+      Inc(i);
+      wSecao := 'Produto' + IntToStrZero(i, 3);
+    end;
+  finally
+    wIni.Free;
+  end;
+
+  Result := (not IsEmpty);
 end;
 
 procedure TACBrIMendesInativarRequest.AssignSchema(aSource: TACBrAPISchema);
