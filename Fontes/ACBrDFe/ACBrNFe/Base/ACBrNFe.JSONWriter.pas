@@ -655,6 +655,8 @@ begin
   lProdJSONObj.AddPair('qCom', AProd.qCom);
   lProdJSONObj.AddPair('vUnCom', AProd.vUnCom);
   lProdJSONObj.AddPair('vProd', AProd.vProd);
+  lProdJSONObj.AddPair('vUnComLiq', AProd.vUnComLiq);
+  lProdJSONObj.AddPair('vProdLiq', AProd.vProdLiq);
   lProdJSONObj.AddPair('cEANTrib', AProd.cEANTrib);
   lProdJSONObj.AddPair('cBarraTrib', AProd.cBarraTrib);
   lProdJSONObj.AddPair('uTrib', AProd.uTrib);
@@ -1452,6 +1454,9 @@ begin
                       lICMSCSTJSONObj.AddPair('vICMSEfet', AICMS.vICMSEfet);
                     end;
                   end;
+
+                cstICMSPrevisto:
+                  lICMSCSTJSONObj.AddPair('vICMSPrevisto', AICMS.vICMSPrevisto);
               end;
             end;
           crtSimplesNacional, crtMEI:
@@ -1853,6 +1858,9 @@ var
   lTotalJSONObj: TACBrJSONObject;
 begin
   lTotalJSONObj := TACBrJSONObject.Create;
+
+  lTotalJSONObj.AddPair('vProdLiqTot', ATotal.vProdLiqTot);
+
   GerarTotal_ICMSTot(ATotal.ICMSTot, lTotalJSONObj);
   GerarTotal_ISSQNTot(ATotal.ISSQNtot, lTotalJSONObj);
   GerarTotal_retTrib(ATotal.retTrib, lTotalJSONObj);
@@ -2583,6 +2591,9 @@ begin
     exit;
 
   lISelJSONObj := TACBrJSONObject.Create;
+
+  //Usar string até a publicação de uma tabela de CSTs oficial para o IS
+//  lISelJSONObj.AddPair('CSTIS', CSTISToStr(AISel.CSTIS));
   lISelJSONObj.AddPair('CSTIS', AISel.CSTIS);
   lISelJSONObj.AddPair('cClassTribIS', AISel.cClassTribIS);
   lISelJSONObj.AddPair('vBCIS', AISel.vBCIS);
