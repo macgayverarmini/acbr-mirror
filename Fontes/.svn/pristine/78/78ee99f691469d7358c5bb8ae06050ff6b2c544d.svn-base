@@ -34,7 +34,7 @@
 
 {$I ACBr.inc}
 
-unit ACBrNFeDANFeRLPaisagemRTC;
+unit ACBrNFeDANFeRLRetratoRTC;
 
 interface
 
@@ -58,22 +58,22 @@ uses
 
 type
 
-  { TfrlDANFeRLPaisagemRTC }
+  { TfrlDANFeRLRetratoRTC }
 
-  TfrlDANFeRLPaisagemRTC = class(TfrlDANFeRLRTC)
-    rlpCanhoto: TRLPanel;
+  TfrlDANFeRLRetratoRTC = class(TfrlDANFeRLRTC)
+    rlbCanhoto: TRLBand;
     rlpCanhotoRecebemos: TRLPanel;
-    rllRecebemosDe: TRLAngleLabel;
-    rllResumo: TRLAngleLabel;
-    rlpCanhotoAssinatura: TRLPanel;
-    rllTitCanhotoAssinatura: TRLAngleLabel;
+    rllRecebemosDe: TRLLabel;
+    rllResumo: TRLLabel;
     rlpCanhotoData: TRLPanel;
-    rllTitCanhotoData: TRLAngleLabel;
+    rllTitCanhotoData: TRLLabel;
+    rlpCanhotoAssinatura: TRLPanel;
+    rllTitCanhotoAssinatura: TRLLabel;
     rlpCanhotoNFe: TRLPanel;
-    rllCanhotoNFe: TRLAngleLabel;
-    rllCanhotoNumero: TRLAngleLabel;
-    rllCanhotoSerie: TRLAngleLabel;
-    rlpDivisaoCanhoto: TRLPanel;
+    rllCanhotoNFe: TRLLabel;
+    rllCanhotoNumero: TRLLabel;
+    rllCanhotoSerie: TRLLabel;
+    rlbDivisaoCanhoto: TRLBand;
     rliDivisaoCanhoto: TRLDraw;
     rlbEmitente: TRLBand;
     rlpEmitente: TRLPanel;
@@ -476,6 +476,7 @@ type
     procedure RLNFeBeforePrint(Sender: TObject; var PrintIt: Boolean);
     procedure RLNFeDataRecord(Sender: TObject; RecNo, CopyNo: Integer;
       var EOF: Boolean; var RecordAction: TRLRecordAction);
+    procedure rlbCanhotoBeforePrint(Sender: TObject; var PrintIt: Boolean);
     procedure rlbEmitenteBeforePrint(Sender: TObject; var PrintIt: Boolean);
     procedure rlbDadosAdicionaisBeforePrint(Sender: TObject; var PrintIt: Boolean);
     procedure rlbContinuacaoBeforePrint(Sender: TObject; var PrintIt: Boolean);
@@ -493,11 +494,8 @@ type
     FLarguraBase: Integer;
     FLarguraAliq: Integer;
     FLarguraVal: Integer;
-    FLarguraExpandida: Boolean;
 
     procedure InicializarDados;
-    procedure ExpandirLargura(AControle: TWinControl; ALarguraNova, ALarguraOriginal: Integer);
-    procedure OcuparLarguraDoCanhoto;
     procedure MapearTributosItem;
     procedure DefinirCanhoto;
     procedure DefinirCabecalho;
@@ -549,46 +547,45 @@ uses
 {$EndIf}
 
 const
-  cAlturaCelula = 21;
-  cTopoCelulas = 13;
-  cAlturaLinhaVolume = 11;
+  cAlturaCelula = 24;
+  cTopoCelulas = 15;
+  cAlturaLinhaVolume = 12;
   cAlturaMinimaItem = 38;
 
-{ TfrlDANFeRLPaisagemRTC }
+{ TfrlDANFeRLRetratoRTC }
 
-procedure TfrlDANFeRLPaisagemRTC.RLNFeBeforePrint(Sender: TObject; var PrintIt: Boolean);
+procedure TfrlDANFeRLRetratoRTC.RLNFeBeforePrint(Sender: TObject; var PrintIt: Boolean);
 begin
   InicializarDados;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.RLNFeDataRecord(Sender: TObject; RecNo,
+procedure TfrlDANFeRLRetratoRTC.RLNFeDataRecord(Sender: TObject; RecNo,
   CopyNo: Integer; var EOF: Boolean; var RecordAction: TRLRecordAction);
 begin
   EOF := (RecNo > 1);
   RecordAction := raUseIt;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.rlbEmitenteBeforePrint(Sender: TObject; var PrintIt: Boolean);
+procedure TfrlDANFeRLRetratoRTC.rlbCanhotoBeforePrint(Sender: TObject; var PrintIt: Boolean);
+begin
+  PrintIt := (RLNFe.PageNumber = 1);
+end;
+
+procedure TfrlDANFeRLRetratoRTC.rlbEmitenteBeforePrint(Sender: TObject; var PrintIt: Boolean);
 begin
   rlbDadosAdicionais.Visible := (RLNFe.PageNumber = 1);
 
   if (RLNFe.PageNumber > 1) then
-  begin
     rllSecItens.Caption := ACBrStr(' CONTINUAÇÃO DOS DADOS DOS PRODUTOS / SERVIÇOS');
-    OcuparLarguraDoCanhoto;
-  end;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.rlbDadosAdicionaisBeforePrint(Sender: TObject;
+procedure TfrlDANFeRLRetratoRTC.rlbDadosAdicionaisBeforePrint(Sender: TObject;
   var PrintIt: Boolean);
 begin
   PrintIt := (RLNFe.PageNumber = 1);
-
-  rlpCanhoto.Visible := False;
-  rlpDivisaoCanhoto.Visible := False;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.rlbContinuacaoBeforePrint(Sender: TObject;
+procedure TfrlDANFeRLRetratoRTC.rlbContinuacaoBeforePrint(Sender: TObject;
   var PrintIt: Boolean);
 begin
   if (RLNFe.PageNumber = 1) then
@@ -599,7 +596,7 @@ begin
   rlbContinuacao.Height := rlpContinuacao.Top + rlpContinuacao.Height + 1;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.subItensDataRecord(Sender: TObject; RecNo,
+procedure TfrlDANFeRLRetratoRTC.subItensDataRecord(Sender: TObject; RecNo,
   CopyNo: Integer; var EOF: Boolean; var RecordAction: TRLRecordAction);
 begin
   FNumItem := RecNo - 1;
@@ -607,7 +604,7 @@ begin
   RecordAction := raUseIt;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.rlbItemBeforePrint(Sender: TObject; var PrintIt: Boolean);
+procedure TfrlDANFeRLRetratoRTC.rlbItemBeforePrint(Sender: TObject; var PrintIt: Boolean);
 var
   LDet: TDetCollectionItem;
   LItem: TACBrNFeDANFeRTCItem;
@@ -617,7 +614,7 @@ begin
   LDet := fpNFe.Det.Items[FNumItem];
   LItem := fpRTC.Item(FNumItem);
 
-  rlmXProd.Lines.Text := LDet.Prod.xProd;
+  rlmXProd.Lines.Text := fpDANFe.ManterCodigoXProd(LDet.Prod.cProd, LDet.Prod.xProd);
 
   LInfAd := Copy(fpDANFe.ManterXProd(fpNFe, FNumItem), Length(LDet.Prod.xProd) + 1, MaxInt);
   if (fpDANFe.ExibeInforAdicProduto = infSeparadamente) then
@@ -692,63 +689,7 @@ begin
         rlmQuantidade.Top + rlmQuantidade.Height + 1));
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.ExpandirLargura(AControle: TWinControl;
-  ALarguraNova, ALarguraOriginal: Integer);
-var
-  I, LLeft, LRight, LCentro: Integer;
-  LControle: TControl;
-begin
-  for I := 0 to (AControle.ControlCount - 1) do
-  begin
-    LControle := AControle.Controls[I];
-    if (LControle is TRLImage) or (LControle is TRLBarcode) then
-    begin
-      LCentro := ((2 * LControle.Left + LControle.Width) * ALarguraNova + ALarguraOriginal) div
-        (2 * ALarguraOriginal);
-      LControle.Left := LCentro - (LControle.Width div 2);
-    end
-    else
-    begin
-      LLeft := (LControle.Left * ALarguraNova + ALarguraOriginal div 2) div ALarguraOriginal;
-      LRight := ((LControle.Left + LControle.Width - 1) * ALarguraNova + ALarguraOriginal div 2) div
-        ALarguraOriginal;
-      LControle.SetBounds(LLeft, LControle.Top, LRight - LLeft + 1, LControle.Height);
-    end;
-
-    // o Fortes restaura as dimensoes salvas ao terminar cada banda (PopBoundsRect)
-    if (LControle is TRLCustomControl) then
-      TRLCustomControl(LControle).PeekBoundsRect := LControle.BoundsRect;
-
-    if (LControle is TWinControl) then
-      ExpandirLargura(TWinControl(LControle), ALarguraNova, ALarguraOriginal);
-  end;
-end;
-
-procedure TfrlDANFeRLPaisagemRTC.OcuparLarguraDoCanhoto;
-var
-  LOriginal, LNova: Integer;
-begin
-  if FLarguraExpandida then
-    Exit;
-
-  FLarguraExpandida := True;
-  LOriginal := rlpChave.Left + rlpChave.Width;
-  LNova := LOriginal + rlpCanhoto.Width + rlpDivisaoCanhoto.Width;
-
-  ExpandirLargura(rlbEmitente, LNova, LOriginal);
-  ExpandirLargura(rlbCanceladaDenegada, LNova, LOriginal);
-  ExpandirLargura(rlbAvisoContingencia, LNova, LOriginal);
-  ExpandirLargura(rlbCabecalhoItens, LNova, LOriginal);
-  ExpandirLargura(rlbItem, LNova, LOriginal);
-  ExpandirLargura(rlbRodape, LNova, LOriginal);
-  ExpandirLargura(rlbContinuacao, LNova, LOriginal);
-
-  FLarguraBase := (FLarguraBase * LNova + LOriginal div 2) div LOriginal;
-  FLarguraAliq := (FLarguraAliq * LNova + LOriginal div 2) div LOriginal;
-  FLarguraVal := (FLarguraVal * LNova + LOriginal div 2) div LOriginal;
-end;
-
-procedure TfrlDANFeRLPaisagemRTC.InicializarDados;
+procedure TfrlDANFeRLRetratoRTC.InicializarDados;
 begin
   TDFeReportFortes.AjustarMargem(RLNFe, fpDANFe);
   RLNFe.Title := RemoverLiteralChave(fpNFe.infNFe.ID);
@@ -770,7 +711,7 @@ begin
   DefinirRodape;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.MapearTributosItem;
+procedure TfrlDANFeRLRetratoRTC.MapearTributosItem;
 var
   L, C: Integer;
 begin
@@ -804,7 +745,7 @@ begin
     end;
 end;
 
-function TfrlDANFeRLPaisagemRTC.NumeroNF: String;
+function TfrlDANFeRLRetratoRTC.NumeroNF: String;
 begin
   if fpDANFe.FormatarNumeroDocumento then
     Result := FormatarNumeroDocumentoFiscal(IntToStr(fpNFe.Ide.nNF))
@@ -814,12 +755,12 @@ begin
   Result := ACBrStr('Nº ') + Result;
 end;
 
-function TfrlDANFeRLPaisagemRTC.SerieNF: String;
+function TfrlDANFeRLRetratoRTC.SerieNF: String;
 begin
   Result := ACBrStr('SÉRIE ') + PadLeft(IntToStr(fpNFe.Ide.serie), 3, '0');
 end;
 
-function TfrlDANFeRLPaisagemRTC.ProtocoloAutorizacao: String;
+function TfrlDANFeRLRetratoRTC.ProtocoloAutorizacao: String;
 begin
   if NaoEstaVazio(fpDANFe.Protocolo) then
     Result := fpDANFe.Protocolo
@@ -829,7 +770,7 @@ begin
     Result := '';
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirCanhoto;
+procedure TfrlDANFeRLRetratoRTC.DefinirCanhoto;
 begin
   rllRecebemosDe.Caption := ACBrStr('RECEBEMOS DE ') + fpNFe.Emit.xNome +
     ACBrStr(' OS PRODUTOS/SERVIÇOS CONSTANTES DA NOTA FISCAL ELETRÔNICA INDICADA AO LADO');
@@ -845,19 +786,16 @@ begin
   rllCanhotoNumero.Caption := NumeroNF;
   rllCanhotoSerie.Caption := SerieNF;
 
-  rlpCanhoto.Visible := True;
-  rlpDivisaoCanhoto.Visible := True;
-
   if (fpDANFe.PosCanhoto = prRodape) then
   begin
-    rlpCanhoto.Align := faLeftMost;
-    rlpDivisaoCanhoto.Align := faLeftMost;
-    rlpCanhoto.Left := 0;
-    rlpDivisaoCanhoto.Left := rlpCanhoto.Width;
+    rlbDivisaoCanhoto.BandType := btFooter;
+    rlbCanhoto.BandType := btFooter;
+    rlbDivisaoCanhoto.Top := rlbRodape.Top + rlbRodape.Height;
+    rlbCanhoto.Top := rlbDivisaoCanhoto.Top + rlbDivisaoCanhoto.Height;
   end;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirCabecalho;
+procedure TfrlDANFeRLRetratoRTC.DefinirCabecalho;
 begin
   rlbCodigoBarras.Caption := RemoverLiteralChave(fpNFe.infNFe.ID);
   rllChave.Caption := FormatarChaveAcesso(fpNFe.infNFe.ID);
@@ -897,7 +835,7 @@ begin
     end;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirEmitente;
+procedure TfrlDANFeRLRetratoRTC.DefinirEmitente;
 var
   LEnder: TenderEmit;
 begin
@@ -944,7 +882,7 @@ begin
   end;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirAvisos;
+procedure TfrlDANFeRLRetratoRTC.DefinirAvisos;
 var
   LSituacao: String;
 begin
@@ -1004,11 +942,9 @@ begin
     rlbAvisoContingencia.Height := rlmContingencia.Top + rlmContingencia.Height + 2
   else
     rlbAvisoContingencia.Height := rllAvisoContingencia.Top + rllAvisoContingencia.Height + 1;
-
-  rllSecItens.Borders.DrawTop := rlbCanceladaDenegada.Visible or rlbAvisoContingencia.Visible;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirDestinatario;
+procedure TfrlDANFeRLRetratoRTC.DefinirDestinatario;
 var
   LEnder: TEnderDest;
 begin
@@ -1034,7 +970,7 @@ begin
   rllDestHoraSaida.Caption := IfThen(TimeOf(fpNFe.Ide.dSaiEnt) = 0, '', TimeToStr(fpNFe.Ide.dSaiEnt));
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirRetirada;
+procedure TfrlDANFeRLRetratoRTC.DefinirRetirada;
 var
   LRetirada: TRetirada;
 begin
@@ -1056,7 +992,7 @@ begin
   rllRetiradaUF.Caption := LRetirada.UF;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirEntrega;
+procedure TfrlDANFeRLRetratoRTC.DefinirEntrega;
 var
   LEntrega: TEntrega;
 begin
@@ -1078,7 +1014,7 @@ begin
   rllEntregaUF.Caption := LEntrega.UF;
 end;
 
-function TfrlDANFeRLPaisagemRTC.CriarCelula(ABand: TRLBand; ALeft, ATop,
+function TfrlDANFeRLRetratoRTC.CriarCelula(ABand: TRLBand; ALeft, ATop,
   AWidth: Integer; const ATitulo, AValor: String): TRLPanel;
 var
   LTitulo, LValor: TRLLabel;
@@ -1101,18 +1037,18 @@ begin
   LValor := TRLLabel.Create(Self);
   LValor.Parent := Result;
   LValor.AutoSize := False;
-  LValor.SetBounds(3, 9, AWidth - 6, 11);
+  LValor.SetBounds(3, 10, AWidth - 6, 13);
   LValor.ParentFont := False;
   LValor.Font.Name := 'Arial';
-  LValor.Font.Height := -9;
+  LValor.Font.Height := -10;
   LValor.Font.Color := clBlack;
   LValor.Caption := AValor;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirFatura;
+procedure TfrlDANFeRLRetratoRTC.DefinirFatura;
 const
   cPorLinha = 3;
-  cLarguraGrupo = 332;
+  cLarguraGrupo = 246;
 var
   I, LLeft, LTop: Integer;
   LDup: TDupCollectionItem;
@@ -1128,16 +1064,16 @@ begin
     LLeft := (I mod cPorLinha) * cLarguraGrupo;
     LTop := cTopoCelulas + (I div cPorLinha) * (cAlturaCelula - 1);
 
-    CriarCelula(rlbFatura, LLeft, LTop, 132, 'FATURA/DUPLICATA', LDup.nDup);
-    CriarCelula(rlbFatura, LLeft + 131, LTop, 94, 'VENCIMENTO', FormatDateBr(LDup.dVenc));
-    CriarCelula(rlbFatura, LLeft + 224, LTop, 108, 'VALOR', fpRTC.FormatarValor(LDup.vDup));
+    CriarCelula(rlbFatura, LLeft, LTop, 98, 'FATURA/DUPLICATA', LDup.nDup);
+    CriarCelula(rlbFatura, LLeft + 97, LTop, 70, 'VENCIMENTO', FormatDateBr(LDup.dVenc));
+    CriarCelula(rlbFatura, LLeft + 166, LTop, 81, 'VALOR', fpRTC.FormatarValor(LDup.vDup));
   end;
 
   rlbFatura.Height := cTopoCelulas +
     ((fpNFe.Cobr.Dup.Count + cPorLinha - 1) div cPorLinha) * (cAlturaCelula - 1) + 1;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirTotais;
+procedure TfrlDANFeRLRetratoRTC.DefinirTotais;
 var
   LNota: TACBrNFeDANFeRTCTotalNota;
   LICMS: TACBrNFeDANFeRTCTotalICMSIPI;
@@ -1183,7 +1119,7 @@ begin
   rllCBSMonoReten.Caption := fpRTC.FormatarValor(LIBSCBS.vCBSMonoReten);
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirISSQN;
+procedure TfrlDANFeRLRetratoRTC.DefinirISSQN;
 var
   LISSQN: TACBrNFeDANFeRTCISSQN;
 begin
@@ -1196,7 +1132,7 @@ begin
   rllISSQNValor.Caption := fpRTC.FormatarValor(LISSQN.vISS);
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirTransporte;
+procedure TfrlDANFeRLRetratoRTC.DefinirTransporte;
 var
   I, LLinhas: Integer;
   LOk: Boolean;
@@ -1259,7 +1195,7 @@ begin
   rlbTransportador.Height := rlpVolQtde.Top + rlpVolQtde.Height + 1;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirDadosAdicionais;
+procedure TfrlDANFeRLRetratoRTC.DefinirDadosAdicionais;
 var
   LTextoOriginal, LTexto: String;
   LPosUltimoEspaco: Integer;
@@ -1292,7 +1228,7 @@ begin
   rlmDadosFisco.Lines.Text := fpNFe.procNFe.xMsg;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirQRCode;
+procedure TfrlDANFeRLRetratoRTC.DefinirQRCode;
 begin
   rlpQRCode.Visible := fpRTC.ExibeQRCode;
 
@@ -1307,7 +1243,7 @@ begin
   end;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirRodape;
+procedure TfrlDANFeRLRetratoRTC.DefinirRodape;
 begin
   rllSistema.Visible := NaoEstaVazio(fpDANFe.Sistema);
   rllSistema.Caption := fpDANFe.Sistema;
@@ -1317,7 +1253,7 @@ begin
     ' - ' + fpDANFe.Usuario;
 end;
 
-procedure TfrlDANFeRLPaisagemRTC.DefinirTributo(ARotulo, AValor: TRLLabel;
+procedure TfrlDANFeRLRetratoRTC.DefinirTributo(ARotulo, AValor: TRLLabel;
   ALargura: Integer; const ATributo: TACBrNFeDANFeRTCTributo; AAliquota: Boolean);
 const
   cAmostra = 10;
