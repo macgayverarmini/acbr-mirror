@@ -1,11 +1,11 @@
 {******************************************************************************}
-{ Projeto: Componentes ACBr                                                    }
+{ Projeto: Componentes ACBr - ACBrNFeABI                                       }
 {  Biblioteca multiplataforma de componentes Delphi para interação com equipa- }
 { mentos de Automação Comercial utilizados no Brasil                           }
 {                                                                              }
 { Direitos Autorais Reservados (c) 2026 Daniel Simoes de Almeida               }
 {                                                                              }
-{ Colaboradores nesse arquivo: Italo Giurizzato Junior                         }
+{ Colaboradores nesse arquivo: Renato Rubinho                                  }
 {                                                                              }
 {  Você pode obter a última versão desse arquivo na pagina do  Projeto ACBr    }
 { Componentes localizado em      http://www.sourceforge.net/projects/acbr      }
@@ -29,26 +29,51 @@
 { Daniel Simões de Almeida - daniel@projetoacbr.com.br - www.projetoacbr.com.br}
 {       Rua Coronel Aureliano de Camargo, 963 - Tatuí - SP - 18270-170         }
 {******************************************************************************}
+{$I ACBr.inc}
 
-{******************************************************************************
-|* ACBrNFeABI (Nota Fiscal Eletrônica de Alienação de Bens Imóveis)
-|*
-|* PROPÓSITO: Registro de Alterações
-*******************************************************************************}
+unit ACBrNFeABI.UtilsFPDF;
 
-Símbolo : Significado
+interface
 
-[+]     : Novo recurso
-[*]     : Recurso modificado/melhorado
-[-]     : Correção de Bug (assim esperamos)
+uses
+  SysUtils,
+  StrUtils,
+  ACBrNFeABI.Classes,
+  ACBrNFeABI.Conversao,
+  ACBrNFeABI.DANFEABIClass;
 
-Data 11/11/2026
-[*] Merge dos fontes doados por MXM Sistema com os fontes escritos pela Equipe ACBr.
-   Por: Italo Giurizzato Junior
+type
+  TLogoAlign = (laLeft, laCenter, laRight, laFull);
 
-Data 10/11/2026
-[+] Doação do componente ACBrNFeABI (NF-e de Alienação de Bens Imóveis, modelo 77,
-    leiaute 1.00) para o Projeto ACBr: geração, assinatura, validação, autorização
-    síncrona, consulta por chave, status do serviço e evento de cancelamento (110111).
-   Por: MXM Sistemas
+  { TNFeABIUtilsFPDF }
 
+  TNFeABIUtilsFPDF = class
+  private
+    FDANFeABIClassOwner: TACBrNFeABIDANFeABIClass;
+    FNFeABI: TNFeABI;
+    FFormatSettings: TFormatSettings;
+  public
+    property NFeABI: TNFeABI read FNFeABI;
+  public
+    constructor Create(ANFeABI: TNFeABI; ADANFeABIClassOwner: TACBrNFeABIDANFeABIClass); overload;
+    destructor Destroy; override;
+    property FormatSettings: TFormatSettings read FFormatSettings write FFormatSettings;
+  end;
+
+implementation
+
+{ TNFeABIUtilsFPDF }
+
+constructor TNFeABIUtilsFPDF.Create(ANFeABI: TNFeABI;
+  ADANFeABIClassOwner: TACBrNFeABIDANFeABIClass);
+begin
+  FNFeABI := ANFeABI;
+  FDANFeABIClassOwner := ADANFeABIClassOwner;
+end;
+
+destructor TNFeABIUtilsFPDF.Destroy;
+begin
+  inherited;
+end;
+
+end.
