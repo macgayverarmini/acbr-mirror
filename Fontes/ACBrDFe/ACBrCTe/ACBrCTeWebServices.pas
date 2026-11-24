@@ -1230,7 +1230,7 @@ begin
                       AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteOSProc', 'CTeOS');
 
                     moCTeSimp:
-                      AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteProc', 'CTe');
+                      AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteSimpProc', 'CTeSimp');
                   else
                     AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'gtveProc', 'GTVe');
                   end;
@@ -1393,7 +1393,7 @@ begin
                   AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteOSProc', 'CTeOS');
 
                 moCTeSimp:
-                  AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteProc', 'CTe');
+                  AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteSimpProc', 'CTeSimp');
               else
                 AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'gtveProc', 'GTVe');
               end;
@@ -1793,7 +1793,7 @@ begin
               AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteOSProc', 'CTeOS');
 
             moCTeSimp:
-              AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteProc', 'CTe');
+              AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteSimpProc', 'CTeSimp');
           else
             AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'gtveProc', 'GTVe');
           end;
@@ -2503,7 +2503,7 @@ begin
                     AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteOSProc', 'CTeOS');
 
                   moCTeSimp:
-                    AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteProc', 'CTe');
+                    AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'cteSimpProc', 'CTeSimp');
                 else
                   AProcCTe := TProcDFe.Create(FPVersaoServico, NAME_SPACE_CTE, 'gtveProc', 'GTVe');
                 end;
@@ -2528,7 +2528,7 @@ begin
 
                     FRetCTeDFe := '<CTeDFe>' +
                                    '<procCTe versao="' + FVersao + '">' +
-                                     SeparaDados(XMLOriginal, 'cteProc') +
+                                     SeparaDados(XMLOriginal, IfThen(FPConfiguracoesCTe.Geral.ModeloDF = moCTeSimp, 'cteSimpProc', 'cteProc')) +
                                    '</procCTe>' +
                                    '<procEventoCTe versao="' + FVersao + '">' +
                                      aEventos +
@@ -3813,11 +3813,11 @@ begin
       if NaoEstaVazio(NomeArq) then
         FlistaArqs.Add( FNomeArq );
 
-      aPath := GerarPathDistribuicao(FretDistDFeInt.docZip.Items[I]);
-      FretDistDFeInt.docZip.Items[I].NomeArq := PathWithDelim(aPath) + FNomeArq;
-
       if (FPConfiguracoesCTe.Arquivos.Salvar) and NaoEstaVazio(FNomeArq) then
       begin
+        aPath := GerarPathDistribuicao(FretDistDFeInt.docZip.Items[I]);
+        FretDistDFeInt.docZip.Items[I].NomeArq := PathWithDelim(aPath) + FNomeArq;
+
         if (FretDistDFeInt.docZip.Items[I].schema in [schprocEventoCTe]) then
           FPDFeOwner.Gravar(FNomeArq, AXML, aPath);
 

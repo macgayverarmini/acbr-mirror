@@ -535,7 +535,7 @@ end;
 
 function TACBrDANFSeFPDFPadraoNacional.GetFinalidadeDescricao: string;
 begin
-  finNFSeToStrText(FNFSe.IBSCBS.finNFSe);
+  Result := finNFSeToStrText(FNFSe.IBSCBS.finNFSe);
 end;
 
 function TACBrDANFSeFPDFPadraoNacional.GetEmitenteDescricao: string;
@@ -724,8 +724,7 @@ end;
 
 function TACBrDANFSeFPDFPadraoNacional.PossuiISSQN: Boolean;
 begin
-  Result := (FNFSe <> nil) and (FNFSe.Servico <> nil) and
-            (FNFSe.Servico.Valores.ValorIss > 0);
+  Result := (FNFSe <> nil) and (FNFSe.Servico <> nil);
 end;
 
 procedure TACBrDANFSeFPDFPadraoNacional.DesenharBordaPagina(PDF: IFPDF);
@@ -1334,20 +1333,11 @@ begin
   LineH := 6.3;
   V := FNFSe.Servico.Valores;
 
-  if not PossuiISSQN then
-  begin
-    DesenharLinhaVazia(PDF, X, Y, W, cMsgISSQNVazio);
-    DesenharLinhaSeparadora(PDF, W);
-    Exit;
-  end;
-
   // Linha 1: Titulo do bloco (1a celula) | Tipo Tributacao | Municipio/UF/Pais Incidencia (2 col)
   DesenharTituloBlocoInline(PDF, X, Y, ColW, LineH, 'Tributacao Municipal (ISSQN)');
   DesenharCampo(PDF, X + 1 * ColW, Y, ColW, LineH,
                 'Tipo de Tributacao do ISSQN',
-                IfThen(Assigned(FDadosAux) and (FDadosAux.NaturezaOperacaoDescricao <> ''),
-                       Ellipsis(FDadosAux.NaturezaOperacaoDescricao, 37),
-                       IfThen(V.IssRetido = stRetencao, 'Operacao Tributavel (Retido)', 'Operacao Tributavel')));
+                Ellipsis(tribISSQNToDescricao(V.tribMun.tribISSQN), 37));
   DesenharCampo(PDF, X + 2 * ColW, Y, 2 * ColW, LineH,
                 'Municipio / Sigla UF / Pais da Incidencia',
                 NN(FNFSe.infNFSe.xLocIncid) + ' / BR');
